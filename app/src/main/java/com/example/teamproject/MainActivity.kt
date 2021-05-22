@@ -3,11 +3,13 @@ package com.example.teamproject
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.example.teamproject.calender.*
+import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
-import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -27,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         val option = arrayListOf<String>("saturday","sunday","today","date","select","color","format","background")
         val setting = arrayListOf<String>("off","off","off","on","GRAY","off","#FFFFFF","#FFFFFF")
         for(i in 0 until option.size){
-            var data = CustomizingData(option[i],setting[i])
+            val data = CustomizingData(option[i], setting[i])
             customizingDBHelper.insertCustomizing(data)
         }
     }
@@ -35,12 +37,21 @@ class MainActivity : AppCompatActivity() {
     private fun init() {
         customizingDBHelper = CustomizingDBHelper(this)
 
-        val btn = findViewById<Button>(R.id.buttonMain)
+        val btn = findViewById<Button>(R.id.settingBtn)
+        val calendarView = findViewById<MaterialCalendarView>(R.id.calendarViewMain)
+        val today = CalendarDay.today()
+
+        calendarView.selectedDate = today
+        Log.d("date_test",calendarView.selectedDate.date.toString())
 
         btn.setOnClickListener {
             val intent = Intent(this, SettingActivity::class.java)
             startActivity(intent)
         }
+        calendarView.setOnDateChangedListener { _, date, _ ->
+            Log.d("date_selected_test", date.date.toString())
+        }
+
         customizing()
     }
 
@@ -81,9 +92,9 @@ class MainActivity : AppCompatActivity() {
         }
         calendar.topbarVisible = customizingDBHelper.findCustomizing("date")=="on"
         if(customizingDBHelper.findCustomizing("format")=="on"){
-            calendar.setTitleFormatter(TitleFormatter {
+            calendar.setTitleFormatter {
                 SimpleDateFormat("yyyy MMMM", Locale.KOREA).format(it.date)
-            })
+            }
         }else{
             calendar.setTitleFormatter(null)
         }
@@ -96,14 +107,14 @@ class MainActivity : AppCompatActivity() {
             "#E7DDFA"->calendar.setBackgroundColor(Color.parseColor("#E7DDFA"))
         }
         when(customizingDBHelper.findCustomizing("select")){
-            "GRAY"-> calendar.setSelectionColor(Color.GRAY)
-            "WHITE"-> calendar.setSelectionColor(Color.WHITE)
-            "RED"-> calendar.setSelectionColor(Color.RED)
-            "MAGENTA"-> calendar.setSelectionColor(Color.MAGENTA)
-            "YELLOW"-> calendar.setSelectionColor(Color.YELLOW)
-            "GREEN"-> calendar.setSelectionColor(Color.GREEN)
-            "BLUE"-> calendar.setSelectionColor(Color.BLUE)
-            "CYAN"-> calendar.setSelectionColor(Color.CYAN)
+            "GRAY"-> calendar.selectionColor = Color.GRAY
+            "WHITE"-> calendar.selectionColor = Color.WHITE
+            "RED"-> calendar.selectionColor = Color.RED
+            "MAGENTA"-> calendar.selectionColor = Color.MAGENTA
+            "YELLOW"-> calendar.selectionColor = Color.YELLOW
+            "GREEN"-> calendar.selectionColor = Color.GREEN
+            "BLUE"-> calendar.selectionColor = Color.BLUE
+            "CYAN"-> calendar.selectionColor = Color.CYAN
         }
         when(customizingDBHelper.findCustomizing("background")){
             "#FFFFFF"->constraint.setBackgroundColor(Color.parseColor("#FFFFFF"))

@@ -1,4 +1,4 @@
-package com.example.teamproject
+package com.example.teamproject.calender
 
 import android.content.ContentValues
 import android.content.Context
@@ -53,7 +53,7 @@ class CustomizingDBHelper(val context: Context?)
         return str
     }
 
-    fun updateCustomizing(customizingdata:CustomizingData): Boolean {
+    fun updateCustomizing(customizingdata: CustomizingData): Boolean {
         val coption = customizingdata.cOption
         val strsql = "select * from $TABLE_NAME where $COPTION ='$coption';"
         val db = writableDatabase
