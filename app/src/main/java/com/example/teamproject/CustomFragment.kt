@@ -1,4 +1,4 @@
-package com.example.teamproject.custom
+package com.example.teamproject
 
 import android.app.AlertDialog
 import android.graphics.Color
@@ -8,7 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
-import com.example.teamproject.R
+import com.example.teamproject.custom.CustomDBHelper
+import com.example.teamproject.custom.CustomData
 
 /*커스터마이징*/
 
@@ -110,7 +111,7 @@ class CustomFragment : Fragment() {
         }
     }
 
-    private fun initSetting(helper:CustomDBHelper, saturday:Switch, sunday:Switch, today:Switch, date:Switch,
+    private fun initSetting(helper: CustomDBHelper, saturday:Switch, sunday:Switch, today:Switch, date:Switch,
                             color:Spinner, select:Spinner, format:Switch, background:Spinner,
                             memo:Spinner, record:Spinner){
         initSwitch(helper, saturday, "saturday")
@@ -187,7 +188,7 @@ class CustomFragment : Fragment() {
         }
     }
 
-    private fun spinnerV1(helper:CustomDBHelper, spinner:Spinner, option:String){
+    private fun spinnerV1(helper: CustomDBHelper, spinner:Spinner, option:String){
         val spinnerAdapter = context?.let {
             ArrayAdapter(
                 it.applicationContext, android.R.layout.simple_spinner_item, selectItems
@@ -221,7 +222,7 @@ class CustomFragment : Fragment() {
         }
     }
 
-    private fun spinnerV2(helper:CustomDBHelper, spinner:Spinner, option:String){
+    private fun spinnerV2(helper: CustomDBHelper, spinner:Spinner, option:String){
         val spinnerAdapter = context?.let {
             ArrayAdapter(
                 it.applicationContext, android.R.layout.simple_spinner_item, backgroundItems
@@ -275,7 +276,7 @@ class CustomFragment : Fragment() {
         dlg.show()
     }
 
-    private fun buttonR(helper:CustomDBHelper){
+    private fun buttonR(helper: CustomDBHelper){
         helper.updateCustomizing(CustomData("saturday", "off"))
         helper.updateCustomizing(CustomData("sunday", "off"))
         helper.updateCustomizing(CustomData("today", "off"))

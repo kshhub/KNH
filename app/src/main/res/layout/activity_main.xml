@@ -4,36 +4,87 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayoutMain"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#E7DDFA">
+    android:layout_height="match_parent">
 
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/calendarViewMain"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="393dp"
+        android:layout_height="319dp"
         android:layout_gravity="center"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="90dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="128dp"
-        android:background="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/buttonMain"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="9dp"
+        android:background="@drawable/edgesmooth"
+        app:layout_constraintBottom_toTopOf="@+id/memoView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:mcv_selectionColor="#555555"
         app:mcv_showOtherDates="all" />
 
-    <Button
-        android:id="@+id/buttonMain"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/memoView"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="145dp"
-        android:layout_marginBottom="35dp"
-        android:backgroundTint="#69AEB6"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="14dp"
+        android:layout_marginBottom="14dp"
+        android:background="@drawable/edgesmooth"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/dietView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/calendarViewMain" />
+
+    <TextView
+        android:id="@+id/dietView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="13dp"
+        android:background="@drawable/edgesmooth"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/memoView" />
+
+    <Button
+        android:id="@+id/memoBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:backgroundTint="#69AEB6"
+        android:text="MEMO"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/settingBtn"
+        app:layout_constraintStart_toStartOf="@id/dietView"
+        app:layout_constraintTop_toBottomOf="@+id/dietView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/settingBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#69AEB6"
+        android:text="settings"
+        app:layout_constraintBottom_toBottomOf="@+id/memoBtn"
+        app:layout_constraintEnd_toStartOf="@+id/button2"
+        app:layout_constraintStart_toEndOf="@+id/memoBtn"
+        app:layout_constraintTop_toTopOf="@+id/memoBtn" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:backgroundTint="#69AEB6"
+        android:text="Diet"
+        app:layout_constraintBottom_toBottomOf="@+id/settingBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/settingBtn"
+        app:layout_constraintTop_toTopOf="@+id/settingBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
