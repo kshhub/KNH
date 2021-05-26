@@ -1,11 +1,11 @@
-package com.example.teamproject.calender
+package com.example.teamproject.custom
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class CustomizingDBHelper(val context: Context?)
+class CustomDBHelper(val context: Context?)
     : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     companion object{
         val DB_NAME="customizingdb.db"
@@ -22,10 +22,10 @@ class CustomizingDBHelper(val context: Context?)
         db!!.execSQL(create_table)
     }
 
-    fun insertCustomizing(customizingData: CustomizingData):Boolean{
+    fun insertCustomizing(customData: CustomData):Boolean{
         val values = ContentValues()
-        values.put(COPTION, customizingData.cOption)
-        values.put(CSETTING, customizingData.cSetting)
+        values.put(COPTION, customData.cOption)
+        values.put(CSETTING, customData.cSetting)
         val db = writableDatabase
         val flag = db.insert(TABLE_NAME, null, values)>0
         db.close()
@@ -53,7 +53,7 @@ class CustomizingDBHelper(val context: Context?)
         return str
     }
 
-    fun updateCustomizing(customizingdata: CustomizingData): Boolean {
+    fun updateCustomizing(customizingdata:CustomData): Boolean {
         val coption = customizingdata.cOption
         val strsql = "select * from $TABLE_NAME where $COPTION ='$coption';"
         val db = writableDatabase

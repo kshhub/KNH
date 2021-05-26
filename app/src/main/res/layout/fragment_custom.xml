@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ECF8DE"
+    android:orientation="vertical"
+    tools:context=".CustomFragment">
+
+
+    <TextView
+        android:id="@+id/textViewCustomMenu1"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/edgesmooth"
+        android:backgroundTint="#C9ECA2"
+        android:gravity="center"
+        android:text="Calendar Customizing" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="5dp"
+        android:background="@drawable/edgesmooth_border"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="5dp"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewCustomSaturday"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/edgesmooth"
+                android:backgroundTint="#EDFBDF"
+                android:gravity="center"
+                android:text="토요일 파란색 표시" />
+
+            <TextView
+                android:id="@+id/textViewCustomSunday"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/edgesmooth"
+                android:backgroundTint="#EDFBDF"
+                android:gravity="center"
+                android:text="일요일 빨간색 표시" />
+
+            <TextView
+                android:id="@+id/textViewCustomToday"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/edgesmooth"
+                android:backgroundTint="#EDFBDF"
+                android:gravity="center"
+                android:text="오늘 강조" />
+
+            <TextView
+                android:id="@+id/textViewCustomDate"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/edgesmooth"
+                android:backgroundTint="#EDFBDF"
+                android:gravity="center"
+                android:text="연도 정보" />
+
+            <TextView
+                android:id="@+id/textViewCustomFormat"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/edgesmooth"
+                android:backgroundTint="#EDFBDF"
+                android:gravity="center"
+                android:text="연도 타입" />
+
+            <TextView
+                android:id="@+id/textViewCustomColor"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/edgesmooth"
+                android:backgroundTint="#EDFBDF"
+                android:gravity="center"
+                android:text="달력 색상" />
+
+            <TextView
+                android:id="@+id/textViewCustomSelect"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/edgesmooth"
+                android:backgroundTint="#EDFBDF"
+                android:gravity="center"
+                android:text="선택 색상" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <Switch
+                android:id="@+id/switchCustomSaturday"
+                android:layout_width="100dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="5dp"
+                android:checked="false"
+                android:text="표시"
+                android:thumb="@drawable/switch_thumb"
+                android:track="@drawable/switch_track_selector" />
+
+            <Switch
+                android:id="@+id/switchCustomSunday"
+                android:layout_width="100dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="5dp"
+                android:text="표시"
+                android:thumb="@drawable/switch_thumb"
+                android:track="@drawable/switch_track_selector" />
+
+            <Switch
+                android:id="@+id/switchCustomToday"
+                android:layout_width="100dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="5dp"
+                android:text="켜기"
+                android:thumb="@drawable/switch_thumb"
+                android:track="@drawable/switch_track_selector" />
+
+            <Switch
+                android:id="@+id/switchCustomDate"
+                android:layout_width="100dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="5dp"
+                android:text="켜기"
+                android:thumb="@drawable/switch_thumb"
+                android:track="@drawable/switch_track_selector" />
+
+            <Switch
+                android:id="@+id/switchCustomFormat"
+                android:layout_width="170dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:text="Year-Month\n(달력 이동 시 적용)"
+                android:textSize="11sp"
+                android:thumb="@drawable/switch_thumb"
+                android:track="@drawable/switch_track_selector" />
+
+            <Spinner
+                android:id="@+id/spinnerCustomColor"
+                android:layout_width="170dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="5dp"
+                android:gravity="center" />
+
+            <Spinner
+                android:id="@+id/spinnerCustomSelect"
+                android:layout_width="170dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:spinnerMode="dropdown" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewCustomMenu2"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/edgesmooth"
+        android:backgroundTint="#C9ECA2"
+        android:gravity="center"
+        android:text="Application Customizing" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="5dp"
+        android:background="@drawable/edgesmooth_border"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewCustomBackground"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/edgesmooth"
+                android:backgroundTint="#EDFBDF"
+                android:gravity="center"
+                android:text="배경 색상" />
+
+            <TextView
+                android:id="@+id/textViewCustomMemo"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/edgesmooth"
+                android:backgroundTint="#EDFBDF"
+                android:gravity="center"
+                android:text="메모 색상" />
+
+            <TextView
+                android:id="@+id/textViewCustomRecord"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/edgesmooth"
+                android:backgroundTint="#EDFBDF"
+                android:gravity="center"
+                android:text="기록 색상" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <Spinner
+                android:id="@+id/spinnerCustomBackground"
+                android:layout_width="170dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="5dp"
+                android:gravity="center" />
+
+            <Spinner
+                android:id="@+id/spinnerCustomMemo"
+                android:layout_width="170dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="5dp"
+                android:gravity="center" />
+
+            <Spinner
+                android:id="@+id/spinnerCustomRecord"
+                android:layout_width="170dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="5dp"
+                android:gravity="center" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewCustomMenu3"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/edgesmooth"
+        android:backgroundTint="#C9ECA2"
+        android:gravity="center"
+        android:text="Caution" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonCustomReset"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="165dp"
+            android:background="@drawable/edgesmooth"
+            android:backgroundTint="#8BC34A"
+            android:text="Reset"
+            app:backgroundTint="@null" />
+
+    </LinearLayout>
+
+</LinearLayout>
