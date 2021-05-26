@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#ECF8DE"
     android:orientation="vertical"
-    tools:context=".CustomFragment">
+    tools:context=".custom.CustomFragment">
 
 
     <TextView
