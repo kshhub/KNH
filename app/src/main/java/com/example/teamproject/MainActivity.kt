@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -47,7 +48,17 @@ class MainActivity : AppCompatActivity() {
         val btn = findViewById<Button>(R.id.settingBtn)
         val calendarView = findViewById<MaterialCalendarView>(R.id.calendarViewMain)
         val today = CalendarDay.today()
+        val memo = findViewById<Button>(R.id.memoBtn)
 
+        calendarView.selectedDate = today
+        memo.setOnClickListener {
+            val intent = Intent(this, MemoActivity::class.java)
+            intent.putExtra("date", today.date.toString())
+            startActivity(intent)
+        }
+
+        Log.d("date_test", calendarView.selectedDate.date.toString())
+        Log.d("date_test", calendarView.currentDate.date.toString())
         btn.setOnClickListener {
             val intent = Intent(this, SettingActivity::class.java)
             startActivity(intent)
@@ -65,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun customizing(){
 
-        val constraint = findViewById<ConstraintLayout>(R.id.constraintLayoutMain)
+        val constraint = findViewById<ConstraintLayout>(R.id.constraint)
         val calendar = findViewById<MaterialCalendarView>(R.id.calendarViewMain)
         val memo = findViewById<TextView>(R.id.memoView)
         val record = findViewById<TextView>(R.id.dietView)

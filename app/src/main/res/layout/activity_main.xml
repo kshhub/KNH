@@ -2,78 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraintLayoutMain"
+    android:id="@+id/constraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </FrameLayout>
-
-    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-        android:id="@+id/calendarViewMain"
-        android:layout_width="393dp"
-        android:layout_height="319dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="9dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="9dp"
-        android:background="@drawable/edgesmooth"
-        app:layout_constraintBottom_toTopOf="@+id/memoView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:mcv_selectionColor="#555555"
-        app:mcv_showOtherDates="all" >
-
-    </com.prolificinteractive.materialcalendarview.MaterialCalendarView>
-
-    <TextView
-        android:id="@+id/memoView"
-        android:layout_width="385dp"
-        android:layout_height="93dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="14dp"
-        android:layout_marginBottom="14dp"
-        android:scrollbars="vertical"
-        android:background="@drawable/edgesmooth"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/dietView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calendarViewMain" />
-
-    <TextView
-        android:id="@+id/dietView"
-        android:layout_width="388dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="13dp"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="13dp"
-        android:background="@drawable/edgesmooth"
-        android:text="TextView"
-        android:scrollbars="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/memoView" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
-        android:backgroundTint="#69AEB6"
-        android:text="Diet"
-        app:layout_constraintBottom_toBottomOf="@+id/settingBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/settingBtn"
-        app:layout_constraintTop_toTopOf="@+id/settingBtn"
-        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/settingBtn"
@@ -84,20 +15,81 @@
         app:layout_constraintBottom_toBottomOf="@+id/memoBtn"
         app:layout_constraintEnd_toStartOf="@+id/button2"
         app:layout_constraintStart_toEndOf="@+id/memoBtn"
-        app:layout_constraintTop_toTopOf="@+id/memoBtn"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="@+id/memoBtn" />
+
+    <TextView
+        android:id="@+id/dietView"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="9dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginBottom="29dp"
+        android:background="@drawable/edgesmooth"
+        android:scrollbars="vertical"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/memoBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/memoView" />
+
+    <TextView
+        android:id="@+id/memoView"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="11dp"
+        android:layout_marginEnd="11dp"
+        android:layout_marginBottom="21dp"
+        android:background="@drawable/edgesmooth"
+        android:scrollbars="vertical"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/dietView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/calendarViewMain" />
+
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+        android:id="@+id/calendarViewMain"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/edgesmooth"
+        app:layout_constraintBottom_toTopOf="@+id/memoView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:mcv_selectionColor="#555555"
+        app:mcv_showOtherDates="all">
+
+    </com.prolificinteractive.materialcalendarview.MaterialCalendarView>
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:backgroundTint="#69AEB6"
+        android:text="Diet"
+        app:layout_constraintBottom_toBottomOf="@+id/settingBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/settingBtn"
+        app:layout_constraintTop_toTopOf="@+id/settingBtn" />
 
     <Button
         android:id="@+id/memoBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="81dp"
         android:backgroundTint="#69AEB6"
         android:text="MEMO"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/settingBtn"
-        app:layout_constraintStart_toStartOf="@id/dietView"
-        app:layout_constraintTop_toBottomOf="@+id/dietView"
-        app:layout_constraintVertical_bias="0.343" />
+        app:layout_constraintEnd_toStartOf="@+id/settingBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dietView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
