@@ -2,12 +2,18 @@ package com.example.teamproject
 
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.example.teamproject.custom.CustomDBHelper
+import com.example.teamproject.database.AppDataBase
+import com.example.teamproject.database.Memo
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MemoActivity : AppCompatActivity() {
     lateinit var customDBHelper: CustomDBHelper
@@ -20,9 +26,25 @@ class MemoActivity : AppCompatActivity() {
         customDBHelper = CustomDBHelper(this)
 
         val dateText = findViewById<TextView>(R.id.dateText)
-
+        val cancelBtn = findViewById<Button>(R.id.cancelBtn)
+        val submitBtn = findViewById<Button>(R.id.subminBtn)
+        val contentEdit = findViewById<EditText>(R.id.contentEdit)
+        val titleEdit = findViewById<EditText>(R.id.titleEdit)
         val intent = intent
         val date = intent.getStringExtra("date").toString()
+
+        cancelBtn.setOnClickListener {
+            finish()
+        }
+
+        submitBtn.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {
+                val memo = Memo(date, titleEdit.text.toString(), contentEdit.text.toString())
+                AppDataBase.getInstance(applicationContext).memoDao().insert(memo)
+                finish()
+            }
+        }
+
         dateText.text = date
         customizing()
     }
@@ -43,21 +65,20 @@ class MemoActivity : AppCompatActivity() {
     }
     private fun customTextViewColor(str: String, textView: EditText){
         when(str){
-            "#FFFFFF"->textView.setBackground(ContextCompat.getDrawable(this, R.drawable.edgesmooth_ffffff))
-            "#FBE4E4"->textView.setBackground(ContextCompat.getDrawable(this, R.drawable.edgesmooth_fbe4e4))
-            "#DDF0F3"->textView.setBackground(ContextCompat.getDrawable(this, R.drawable.edgesmooth_ddf0f3))
-            "#D1F3D2"->textView.setBackground(ContextCompat.getDrawable(this, R.drawable.edgesmooth_d1f3d2))
-            "#F8F5DA"->textView.setBackground(ContextCompat.getDrawable(this, R.drawable.edgesmooth_f8f5da))
-            "#E7DDFA"->textView.setBackground(ContextCompat.getDrawable(this, R.drawable.edgesmooth_e7ddfa))
-            "#F44336"->textView.setBackground(ContextCompat.getDrawable(this, R.drawable.edgesmooth_f44336))
-            "#FF9800"->textView.setBackground(ContextCompat.getDrawable(this, R.drawable.edgesmooth_ff9800))
-            "#FFEB3B"->textView.setBackground(ContextCompat.getDrawable(this, R.drawable.edgesmooth_ffeb3b))
-            "#673AB7"->textView.setBackground(ContextCompat.getDrawable(this, R.drawable.edgesmooth_673ab7))
+            "#FFFFFF"-> textView.background = ContextCompat.getDrawable(this, R.drawable.edgesmooth_ffffff)
+            "#FBE4E4"-> textView.background = ContextCompat.getDrawable(this, R.drawable.edgesmooth_fbe4e4)
+            "#DDF0F3"-> textView.background = ContextCompat.getDrawable(this, R.drawable.edgesmooth_ddf0f3)
+            "#D1F3D2"-> textView.background = ContextCompat.getDrawable(this, R.drawable.edgesmooth_d1f3d2)
+            "#F8F5DA"-> textView.background = ContextCompat.getDrawable(this, R.drawable.edgesmooth_f8f5da)
+            "#E7DDFA"-> textView.background = ContextCompat.getDrawable(this, R.drawable.edgesmooth_e7ddfa)
+            "#F44336"-> textView.background = ContextCompat.getDrawable(this, R.drawable.edgesmooth_f44336)
+            "#FF9800"-> textView.background = ContextCompat.getDrawable(this, R.drawable.edgesmooth_ff9800)
+            "#FFEB3B"-> textView.background = ContextCompat.getDrawable(this, R.drawable.edgesmooth_ffeb3b)
+            "#673AB7"-> textView.background = ContextCompat.getDrawable(this, R.drawable.edgesmooth_673ab7)
         }
     }
     override fun onRestart() {
         super.onRestart()
         customizing()
     }
-
 }
