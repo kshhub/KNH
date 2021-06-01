@@ -13,9 +13,15 @@ import androidx.core.content.ContextCompat
 import com.example.teamproject.custom.CustomDBHelper
 import com.example.teamproject.custom.CustomData
 import com.example.teamproject.custom.CustomDecorator
+import com.example.teamproject.database.AppDataBase
+import com.example.teamproject.database.Diet
+import com.example.teamproject.database.Memo
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.format.TitleFormatter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -27,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initCustomizingDB()
+        initDB()
         init()
     }
 
@@ -39,6 +46,16 @@ class MainActivity : AppCompatActivity() {
         for(i in 0 until coption.size){
             var cdata = CustomData(coption[i],csetting[i])
             customDBHelper.insertCustomizing(cdata)
+        }
+    }
+
+    private fun initDB() {
+        val today = CalendarDay.today().date.toString()
+        val memo = Memo(today,"","")
+        val diet = Diet(today,"","")
+        CoroutineScope(Dispatchers.IO).launch {
+            AppDataBase.getInstance(applicationContext).memoDao().insert(memo)
+            AppDataBase.getInstance(applicationContext).dietDao().insert(diet)
         }
     }
 
@@ -67,11 +84,24 @@ class MainActivity : AppCompatActivity() {
             Log.d("date_selected_test", date.date.toString())
         }
         customizing()
+        initView()
     }
 
     override fun onRestart() {
         super.onRestart()
         customizing()
+        initView()
+    }
+    private fun initView() {
+        val memoTxt = findViewById<TextView>(R.id.memoView)
+        val dietTxt = findViewById<TextView>(R.id.dietView)
+        val today = CalendarDay.today().date.toString()
+        CoroutineScope(Dispatchers.IO).launch {
+            val memo = AppDataBase.getInstance(applicationContext).memoDao().getMemoByDate(today)
+            memoTxt.text = memo.content
+            val diet = AppDataBase.getInstance(applicationContext).dietDao().getDietByDate(today)
+            dietTxt.text = diet.diet
+        }
     }
 
     private fun customizing(){
