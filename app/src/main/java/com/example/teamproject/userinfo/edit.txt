@@ -1,0 +1,28 @@
+
+    === 추가 필요 사항 ===
+
+    // fragment 갱신...
+    // 사용자 설정 default 시 UserInfoFragment 로 전환...
+
+    === MainActivity 변경사항 ===
+
+    lateinit var userInfoDBHelper: UserInfoDBHelper //추가
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            setContentView(R.layout.activity_main)
+            initCustomizingDB()
+            initUserInfoDB() //추가
+            initDB()
+            init()
+        }
+
+    private fun initUserInfoDB() { //추가
+            userInfoDBHelper = UserInfoDBHelper(this)
+            val uoption = arrayListOf<String>("age","gender","height","weight","goal")
+            val usetting = arrayListOf<String>("default","default","default","default","default")
+            for(i in 0 until uoption.size){
+                var udata = UserInfoData(uoption[i],usetting[i])
+                userInfoDBHelper.insertUserInfo(udata)
+            }
+        }
