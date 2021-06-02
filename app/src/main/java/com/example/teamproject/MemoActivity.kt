@@ -39,7 +39,7 @@ class MemoActivity : AppCompatActivity() {
 
         submitBtn.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
-                val memo = Memo(date, titleEdit.text.toString(), contentEdit.text.toString())
+                val memo = Memo(0, date, titleEdit.text.toString(), contentEdit.text.toString())
                 AppDataBase.getInstance(applicationContext).memoDao().updateMemo(memo)
                 finish()
             }
