@@ -16,10 +16,10 @@ class CustomDBHelper(val context: Context?)
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
-        val create_table = "create table if not exists $TABLE_NAME("+
+        val createTable = "create table if not exists $TABLE_NAME("+
                 "$COPTION text, "+
                 "$CSETTING text);"
-        db!!.execSQL(create_table)
+        db!!.execSQL(createTable)
     }
 
     fun insertCustomizing(customData: CustomData):Boolean{
@@ -33,19 +33,19 @@ class CustomDBHelper(val context: Context?)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        val drop_table = "drop table if exists $TABLE_NAME;"
-        db!!.execSQL(drop_table)
+        val dropTable = "drop table if exists $TABLE_NAME;"
+        db!!.execSQL(dropTable)
         onCreate(db)
     }
 
     fun findCustomizing(option:String):String {
-        val strsql = "select $CSETTING from $TABLE_NAME where $COPTION='$option';"
+        val strSql = "select $CSETTING from $TABLE_NAME where $COPTION='$option';"
         val db = readableDatabase
-        val cursor = db.rawQuery(strsql, null)
-        var str:String=""
+        val cursor = db.rawQuery(strSql, null)
+        var str =""
         cursor.moveToFirst()
-        val attrcount = cursor.columnCount
-        for(i in 0 until attrcount){
+        val attrCount = cursor.columnCount
+        for(i in 0 until attrCount){
             str = cursor.getString(i)
         }
         cursor.close()
@@ -64,7 +64,7 @@ class CustomDBHelper(val context: Context?)
             val values = ContentValues()
             values.put(COPTION, customizingdata.cOption)
             values.put(CSETTING, customizingdata.cSetting)
-            db.update(TABLE_NAME, values,"$COPTION=?", arrayOf(coption.toString()))
+            db.update(TABLE_NAME, values,"$COPTION=?", arrayOf(coption))
         }
         cursor.close()
         db.close()

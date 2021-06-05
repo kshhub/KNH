@@ -19,8 +19,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 class SettingActivity : AppCompatActivity() {
 
     lateinit var settingbinding:ActivitySettingBinding
-    val settingFragText = arrayListOf<String>("Customizing","User Info")
-    val settingFragIcon = arrayListOf<Int>(R.drawable.ic_baseline_brush_24, R.drawable.ic_baseline_people_24)
+    val settingFragText = arrayListOf("Customizing","User Info")
+    val settingFragIcon = arrayListOf(R.drawable.ic_baseline_brush_24, R.drawable.ic_baseline_people_24)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

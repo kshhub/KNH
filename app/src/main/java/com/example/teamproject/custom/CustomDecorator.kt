@@ -10,7 +10,7 @@ import com.prolificinteractive.materialcalendarview.DayViewFacade
 import com.prolificinteractive.materialcalendarview.spans.DotSpan
 import java.util.*
 
-class CustomDecorator(var dayoftheWeek:String, var setting:String):DayViewDecorator {
+class CustomDecorator(var dayOfTheWeek:String, var setting:String):DayViewDecorator {
 
     private val calendar: Calendar = Calendar.getInstance()
     private var date = CalendarDay.today()
@@ -18,12 +18,16 @@ class CustomDecorator(var dayoftheWeek:String, var setting:String):DayViewDecora
     override fun shouldDecorate(day: CalendarDay?): Boolean {
         day?.copyTo(calendar)
         val weekDay: Int = calendar.get(Calendar.DAY_OF_WEEK)
-        if(dayoftheWeek=="saturday") {
-            return weekDay == Calendar.SATURDAY
-        }else if(dayoftheWeek=="sunday"){
-            return weekDay == Calendar.SUNDAY
-        }else{
-            return day?.equals(date)!!
+        return when (dayOfTheWeek) {
+            "saturday" -> {
+                weekDay == Calendar.SATURDAY
+            }
+            "sunday" -> {
+                weekDay == Calendar.SUNDAY
+            }
+            else -> {
+                day?.equals(date)!!
+            }
         }
     }
 
@@ -31,9 +35,9 @@ class CustomDecorator(var dayoftheWeek:String, var setting:String):DayViewDecora
         if(setting=="off") {
             view?.addSpan(ForegroundColorSpan(Color.BLACK))
         }else {
-            if(dayoftheWeek=="saturday") {
+            if(dayOfTheWeek=="saturday") {
                 view?.addSpan(ForegroundColorSpan(Color.BLUE))
-            }else if(dayoftheWeek=="sunday"){
+            }else if(dayOfTheWeek=="sunday"){
                 view?.addSpan(ForegroundColorSpan(Color.RED))
             }else{
                 view?.addSpan(ForegroundColorSpan(Color.GREEN))

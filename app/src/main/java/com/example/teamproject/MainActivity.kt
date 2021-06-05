@@ -9,27 +9,22 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
 import com.example.teamproject.custom.CustomDBHelper
 import com.example.teamproject.custom.CustomData
 import com.example.teamproject.custom.CustomDecorator
 import com.example.teamproject.database.AppDataBase
-import com.example.teamproject.database.Diet
-import com.example.teamproject.database.Memo
 import com.example.teamproject.userinfo.UserInfoDBHelper
 import com.example.teamproject.userinfo.UserInfoData
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
-import com.prolificinteractive.materialcalendarview.format.TitleFormatter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.File
+import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
-
     val DEFAULT_DATE = "Tue Jun 01 00:00:00 GMT+09:00 1990"
     lateinit var customDBHelper: CustomDBHelper
     lateinit var userInfoDBHelper: UserInfoDBHelper
@@ -39,41 +34,59 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         initCustomizingDB()
         initUserInfoDB()
-        initDB()
         init()
     }
 
+    fun hi() {}
+
     private fun initCustomizingDB() {
         customDBHelper = CustomDBHelper(this)
-        val coption = arrayListOf<String>(
+        val coption = arrayListOf(
             "saturday", "sunday", "today", "date", "color", "select",
             "format", "background", "memo", "record"
         )
-        val csetting = arrayListOf<String>(
+        val csetting = arrayListOf(
             "off", "off", "off", "on", "#FFFFFF", "GRAY",
             "off", "#FFFFFF", "#FFFFFF", "#FFFFFF"
         )
         for (i in 0 until coption.size) {
-            var cdata = CustomData(coption[i], csetting[i])
+            val cdata = CustomData(coption[i], csetting[i])
             customDBHelper.insertCustomizing(cdata)
         }
     }
 
     private fun initUserInfoDB() {
         userInfoDBHelper = UserInfoDBHelper(this)
-        val uoption = arrayListOf<String>("age","gender","height","weight","goal")
-        val usetting = arrayListOf<String>("default","default","default","default","default")
-        for(i in 0 until uoption.size){
-            var udata = UserInfoData(uoption[i],usetting[i])
+        val uoption = arrayListOf("age", "gender", "height", "weight", "goal")
+        val usetting = arrayListOf("default", "default", "default", "default", "default")
+        for (i in 0 until uoption.size) {
+            val udata = UserInfoData(uoption[i], usetting[i])
             userInfoDBHelper.insertUserInfo(udata)
         }
     }
 
-    private fun initDB() {
-        val memoTxt = findViewById<TextView>(R.id.memoView)
-        val dietTxt = findViewById<TextView>(R.id.dietView)
-        memoTxt.text = "Empty"
-        dietTxt.text = "Empty"
+    private fun initBoolean(): Array<Boolean> = runBlocking {
+        val today = CalendarDay.today().date.toString()
+        var isMemo = false
+        var isDiet = false
+        val job = CoroutineScope(Dispatchers.IO).launch {
+            val memoData = AppDataBase.getInstance(applicationContext).memoDao().getAllMemo()
+            for (memo in memoData) {
+                if (memo.date == today) {
+                    isMemo = true
+                    break
+                }
+            }
+            val dietData = AppDataBase.getInstance(applicationContext).dietDao().getAllDiet()
+            for (diet in dietData) {
+                if (diet.date == today) {
+                    isDiet = true
+                    break
+                }
+            }
+        }
+        job.join()
+        return@runBlocking arrayOf(isMemo, isDiet)
     }
 
     private fun init() {
@@ -91,8 +104,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        Log.d("date_test", calendarView.selectedDate.date.toString())
-        Log.d("date_test", calendarView.currentDate.date.toString())
         btn.setOnClickListener {
             val intent = Intent(this, SettingActivity::class.java)
             startActivity(intent)
@@ -114,12 +125,24 @@ class MainActivity : AppCompatActivity() {
         val memoTxt = findViewById<TextView>(R.id.memoView)
         val dietTxt = findViewById<TextView>(R.id.dietView)
         val today = CalendarDay.today().date.toString()
-
-        CoroutineScope(Dispatchers.IO).launch {
-            val memo = AppDataBase.getInstance(applicationContext).memoDao().getMemoByDate(today)
-            memoTxt.text = memo[memo.lastIndex].content
-            val diet = AppDataBase.getInstance(applicationContext).dietDao().getDietByDate(today)
-            dietTxt.text = diet[diet.lastIndex].diet
+        val bools = initBoolean()
+        if (bools[0]) {
+            CoroutineScope(Dispatchers.IO).launch {
+                val memo =
+                    AppDataBase.getInstance(applicationContext).memoDao().getMemoByDate(today)
+                memoTxt.text = memo[memo.lastIndex].content
+            }
+        } else {
+            memoTxt.text = ""
+        }
+        if (bools[1]) {
+            CoroutineScope(Dispatchers.IO).launch {
+                val diet =
+                    AppDataBase.getInstance(applicationContext).dietDao().getDietByDate(today)
+                dietTxt.text = diet[diet.lastIndex].diet
+            }
+        } else {
+            dietTxt.text = ""
         }
     }
 
@@ -156,9 +179,9 @@ class MainActivity : AppCompatActivity() {
         }
         calendar.topbarVisible = customDBHelper.findCustomizing("date") == "on"
         if (customDBHelper.findCustomizing("format") == "on") {
-            calendar.setTitleFormatter(TitleFormatter {
+            calendar.setTitleFormatter {
                 SimpleDateFormat("yyyy MMMM", Locale.KOREA).format(it.date)
-            })
+            }
         } else {
             calendar.setTitleFormatter(null)
         }
@@ -186,143 +209,103 @@ class MainActivity : AppCompatActivity() {
 
     private fun customCalendarSelectColor(str: String, calendar: MaterialCalendarView) {
         when (str) {
-            "GRAY" -> calendar.setSelectionColor(Color.GRAY)
-            "WHITE" -> calendar.setSelectionColor(Color.WHITE)
-            "RED" -> calendar.setSelectionColor(Color.RED)
-            "MAGENTA" -> calendar.setSelectionColor(Color.MAGENTA)
-            "YELLOW" -> calendar.setSelectionColor(Color.YELLOW)
-            "GREEN" -> calendar.setSelectionColor(Color.GREEN)
-            "BLUE" -> calendar.setSelectionColor(Color.BLUE)
-            "CYAN" -> calendar.setSelectionColor(Color.CYAN)
+            "GRAY" -> calendar.selectionColor = Color.GRAY
+            "WHITE" -> calendar.selectionColor = Color.WHITE
+            "RED" -> calendar.selectionColor = Color.RED
+            "MAGENTA" -> calendar.selectionColor = Color.MAGENTA
+            "YELLOW" -> calendar.selectionColor = Color.YELLOW
+            "GREEN" -> calendar.selectionColor = Color.GREEN
+            "BLUE" -> calendar.selectionColor = Color.BLUE
+            "CYAN" -> calendar.selectionColor = Color.CYAN
         }
     }
 
     private fun customCalendarColor(str: String, calendar: MaterialCalendarView) {
         when (str) {
-            "#FFFFFF" -> calendar.setBackground(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_ffffff
-                )
+            "#FFFFFF" -> calendar.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.edgesmooth_ffffff
             )
-            "#FBE4E4" -> calendar.setBackground(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_fbe4e4
-                )
+            "#FBE4E4" -> calendar.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.edgesmooth_fbe4e4
             )
-            "#DDF0F3" -> calendar.setBackground(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_ddf0f3
-                )
+            "#DDF0F3" -> calendar.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.edgesmooth_ddf0f3
             )
-            "#D1F3D2" -> calendar.setBackground(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_d1f3d2
-                )
+            "#D1F3D2" -> calendar.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.edgesmooth_d1f3d2
             )
-            "#F8F5DA" -> calendar.setBackground(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_f8f5da
-                )
+            "#F8F5DA" -> calendar.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.edgesmooth_f8f5da
             )
-            "#E7DDFA" -> calendar.setBackground(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_e7ddfa
-                )
+            "#E7DDFA" -> calendar.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.edgesmooth_e7ddfa
             )
-            "#F44336" -> calendar.setBackground(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_f44336
-                )
+            "#F44336" -> calendar.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.edgesmooth_f44336
             )
-            "#FF9800" -> calendar.setBackground(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_ff9800
-                )
+            "#FF9800" -> calendar.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.edgesmooth_ff9800
             )
-            "#FFEB3B" -> calendar.setBackground(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_ffeb3b
-                )
+            "#FFEB3B" -> calendar.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.edgesmooth_ffeb3b
             )
-            "#673AB7" -> calendar.setBackground(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_673ab7
-                )
+            "#673AB7" -> calendar.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.edgesmooth_673ab7
             )
         }
     }
 
     private fun customTextViewColor(str: String, textView: TextView) {
         when (str) {
-            "#FFFFFF" -> textView.setBackground(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_ffffff
-                )
+            "#FFFFFF" -> textView.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.edgesmooth_ffffff
             )
-            "#FBE4E4" -> textView.setBackground(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_fbe4e4
-                )
+            "#FBE4E4" -> textView.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.edgesmooth_fbe4e4
             )
-            "#DDF0F3" -> textView.setBackground(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_ddf0f3
-                )
+            "#DDF0F3" -> textView.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.edgesmooth_ddf0f3
             )
-            "#D1F3D2" -> textView.setBackground(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_d1f3d2
-                )
+            "#D1F3D2" -> textView.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.edgesmooth_d1f3d2
             )
-            "#F8F5DA" -> textView.setBackground(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_f8f5da
-                )
+            "#F8F5DA" -> textView.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.edgesmooth_f8f5da
             )
-            "#E7DDFA" -> textView.setBackground(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_e7ddfa
-                )
+            "#E7DDFA" -> textView.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.edgesmooth_e7ddfa
             )
-            "#F44336" -> textView.setBackground(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_f44336
-                )
+            "#F44336" -> textView.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.edgesmooth_f44336
             )
-            "#FF9800" -> textView.setBackground(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_ff9800
-                )
+            "#FF9800" -> textView.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.edgesmooth_ff9800
             )
-            "#FFEB3B" -> textView.setBackground(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_ffeb3b
-                )
+            "#FFEB3B" -> textView.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.edgesmooth_ffeb3b
             )
-            "#673AB7" -> textView.setBackground(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_673ab7
-                )
+            "#673AB7" -> textView.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.edgesmooth_673ab7
             )
         }
     }
