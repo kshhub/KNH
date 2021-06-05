@@ -1,14 +1,294 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ECF8DE"
+    android:orientation="vertical"
     tools:context=".UserInfoFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/textViewUserInfoTitle"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/edgesmooth"
+        android:backgroundTint="#C9ECA2"
+        android:gravity="center"
+        android:text="목표" />
 
-</FrameLayout>
+    <TableLayout
+        android:id="@+id/tableLayoutGoal"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginVertical="5dp"
+        android:background="@drawable/edgesmooth_border"
+        android:orientation="vertical">
+
+        <TableRow android:layout_marginHorizontal="5dp">
+
+            <TextView
+                android:id="@+id/textViewUserInfo11"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/edgesmooth_d1f3d2"
+                android:gravity="center"
+                android:text="사용자 정보" />
+        </TableRow>
+
+        <TableRow
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginBottom="5dp">
+
+            <TextView
+                android:id="@+id/textViewUserInfo12"
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:background="#EDFBDF"
+                android:text="나이" />
+
+            <TextView
+                android:id="@+id/textViewUserInfoAge"
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:text="age" />
+
+            <TextView
+                android:id="@+id/textViewUserInfo13"
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:background="#EDFBDF"
+                android:text="성별" />
+
+            <TextView
+                android:id="@+id/textViewUserInfoGender"
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:text="gender" />
+        </TableRow>
+
+        <TableRow android:layout_marginHorizontal="5dp">
+
+            <TextView
+                android:id="@+id/textViewUserInfo14"
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:background="#EDFBDF"
+                android:text="신장" />
+
+            <TextView
+                android:id="@+id/textViewUserInfoHeight"
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:text="height" />
+
+            <TextView
+                android:id="@+id/textViewUserInfo15"
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:background="#EDFBDF"
+                android:text="체중" />
+
+            <TextView
+                android:id="@+id/textViewUserInfoWeight"
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:text="weight" />
+        </TableRow>
+
+        <TableRow android:layout_marginHorizontal="5dp">
+
+            <TextView
+                android:id="@+id/textViewUserInfo16"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/edgesmooth_d1f3d2"
+                android:gravity="center"
+                android:text="사용자 목표" />
+        </TableRow>
+
+        <TableRow android:layout_marginHorizontal="5dp">
+
+            <TextView
+                android:id="@+id/textViewUserInfo17"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_weight="2.5"
+                android:background="#EDFBDF"
+                android:text="목표" />
+
+            <TextView
+                android:id="@+id/textViewUserInfoGoal"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_weight="7.5"
+                android:text="goal" />
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/textViewUserInfo21"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/edgesmooth"
+        android:backgroundTint="#C9ECA2"
+        android:gravity="center"
+        android:text="목표 설정" />
+
+    <TextView
+        android:id="@+id/textViewUserInfo22"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/edgesmooth"
+        android:gravity="center"
+        android:text="사용자의 정보와 목표를 입력하세요." />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewUserInfo31"
+            android:layout_width="200dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/edgesmooth"
+            android:gravity="center"
+            android:text="나이" />
+
+        <EditText
+            android:id="@+id/editTextUserInfoAge"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewUserInfo32"
+            android:layout_width="200dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/edgesmooth"
+            android:gravity="center"
+            android:text="성별" />
+
+        <RadioGroup
+            android:id="@+id/radioGroupUserInfo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radioButtonUserInfoMan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:text="남" />
+
+            <RadioButton
+                android:id="@+id/radioButtonUserInfoWoman"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="여" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewUserInfo33"
+            android:layout_width="200dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/edgesmooth"
+            android:gravity="center"
+            android:text="신장" />
+
+        <EditText
+            android:id="@+id/editTextUserInfoHeight"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewUserInfo34"
+            android:layout_width="200dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/edgesmooth"
+            android:gravity="center"
+            android:text="체중" />
+
+        <EditText
+            android:id="@+id/editTextUserInfoWeight"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewUserInfo35"
+            android:layout_width="200dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/edgesmooth"
+            android:gravity="center"
+            android:text="목표" />
+
+        <Spinner
+            android:id="@+id/spinnerUserInfoGoal"
+            android:layout_width="170dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonUserInfoSave"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:background="@drawable/edgesmooth"
+        android:backgroundTint="#8BC34A"
+        android:text="저장"
+        app:backgroundTint="@null" />
+
+
+</LinearLayout>

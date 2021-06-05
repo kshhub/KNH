@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -17,6 +16,8 @@ import com.example.teamproject.custom.CustomDecorator
 import com.example.teamproject.database.AppDataBase
 import com.example.teamproject.database.Diet
 import com.example.teamproject.database.Memo
+import com.example.teamproject.userinfo.UserInfoDBHelper
+import com.example.teamproject.userinfo.UserInfoData
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.format.TitleFormatter
@@ -31,11 +32,13 @@ class MainActivity : AppCompatActivity() {
 
     val DEFAULT_DATE = "Tue Jun 01 00:00:00 GMT+09:00 1990"
     lateinit var customDBHelper: CustomDBHelper
+    lateinit var userInfoDBHelper: UserInfoDBHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initCustomizingDB()
+        initUserInfoDB()
         initDB()
         init()
     }
@@ -53,6 +56,16 @@ class MainActivity : AppCompatActivity() {
         for (i in 0 until coption.size) {
             var cdata = CustomData(coption[i], csetting[i])
             customDBHelper.insertCustomizing(cdata)
+        }
+    }
+
+    private fun initUserInfoDB() {
+        userInfoDBHelper = UserInfoDBHelper(this)
+        val uoption = arrayListOf<String>("age","gender","height","weight","goal")
+        val usetting = arrayListOf<String>("default","default","default","default","default")
+        for(i in 0 until uoption.size){
+            var udata = UserInfoData(uoption[i],usetting[i])
+            userInfoDBHelper.insertUserInfo(udata)
         }
     }
 
