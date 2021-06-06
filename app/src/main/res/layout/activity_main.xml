@@ -35,9 +35,9 @@
     <TextView
         android:id="@+id/memoView"
         android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="11dp"
-        android:layout_marginEnd="11dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="9dp"
+        android:layout_marginEnd="9dp"
         android:layout_marginBottom="21dp"
         android:background="@drawable/edgesmooth"
         android:scrollbars="vertical"

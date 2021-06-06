@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class Diet(
+data class Diet (
     @PrimaryKey @ColumnInfo(name = "index") val index : Long,
     @ColumnInfo(name = "date") val date: String,
     @ColumnInfo(name = "type") val type: String?, // 아침, 점심, 저녁 구분

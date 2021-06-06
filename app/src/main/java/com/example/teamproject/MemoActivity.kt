@@ -63,6 +63,7 @@ class MemoActivity : AppCompatActivity() {
     private fun customBackgroundColor(str: String, const:ConstraintLayout){
         const.setBackgroundColor(Color.parseColor(str))
     }
+
     private fun customTextViewColor(str: String, textView: EditText){
         when(str){
             "#FFFFFF"-> textView.background = ContextCompat.getDrawable(this, R.drawable.edgesmooth_ffffff)

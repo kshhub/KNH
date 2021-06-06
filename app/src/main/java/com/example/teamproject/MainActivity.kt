@@ -3,6 +3,7 @@ package com.example.teamproject
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
@@ -36,8 +37,6 @@ class MainActivity : AppCompatActivity() {
         initUserInfoDB()
         init()
     }
-
-    fun hi() {}
 
     private fun initCustomizingDB() {
         customDBHelper = CustomDBHelper(this)
@@ -96,11 +95,22 @@ class MainActivity : AppCompatActivity() {
         val calendarView = findViewById<MaterialCalendarView>(R.id.calendarViewMain)
         val today = CalendarDay.today()
         val memo = findViewById<Button>(R.id.memoBtn)
+        val memoTextView = findViewById<TextView>(R.id.memoView)
 
         calendarView.selectedDate = today
         memo.setOnClickListener {
             val intent = Intent(this, MemoActivity::class.java)
             intent.putExtra("date", today.date.toString())
+            startActivity(intent)
+        }
+
+        memoTextView.movementMethod = ScrollingMovementMethod()
+
+        memoTextView.setOnClickListener {
+            val intent = Intent(this, PopupActivity::class.java)
+            intent.putExtra("date", today.date.toString())
+            Log.d("memo_test", memoTextView.text.toString())
+            intent.putExtra("content", memoTextView.text.toString())
             startActivity(intent)
         }
 
@@ -126,6 +136,7 @@ class MainActivity : AppCompatActivity() {
         val dietTxt = findViewById<TextView>(R.id.dietView)
         val today = CalendarDay.today().date.toString()
         val bools = initBoolean()
+        Log.d("edit_test", bools.toString())
         if (bools[0]) {
             CoroutineScope(Dispatchers.IO).launch {
                 val memo =
