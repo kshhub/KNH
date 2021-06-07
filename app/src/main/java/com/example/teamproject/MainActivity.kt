@@ -164,28 +164,28 @@ class MainActivity : AppCompatActivity() {
         val record = findViewById<TextView>(R.id.dietView)
 
         if (customDBHelper.findCustomizing("saturday") == "on") {
-            calendar.addDecorator(CustomDecorator("saturday", "on"))
+            calendar.addDecorator(CustomDecorator("saturday", "on", Color.BLUE))
         } else {
-            calendar.addDecorator(CustomDecorator("saturday", "off"))
+            calendar.addDecorator(CustomDecorator("saturday", "off", Color.BLACK))
         }
         if (customDBHelper.findCustomizing("sunday") == "on") {
-            calendar.addDecorator(CustomDecorator("sunday", "on"))
+            calendar.addDecorator(CustomDecorator("sunday", "on", Color.RED))
         } else {
-            calendar.addDecorator(CustomDecorator("sunday", "off"))
+            calendar.addDecorator(CustomDecorator("sunday", "off", Color.BLACK))
         }
         if (customDBHelper.findCustomizing("today") == "on") {
-            calendar.addDecorator(CustomDecorator("today", "on"))
+            calendar.addDecorator(CustomDecorator("today", "on", Color.GREEN))
         } else {
             calendar.removeDecorators()
             if (customDBHelper.findCustomizing("saturday") == "on") {
-                calendar.addDecorator(CustomDecorator("saturday", "on"))
+                calendar.addDecorator(CustomDecorator("saturday", "on", Color.BLUE))
             } else {
-                calendar.addDecorator(CustomDecorator("saturday", "off"))
+                calendar.addDecorator(CustomDecorator("saturday", "off", Color.BLACK))
             }
             if (customDBHelper.findCustomizing("sunday") == "on") {
-                calendar.addDecorator(CustomDecorator("sunday", "on"))
+                calendar.addDecorator(CustomDecorator("sunday", "on", Color.RED))
             } else {
-                calendar.addDecorator(CustomDecorator("sunday", "off"))
+                calendar.addDecorator(CustomDecorator("sunday", "off", Color.BLACK))
             }
         }
         calendar.topbarVisible = customDBHelper.findCustomizing("date") == "on"
@@ -220,14 +220,38 @@ class MainActivity : AppCompatActivity() {
 
     private fun customCalendarSelectColor(str: String, calendar: MaterialCalendarView) {
         when (str) {
-            "GRAY" -> calendar.selectionColor = Color.GRAY
-            "WHITE" -> calendar.selectionColor = Color.WHITE
-            "RED" -> calendar.selectionColor = Color.RED
-            "MAGENTA" -> calendar.selectionColor = Color.MAGENTA
-            "YELLOW" -> calendar.selectionColor = Color.YELLOW
-            "GREEN" -> calendar.selectionColor = Color.GREEN
-            "BLUE" -> calendar.selectionColor = Color.BLUE
-            "CYAN" -> calendar.selectionColor = Color.CYAN
+            "GRAY" -> {
+                calendar.selectionColor = Color.GRAY
+                //calendar.addDecorator(CustomDecorator("today", "on", Color.WHITE))
+            }
+            "WHITE" -> {
+                calendar.selectionColor = Color.WHITE
+                //calendar.addDecorator(CustomDecorator("today", "on", Color.GRAY))
+            }
+            "RED" -> {
+                calendar.selectionColor = Color.RED
+                //calendar.addDecorator(CustomDecorator("today", "on", Color.CYAN))
+            }
+            "MAGENTA" -> {
+                calendar.selectionColor = Color.MAGENTA
+                //calendar.addDecorator(CustomDecorator("today", "on", Color.GREEN))
+            }
+            "YELLOW" -> {
+                calendar.selectionColor = Color.YELLOW
+                //calendar.addDecorator(CustomDecorator("today", "on", Color.BLUE))
+            }
+            "GREEN" -> {
+                calendar.selectionColor = Color.GREEN
+                //calendar.addDecorator(CustomDecorator("today", "on", Color.MAGENTA))
+            }
+            "BLUE" -> {
+                calendar.selectionColor = Color.BLUE
+                //calendar.addDecorator(CustomDecorator("today", "on", Color.YELLOW))
+            }
+            "CYAN" -> {
+                calendar.selectionColor = Color.CYAN
+                //calendar.addDecorator(CustomDecorator("today", "on", Color.RED))
+            }
         }
     }
 
@@ -278,46 +302,96 @@ class MainActivity : AppCompatActivity() {
 
     private fun customTextViewColor(str: String, textView: TextView) {
         when (str) {
-            "#FFFFFF" -> textView.background = ContextCompat.getDrawable(
-                this,
-                R.drawable.edgesmooth_ffffff
-            )
-            "#FBE4E4" -> textView.background = ContextCompat.getDrawable(
-                this,
-                R.drawable.edgesmooth_fbe4e4
-            )
-            "#DDF0F3" -> textView.background = ContextCompat.getDrawable(
-                this,
-                R.drawable.edgesmooth_ddf0f3
-            )
-            "#D1F3D2" -> textView.background = ContextCompat.getDrawable(
-                this,
-                R.drawable.edgesmooth_d1f3d2
-            )
-            "#F8F5DA" -> textView.background = ContextCompat.getDrawable(
-                this,
-                R.drawable.edgesmooth_f8f5da
-            )
-            "#E7DDFA" -> textView.background = ContextCompat.getDrawable(
-                this,
-                R.drawable.edgesmooth_e7ddfa
-            )
-            "#F44336" -> textView.background = ContextCompat.getDrawable(
-                this,
-                R.drawable.edgesmooth_f44336
-            )
-            "#FF9800" -> textView.background = ContextCompat.getDrawable(
-                this,
-                R.drawable.edgesmooth_ff9800
-            )
-            "#FFEB3B" -> textView.background = ContextCompat.getDrawable(
-                this,
-                R.drawable.edgesmooth_ffeb3b
-            )
-            "#673AB7" -> textView.background = ContextCompat.getDrawable(
-                this,
-                R.drawable.edgesmooth_673ab7
-            )
+            "#FFFFFF" -> {
+                textView.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.edgesmooth_ffffff
+                )
+                val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
+                val strColor = String.format("#%06X", (0xFFFFFF and intColor))
+                textView.setTextColor(Color.parseColor(strColor))
+            }
+            "#FBE4E4" -> {
+                textView.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.edgesmooth_fbe4e4
+                )
+                val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
+                val strColor = String.format("#%06X", (0xFFFFFF and intColor))
+                textView.setTextColor(Color.parseColor(strColor))
+            }
+            "#DDF0F3" -> {
+                textView.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.edgesmooth_ddf0f3
+                )
+                val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
+                val strColor = String.format("#%06X", (0xFFFFFF and intColor))
+                textView.setTextColor(Color.parseColor(strColor))
+            }
+            "#D1F3D2" -> {
+                textView.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.edgesmooth_d1f3d2
+                )
+                val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
+                val strColor = String.format("#%06X", (0xFFFFFF and intColor))
+                textView.setTextColor(Color.parseColor(strColor))
+            }
+            "#F8F5DA" -> {
+                textView.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.edgesmooth_f8f5da
+                )
+                val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
+                val strColor = String.format("#%06X", (0xFFFFFF and intColor))
+                textView.setTextColor(Color.parseColor(strColor))
+            }
+            "#E7DDFA" -> {
+                textView.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.edgesmooth_e7ddfa
+                )
+                val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
+                val strColor = String.format("#%06X", (0xFFFFFF and intColor))
+                textView.setTextColor(Color.parseColor(strColor))
+            }
+            "#F44336" -> {
+                textView.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.edgesmooth_f44336
+                )
+                val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
+                val strColor = String.format("#%06X", (0xFFFFFF and intColor))
+                textView.setTextColor(Color.parseColor(strColor))
+            }
+            "#FF9800" -> {
+                textView.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.edgesmooth_ff9800
+                )
+                val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
+                val strColor = String.format("#%06X", (0xFFFFFF and intColor))
+                textView.setTextColor(Color.parseColor(strColor))
+            }
+            "#FFEB3B" -> {
+                textView.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.edgesmooth_ffeb3b
+                )
+                val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
+                val strColor = String.format("#%06X", (0xFFFFFF and intColor))
+                textView.setTextColor(Color.parseColor(strColor))
+            }
+            "#673AB7" -> {
+                textView.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.edgesmooth_673ab7
+                )
+                val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
+                val strColor = String.format("#%06X", (0xFFFFFF and intColor))
+                textView.setTextColor(Color.parseColor(strColor))
+            }
         }
     }
 }

@@ -2,6 +2,7 @@ package com.example.teamproject
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -64,20 +65,101 @@ class MemoActivity : AppCompatActivity() {
         const.setBackgroundColor(Color.parseColor(str))
     }
 
-    private fun customTextViewColor(str: String, textView: EditText){
-        when(str){
-            "#FFFFFF"-> textView.background = ContextCompat.getDrawable(this, R.drawable.edgesmooth_ffffff)
-            "#FBE4E4"-> textView.background = ContextCompat.getDrawable(this, R.drawable.edgesmooth_fbe4e4)
-            "#DDF0F3"-> textView.background = ContextCompat.getDrawable(this, R.drawable.edgesmooth_ddf0f3)
-            "#D1F3D2"-> textView.background = ContextCompat.getDrawable(this, R.drawable.edgesmooth_d1f3d2)
-            "#F8F5DA"-> textView.background = ContextCompat.getDrawable(this, R.drawable.edgesmooth_f8f5da)
-            "#E7DDFA"-> textView.background = ContextCompat.getDrawable(this, R.drawable.edgesmooth_e7ddfa)
-            "#F44336"-> textView.background = ContextCompat.getDrawable(this, R.drawable.edgesmooth_f44336)
-            "#FF9800"-> textView.background = ContextCompat.getDrawable(this, R.drawable.edgesmooth_ff9800)
-            "#FFEB3B"-> textView.background = ContextCompat.getDrawable(this, R.drawable.edgesmooth_ffeb3b)
-            "#673AB7"-> textView.background = ContextCompat.getDrawable(this, R.drawable.edgesmooth_673ab7)
+    private fun customTextViewColor(str: String, textView: TextView) {
+        when (str) {
+            "#FFFFFF" -> {
+                textView.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.edgesmooth_ffffff
+                )
+                val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
+                val strColor = String.format("#%06X", (0xFFFFFF and intColor))
+                textView.setTextColor(Color.parseColor(strColor))
+            }
+            "#FBE4E4" -> {
+                textView.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.edgesmooth_fbe4e4
+                )
+                val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
+                val strColor = String.format("#%06X", (0xFFFFFF and intColor))
+                textView.setTextColor(Color.parseColor(strColor))
+            }
+            "#DDF0F3" -> {
+                textView.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.edgesmooth_ddf0f3
+                )
+                val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
+                val strColor = String.format("#%06X", (0xFFFFFF and intColor))
+                textView.setTextColor(Color.parseColor(strColor))
+            }
+            "#D1F3D2" -> {
+                textView.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.edgesmooth_d1f3d2
+                )
+                val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
+                val strColor = String.format("#%06X", (0xFFFFFF and intColor))
+                textView.setTextColor(Color.parseColor(strColor))
+            }
+            "#F8F5DA" -> {
+                textView.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.edgesmooth_f8f5da
+                )
+                val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
+                val strColor = String.format("#%06X", (0xFFFFFF and intColor))
+                textView.setTextColor(Color.parseColor(strColor))
+            }
+            "#E7DDFA" -> {
+                textView.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.edgesmooth_e7ddfa
+                )
+                val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
+                val strColor = "#"+Integer.toHexString(intColor)
+                textView.setTextColor(Color.parseColor(strColor))
+            }
+            "#F44336" -> {
+                textView.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.edgesmooth_f44336
+                )
+                val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
+                val strColor = "#"+Integer.toHexString(intColor)
+                textView.setTextColor(Color.parseColor(strColor))
+            }
+            "#FF9800" -> {
+                textView.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.edgesmooth_ff9800
+                )
+                val intColor: Int = Color.parseColor("#FFFFFF") - Color.parseColor(str)
+                val strColor = String.format("#%06X", (0xFFFFFF and intColor))
+                textView.setTextColor(Color.parseColor(strColor))
+            }
+            "#FFEB3B" -> {
+                textView.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.edgesmooth_ffeb3b
+                )
+                val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
+                val strColor = String.format("#%06X", (0xFFFFFF and intColor))
+                textView.setTextColor(Color.parseColor(strColor))
+            }
+            "#673AB7" -> {
+                textView.background = ContextCompat.getDrawable(
+                    this,
+                    R.drawable.edgesmooth_673ab7
+                )
+                val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
+                val strColor = String.format("#%06X", (0xFFFFFF and intColor))
+                textView.setTextColor(Color.parseColor(strColor))
+            }
         }
     }
+
     override fun onRestart() {
         super.onRestart()
         customizing()
