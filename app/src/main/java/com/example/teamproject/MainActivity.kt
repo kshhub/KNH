@@ -207,11 +207,10 @@ class MainActivity : AppCompatActivity() {
         when (str) {
             "#FFFFFF" -> const.setBackgroundColor(Color.parseColor("#FFFFFF"))
             "#FBE4E4" -> const.setBackgroundColor(Color.parseColor("#FBE4E4"))
-            "#DDF0F3" -> const.setBackgroundColor(Color.parseColor("#DDF0F3"))
+            "#E3F6F8" -> const.setBackgroundColor(Color.parseColor("#E3F6F8"))
             "#D1F3D2" -> const.setBackgroundColor(Color.parseColor("#D1F3D2"))
             "#F8F5DA" -> const.setBackgroundColor(Color.parseColor("#F8F5DA"))
             "#E7DDFA" -> const.setBackgroundColor(Color.parseColor("#E7DDFA"))
-            "#F44336" -> const.setBackgroundColor(Color.parseColor("#F44336"))
             "#FF9800" -> const.setBackgroundColor(Color.parseColor("#FF9800"))
             "#FFEB3B" -> const.setBackgroundColor(Color.parseColor("#FFEB3B"))
             "#673AB7" -> const.setBackgroundColor(Color.parseColor("#673AB7"))
@@ -265,9 +264,9 @@ class MainActivity : AppCompatActivity() {
                 this,
                 R.drawable.edgesmooth_fbe4e4
             )
-            "#DDF0F3" -> calendar.background = ContextCompat.getDrawable(
+            "#E3F6F8" -> calendar.background = ContextCompat.getDrawable(
                 this,
-                R.drawable.edgesmooth_ddf0f3
+                R.drawable.edgesmooth_e3f6f8
             )
             "#D1F3D2" -> calendar.background = ContextCompat.getDrawable(
                 this,
@@ -280,10 +279,6 @@ class MainActivity : AppCompatActivity() {
             "#E7DDFA" -> calendar.background = ContextCompat.getDrawable(
                 this,
                 R.drawable.edgesmooth_e7ddfa
-            )
-            "#F44336" -> calendar.background = ContextCompat.getDrawable(
-                this,
-                R.drawable.edgesmooth_f44336
             )
             "#FF9800" -> calendar.background = ContextCompat.getDrawable(
                 this,
@@ -320,10 +315,10 @@ class MainActivity : AppCompatActivity() {
                 val strColor = String.format("#%06X", (0xFFFFFF and intColor))
                 textView.setTextColor(Color.parseColor(strColor))
             }
-            "#DDF0F3" -> {
+            "#E3F6F8" -> {
                 textView.background = ContextCompat.getDrawable(
                     this,
-                    R.drawable.edgesmooth_ddf0f3
+                    R.drawable.edgesmooth_e3f6f8
                 )
                 val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
                 val strColor = String.format("#%06X", (0xFFFFFF and intColor))
@@ -351,15 +346,6 @@ class MainActivity : AppCompatActivity() {
                 textView.background = ContextCompat.getDrawable(
                     this,
                     R.drawable.edgesmooth_e7ddfa
-                )
-                val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
-                val strColor = String.format("#%06X", (0xFFFFFF and intColor))
-                textView.setTextColor(Color.parseColor(strColor))
-            }
-            "#F44336" -> {
-                textView.background = ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_f44336
                 )
                 val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
                 val strColor = String.format("#%06X", (0xFFFFFF and intColor))

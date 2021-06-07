@@ -44,7 +44,6 @@ class CustomDecorator(
                     view?.addSpan(ForegroundColorSpan(Color.RED))
                 }
                 else -> {
-                    view?.addSpan(ForegroundColorSpan(color))
                     view?.addSpan(StyleSpan(Typeface.BOLD))
                     view?.addSpan(DotSpan(5f,Color.RED))
                 }

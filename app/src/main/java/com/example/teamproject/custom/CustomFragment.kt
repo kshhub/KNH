@@ -1,6 +1,5 @@
 package com.example.teamproject.custom
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.graphics.Color
 import android.os.Bundle
@@ -37,7 +36,7 @@ class CustomFragment : Fragment() {
     )
     private val backgroundItems = arrayOf(
         "목련", "벚꽃", "물망초", "그린 카네이션",
-        "유채", "코스모스", "장미", "금잔화",
+        "유채", "코스모스", "금잔화",
         "민들레", "도라지"
     )
 
@@ -213,9 +212,9 @@ class CustomFragment : Fragment() {
                 spinner.setSelection(1)
                 spinner.setBackgroundColor(Color.parseColor("#FBE4E4"))
             }
-            "#DDF0F3" -> {
+            "#E3F6F8" -> {
                 spinner.setSelection(2)
-                spinner.setBackgroundColor(Color.parseColor("#DDF0F3"))
+                spinner.setBackgroundColor(Color.parseColor("#E3F6F8"))
             }
             "#D1F3D2" -> {
                 spinner.setSelection(3)
@@ -229,20 +228,16 @@ class CustomFragment : Fragment() {
                 spinner.setSelection(5)
                 spinner.setBackgroundColor(Color.parseColor("#E7DDFA"))
             }
-            "#F44336" -> {
-                spinner.setSelection(6)
-                spinner.setBackgroundColor(Color.parseColor("#F44336"))
-            }
             "#FF9800" -> {
-                spinner.setSelection(7)
+                spinner.setSelection(6)
                 spinner.setBackgroundColor(Color.parseColor("#FF9800"))
             }
             "#FFEB3B" -> {
-                spinner.setSelection(8)
+                spinner.setSelection(7)
                 spinner.setBackgroundColor(Color.parseColor("#FFEB3B"))
             }
             "#673AB7" -> {
-                spinner.setSelection(9)
+                spinner.setSelection(8)
                 spinner.setBackgroundColor(Color.parseColor("#673AB7"))
             }
         }
@@ -341,8 +336,8 @@ class CustomFragment : Fragment() {
                         spinner.setBackgroundColor(Color.parseColor("#FBE4E4"))
                     }
                     2 -> {
-                        helper.updateCustomizing(CustomData(option, "#DDF0F3"))
-                        spinner.setBackgroundColor(Color.parseColor("#DDF0F3"))
+                        helper.updateCustomizing(CustomData(option, "#E3F6F8"))
+                        spinner.setBackgroundColor(Color.parseColor("#E3F6F8"))
                     }
                     3 -> {
                         helper.updateCustomizing(CustomData(option, "#D1F3D2"))
@@ -357,18 +352,14 @@ class CustomFragment : Fragment() {
                         spinner.setBackgroundColor(Color.parseColor("#E7DDFA"))
                     }
                     6 -> {
-                        helper.updateCustomizing(CustomData(option, "#F44336"))
-                        spinner.setBackgroundColor(Color.parseColor("#F44336"))
-                    }
-                    7 -> {
                         helper.updateCustomizing(CustomData(option, "#FF9800"))
                         spinner.setBackgroundColor(Color.parseColor("#FF9800"))
                     }
-                    8 -> {
+                    7 -> {
                         helper.updateCustomizing(CustomData(option, "#FFEB3B"))
                         spinner.setBackgroundColor(Color.parseColor("#FFEB3B"))
                     }
-                    9 -> {
+                    8 -> {
                         helper.updateCustomizing(CustomData(option, "#673AB7"))
                         spinner.setBackgroundColor(Color.parseColor("#673AB7"))
                     }

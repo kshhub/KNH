@@ -2,7 +2,6 @@ package com.example.teamproject
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -85,10 +84,10 @@ class MemoActivity : AppCompatActivity() {
                 val strColor = String.format("#%06X", (0xFFFFFF and intColor))
                 textView.setTextColor(Color.parseColor(strColor))
             }
-            "#DDF0F3" -> {
+            "#E3F6F8" -> {
                 textView.background = ContextCompat.getDrawable(
                     this,
-                    R.drawable.edgesmooth_ddf0f3
+                    R.drawable.edgesmooth_e3f6f8
                 )
                 val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
                 val strColor = String.format("#%06X", (0xFFFFFF and intColor))
@@ -116,15 +115,6 @@ class MemoActivity : AppCompatActivity() {
                 textView.background = ContextCompat.getDrawable(
                     this,
                     R.drawable.edgesmooth_e7ddfa
-                )
-                val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
-                val strColor = "#"+Integer.toHexString(intColor)
-                textView.setTextColor(Color.parseColor(strColor))
-            }
-            "#F44336" -> {
-                textView.background = ContextCompat.getDrawable(
-                    this,
-                    R.drawable.edgesmooth_f44336
                 )
                 val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
                 val strColor = "#"+Integer.toHexString(intColor)
