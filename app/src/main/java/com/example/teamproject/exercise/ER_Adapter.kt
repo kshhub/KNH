@@ -1,18 +1,19 @@
-package com.example.teamproject
+package com.example.teamproject.exercise
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.teamproject.ExerciseRecord
 import com.example.teamproject.databinding.NfrRowBinding
 
 //운동정보 기록 RecyclerView에 대한 어댑터.
 class ER_Adapter(val items:ArrayList<ExerciseRecord>) : RecyclerView.Adapter<ER_Adapter.MyViewHolder>()
 {
-    var itemClickListener: ER_Adapter.OnItemClickListener? = null
+    var itemClickListener: OnItemClickListener? = null
 
     interface OnItemClickListener{
-        fun OnItemClick(holder: ER_Adapter.MyViewHolder, view: View, data:ExerciseRecord, position:Int)
+        fun OnItemClick(holder: MyViewHolder, view: View, data: ExerciseRecord, position:Int)
     }
 
     inner class MyViewHolder(val binding: NfrRowBinding) : RecyclerView.ViewHolder(binding.root)

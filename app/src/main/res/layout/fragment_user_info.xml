@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#ECF8DE"
     android:orientation="vertical"
-    tools:context=".UserInfoFragment">
+    tools:context=".userinfo.UserInfoFragment">
 
     <TextView
         android:id="@+id/textViewUserInfoTitle"

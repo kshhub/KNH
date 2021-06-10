@@ -1,13 +1,15 @@
-package com.example.teamproject
+package com.example.teamproject.exercise
 
 import android.app.Dialog
 import android.content.Context
 import android.view.Window
 import android.widget.Button
 import android.widget.EditText
+import com.example.teamproject.ExerciseRecord
+import com.example.teamproject.R
 
 //운동 기록 항목을 누르면 팝업되는 다이얼로그.
-class ExerciceRecordEditDialog(context : Context, val data : ExerciseRecord) {
+class ExerciseRecordEditDialog(context : Context, val data : ExerciseRecord) {
 
     private val dlg = Dialog(context)
     private lateinit var btnOK : Button

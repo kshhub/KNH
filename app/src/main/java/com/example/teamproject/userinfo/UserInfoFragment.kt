@@ -1,4 +1,4 @@
-package com.example.teamproject
+package com.example.teamproject.userinfo
 
 
 import android.os.Bundle
@@ -7,8 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
-import com.example.teamproject.userinfo.UserInfoDBHelper
-import com.example.teamproject.userinfo.UserInfoData
+import com.example.teamproject.R
 
 class UserInfoFragment : Fragment() {
 
