@@ -16,6 +16,7 @@
         <activity android:name=".popup.PopupActivity" android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".memo.MemoActivity"/>
         <activity android:name=".setting.SettingActivity" />
+        <activity android:name=".ChartActivity"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

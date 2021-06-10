@@ -99,7 +99,6 @@ class MainActivity : AppCompatActivity() {
         val today = CalendarDay.today()
         val memo = findViewById<Button>(R.id.memoBtn)
         val memoTextView = findViewById<TextView>(R.id.memoView)
-
         calendarView.selectedDate = today
         memo.setOnClickListener {
             val intent = Intent(this, MemoActivity::class.java)
@@ -123,6 +122,16 @@ class MainActivity : AppCompatActivity() {
         }
         calendarView.setOnDateChangedListener { _, date, _ ->
             Log.d("date_selected_test", date.date.toString())
+        }
+        val cbtn = findViewById<Button>(R.id.chartbtn)
+
+        cbtn.setOnClickListener {
+            val intent = Intent(this, ChartActivity::class.java)
+            intent.putExtra("day", today.day.toString())
+            intent.putExtra("month", today.month.toString())
+            intent.putExtra("year", today.year.toString())
+            intent.putExtra("date",calendarView.selectedDate.toString())
+            startActivity(intent)
         }
         customizing()
         initView()
