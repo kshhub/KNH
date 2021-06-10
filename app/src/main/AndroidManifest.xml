@@ -15,6 +15,7 @@
         android:theme="@style/Theme.Teamproject">
         <activity android:name=".PopupActivity" android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".MemoActivity"/>
+        <activity android:name=".ChartActivity"></activity>
         <activity android:name=".SettingActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
