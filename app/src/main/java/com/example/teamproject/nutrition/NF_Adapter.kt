@@ -1,21 +1,22 @@
-package com.example.teamproject
+package com.example.teamproject.nutrition
 
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.teamproject.NutritionFacts
 import com.example.teamproject.databinding.NfRowBinding
 
 //음식 영양정보 RecyclerView의 어댑터
 class NF_Adapter(val items:ArrayList<NutritionFacts>) : RecyclerView.Adapter<NF_Adapter.MyViewHolder>()
 {
-    var itemClickListener:OnItemClickListener? = null
+    var itemClickListener: OnItemClickListener? = null
     var nowHolder : MyViewHolder? = null
     var selectedFid = -1;
 
     interface OnItemClickListener{
-        fun OnItemClick(fomerHolder : MyViewHolder?, holder:MyViewHolder, view:View, selectedFid : Int, data:NutritionFacts, position:Int)
+        fun OnItemClick(fomerHolder : MyViewHolder?, holder: MyViewHolder, view:View, selectedFid : Int, data: NutritionFacts, position:Int)
     }
 
     inner class MyViewHolder(val binding: NfRowBinding) : RecyclerView.ViewHolder(binding.root)

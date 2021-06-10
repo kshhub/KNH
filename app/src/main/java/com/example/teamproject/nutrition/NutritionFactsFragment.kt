@@ -1,4 +1,4 @@
-package com.example.teamproject
+package com.example.teamproject.nutrition
 
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +14,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.teamproject.NutritionFacts
+import com.example.teamproject.NutritionFactsRecord
+import com.example.teamproject.R
 import com.example.teamproject.databinding.FragmentNutritionFactsBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -166,7 +169,7 @@ class NutritionFactsFragment : Fragment()
 
         nf_adapter = NF_Adapter(ArrayList<NutritionFacts>(arrayList))
         nf_adapter.itemClickListener = object : NF_Adapter.OnItemClickListener {
-            override fun OnItemClick(fomerHolder:NF_Adapter.MyViewHolder?, holder: NF_Adapter.MyViewHolder, view: View, selectedFid : Int, data: NutritionFacts, position: Int)
+            override fun OnItemClick(fomerHolder: NF_Adapter.MyViewHolder?, holder: NF_Adapter.MyViewHolder, view: View, selectedFid : Int, data: NutritionFacts, position: Int)
             {
                 //눌렀을 때 nametext 채워주기
                 binding?.fnameEditText?.setText(data.fname.toString())

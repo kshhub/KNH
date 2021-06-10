@@ -1,10 +1,12 @@
-package com.example.teamproject
+package com.example.teamproject.nutrition
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import com.example.teamproject.NutritionFacts
+import com.example.teamproject.NutritionFactsRecord
 import java.time.LocalDate
 
 //식단 관련 DB

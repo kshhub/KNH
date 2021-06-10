@@ -1,19 +1,20 @@
-package com.example.teamproject
+package com.example.teamproject.nutrition
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.teamproject.NutritionFactsRecord
 import com.example.teamproject.databinding.NfrRowBinding
 import kotlin.math.round
 
 //사용자의 영양정보 기록 RecyclerView의 어댑터
 class NFR_Adapter(val items:ArrayList<NutritionFactsRecord>) : RecyclerView.Adapter<NFR_Adapter.MyViewHolder>()
 {
-    var itemClickListener: NFR_Adapter.OnItemClickListener? = null
+    var itemClickListener: OnItemClickListener? = null
 
     interface OnItemClickListener{
-        fun OnItemClick(holder: NFR_Adapter.MyViewHolder, view: View, data:NutritionFactsRecord, position:Int)
+        fun OnItemClick(holder: MyViewHolder, view: View, data: NutritionFactsRecord, position:Int)
     }
 
     inner class MyViewHolder(val binding: NfrRowBinding) : RecyclerView.ViewHolder(binding.root)

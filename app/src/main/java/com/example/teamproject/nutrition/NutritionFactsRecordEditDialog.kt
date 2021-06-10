@@ -1,10 +1,12 @@
-package com.example.teamproject
+package com.example.teamproject.nutrition
 
 import android.app.Dialog
 import android.content.Context
 import android.view.Window
 import android.widget.Button
 import android.widget.EditText
+import com.example.teamproject.NutritionFactsRecord
+import com.example.teamproject.R
 
 class NutritionFactsRecordEditDialog(context : Context, val data : NutritionFactsRecord) {
     private val dlg = Dialog(context)
