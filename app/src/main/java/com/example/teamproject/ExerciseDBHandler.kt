@@ -11,7 +11,7 @@ import java.time.LocalDate
 class ExerciseDBHelper(val context:Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION)
 {
     companion object{
-        val DB_NAME = "Exercise.db"
+        val DB_NAME = "exercise.db"
         val DB_VERSION = 1
         val TABLE_NAME_EXERCISERECORD = "exerciseRecord"
         val TABLE_NAME_EXERCISE = "exercise"
@@ -211,6 +211,34 @@ class ExerciseDBHelper(val context:Context) : SQLiteOpenHelper(context, DB_NAME,
                 val totalkcal = cursor.getInt(4)
 
                 list.add(ExerciseRecord(recordtime, exercise!!, weight, etime, totalkcal))
+            }while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+
+        return list
+    }
+
+    fun getAllExercise() : ArrayList<Exercise>
+    {
+        val strsql = "select * from $TABLE_NAME_EXERCISE;"
+        val db = readableDatabase
+        val cursor = db.rawQuery(strsql, null)
+
+        var list = ArrayList<Exercise>()
+
+        if(cursor.count!=0)
+        {
+            cursor.moveToFirst()
+
+            //리스트에 추가하기
+            do
+            {
+                val eid = cursor.getInt(0)
+                val ename = cursor.getString(1)
+                val met = cursor.getDouble(2)
+
+                list.add(Exercise(eid, ename, met))
             }while (cursor.moveToNext())
         }
         cursor.close()

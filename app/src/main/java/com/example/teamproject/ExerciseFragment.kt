@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import org.jsoup.Jsoup
+import java.io.FileOutputStream
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -30,9 +31,9 @@ class ExerciseFragment : Fragment() {
     var binding : FragmentExerciseBinding?= null
 
     //DB에서 가지고 온 운동 정보들.
-    val eArrayList = ArrayList<Exercise>()
+    var eArrayList = ArrayList<Exercise>()
     //AutoTextComplement에 쓰일 운동 이름 리스트
-    val enameArrayList = ArrayList<String>()
+    var enameArrayList = ArrayList<String>()
 
     //AutoCompleteTextView의 어댑터
     lateinit var act_adapter : ArrayAdapter<String>
@@ -62,7 +63,7 @@ class ExerciseFragment : Fragment() {
         init()
         initRecyclerView(nowDate)
 
-        getjson()
+        //getjson()
     }
 
     override fun onDestroyView() {
@@ -164,17 +165,16 @@ class ExerciseFragment : Fragment() {
     {
         ERDBHelper = ExerciseDBHelper(requireActivity())
 
-        val dbfile = requireActivity().getDatabasePath("Exercise.db")
+        val dbfile = requireActivity().getDatabasePath("exercise.db")
 
         if(!dbfile.parentFile.exists())
         {
             dbfile.parentFile.mkdir()
         }
 
-        /*
         if(!dbfile.exists())
         {
-            val file = resources.openRawResource(R.raw)
+            val file = resources.openRawResource(com.example.teamproject.R.raw.exercise)
             val fileSize = file.available()
             val buffer = ByteArray(fileSize)
 
@@ -186,7 +186,14 @@ class ExerciseFragment : Fragment() {
             output.write(buffer)
             output.close()
         }
-         */
+
+        eArrayList = ERDBHelper.getAllExercise()
+
+        for(item in eArrayList)
+        {
+            enameArrayList.add(item.ename)
+        }
+
 
     }
 
