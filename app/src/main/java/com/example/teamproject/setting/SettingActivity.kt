@@ -1,7 +1,8 @@
-package com.example.teamproject
+package com.example.teamproject.setting
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.teamproject.R
 import com.example.teamproject.databinding.ActivitySettingBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -20,7 +21,10 @@ class SettingActivity : AppCompatActivity() {
 
     lateinit var settingbinding:ActivitySettingBinding
     val settingFragText = arrayListOf("Customizing","User Info")
-    val settingFragIcon = arrayListOf(R.drawable.ic_baseline_brush_24, R.drawable.ic_baseline_people_24)
+    val settingFragIcon = arrayListOf(
+        R.drawable.ic_baseline_brush_24,
+        R.drawable.ic_baseline_people_24
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

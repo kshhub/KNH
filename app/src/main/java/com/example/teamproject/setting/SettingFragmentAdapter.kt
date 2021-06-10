@@ -1,4 +1,4 @@
-package com.example.teamproject
+package com.example.teamproject.setting
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

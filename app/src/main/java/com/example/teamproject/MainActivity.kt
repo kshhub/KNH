@@ -14,6 +14,9 @@ import com.example.teamproject.custom.CustomDBHelper
 import com.example.teamproject.custom.CustomData
 import com.example.teamproject.custom.CustomDecorator
 import com.example.teamproject.database.AppDataBase
+import com.example.teamproject.memo.MemoActivity
+import com.example.teamproject.popup.PopupActivity
+import com.example.teamproject.setting.SettingActivity
 import com.example.teamproject.userinfo.UserInfoDBHelper
 import com.example.teamproject.userinfo.UserInfoData
 import com.prolificinteractive.materialcalendarview.CalendarDay

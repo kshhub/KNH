@@ -1,4 +1,4 @@
-package com.example.teamproject
+package com.example.teamproject.memo
 
 import android.graphics.Color
 import android.os.Bundle
@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import com.example.teamproject.R
 import com.example.teamproject.custom.CustomDBHelper
 import com.example.teamproject.database.AppDataBase
 import com.example.teamproject.database.Memo

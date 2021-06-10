@@ -1,4 +1,4 @@
-package com.example.teamproject
+package com.example.teamproject.exercise
 
 import android.R
 import android.os.Bundle
@@ -14,6 +14,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.teamproject.Exercise
+import com.example.teamproject.ExerciseDBHelper
+import com.example.teamproject.ExerciseRecord
 import com.example.teamproject.databinding.FragmentExerciseBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -213,8 +216,8 @@ class ExerciseFragment : Fragment() {
                     data: ExerciseRecord,
                     position: Int
                 ) {
-                    val dlg = ExerciceRecordEditDialog(requireActivity(), data)
-                    dlg.listener = object : ExerciceRecordEditDialog.OKClickedListener {
+                    val dlg = ExerciseRecordEditDialog(requireActivity(), data)
+                    dlg.listener = object : ExerciseRecordEditDialog.OKClickedListener {
                         override fun onOKClicked(eweightText: EditText, etimeText: EditText) {
                             er_adapter.items[position].weight = eweightText.text.toString().toInt()
                             er_adapter.items[position].etime = etimeText.text.toString().toInt()
