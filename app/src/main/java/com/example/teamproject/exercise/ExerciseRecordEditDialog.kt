@@ -9,16 +9,16 @@ import com.example.teamproject.ExerciseRecord
 import com.example.teamproject.R
 
 //운동 기록 항목을 누르면 팝업되는 다이얼로그.
-class ExerciseRecordEditDialog(context : Context, val data : ExerciseRecord) {
+class ExerciseRecordEditDialog(context: Context, val data: ExerciseRecord) {
 
     private val dlg = Dialog(context)
-    private lateinit var btnOK : Button
-    private lateinit var btnCancel : Button
+    private lateinit var btnOK: Button
+    private lateinit var btnCancel: Button
 
-    lateinit var weightText : EditText
-    lateinit var timeText : EditText
-    lateinit var enameText : EditText
-    var listener : OKClickedListener? = null
+    lateinit var weightText: EditText
+    lateinit var timeText: EditText
+    lateinit var enameText: EditText
+    var listener: OKClickedListener? = null
 
     fun start() {
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE)

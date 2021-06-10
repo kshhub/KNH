@@ -5,10 +5,10 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class UserInfoDBHelper(val context: Context?)
-    : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
-    companion object{
-        val DB_NAME="userInfodb.db"
+class UserInfoDBHelper(val context: Context?) :
+    SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
+    companion object {
+        val DB_NAME = "userInfodb.db"
         val DB_VERSION = 1
         val TABLE_NAME = "userInfo"
         val UOPTION = "uoption"
@@ -16,18 +16,18 @@ class UserInfoDBHelper(val context: Context?)
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
-        val create_table = "create table if not exists $TABLE_NAME("+
-                "$UOPTION text, "+
+        val create_table = "create table if not exists $TABLE_NAME(" +
+                "$UOPTION text, " +
                 "$USETTING text);"
         db!!.execSQL(create_table)
     }
 
-    fun insertUserInfo(userInfoData: UserInfoData):Boolean{
+    fun insertUserInfo(userInfoData: UserInfoData): Boolean {
         val values = ContentValues()
         values.put(UOPTION, userInfoData.uOption)
         values.put(USETTING, userInfoData.uSetting)
         val db = writableDatabase
-        val flag = db.insert(TABLE_NAME, null, values)>0
+        val flag = db.insert(TABLE_NAME, null, values) > 0
         db.close()
         return flag
     }
@@ -38,14 +38,14 @@ class UserInfoDBHelper(val context: Context?)
         onCreate(db)
     }
 
-    fun findUserInfo(option:String):String {
+    fun findUserInfo(option: String): String {
         val strsql = "select $USETTING from $TABLE_NAME where $UOPTION='$option';"
         val db = readableDatabase
         val cursor = db.rawQuery(strsql, null)
-        var str:String=""
+        var str: String = ""
         cursor.moveToFirst()
         val attrcount = cursor.columnCount
-        for(i in 0 until attrcount){
+        for (i in 0 until attrcount) {
             str = cursor.getString(i)
         }
         cursor.close()
@@ -58,17 +58,17 @@ class UserInfoDBHelper(val context: Context?)
         val strsql = "select * from $TABLE_NAME where $UOPTION ='$uoption';"
         val db = writableDatabase
         val cursor = db.rawQuery(strsql, null)
-        val flag = cursor.count!=0
-        if(flag){
+        val flag = cursor.count != 0
+        if (flag) {
             cursor.moveToFirst()
             val values = ContentValues()
             values.put(UOPTION, userInfoData.uOption)
             values.put(USETTING, userInfoData.uSetting)
-            db.update(TABLE_NAME, values,"$UOPTION=?", arrayOf(uoption.toString()))
+            db.update(TABLE_NAME, values, "$UOPTION=?", arrayOf(uoption.toString()))
         }
         cursor.close()
         db.close()
-        return  flag
+        return flag
     }
 
 }

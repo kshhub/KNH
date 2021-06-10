@@ -19,8 +19,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class SettingActivity : AppCompatActivity() {
 
-    lateinit var settingbinding:ActivitySettingBinding
-    val settingFragText = arrayListOf("Customizing","User Info")
+    lateinit var settingbinding: ActivitySettingBinding
+    val settingFragText = arrayListOf("Customizing", "User Info")
     val settingFragIcon = arrayListOf(
         R.drawable.ic_baseline_brush_24,
         R.drawable.ic_baseline_people_24
@@ -35,8 +35,10 @@ class SettingActivity : AppCompatActivity() {
 
     private fun init() {
         settingbinding.viewPagerSetting.adapter = SettingFragmentAdapter(this)
-        TabLayoutMediator(settingbinding.tablayoutSetting, settingbinding.viewPagerSetting){
-                tab, position ->
+        TabLayoutMediator(
+            settingbinding.tablayoutSetting,
+            settingbinding.viewPagerSetting
+        ) { tab, position ->
             tab.text = settingFragText[position]
             tab.setIcon(settingFragIcon[position])
         }.attach()

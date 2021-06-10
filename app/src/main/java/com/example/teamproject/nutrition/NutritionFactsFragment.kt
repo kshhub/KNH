@@ -28,19 +28,18 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class NutritionFactsFragment : Fragment()
-{
-    var binding : FragmentNutritionFactsBinding ?= null
+class NutritionFactsFragment : Fragment() {
+    var binding: FragmentNutritionFactsBinding? = null
 
-    lateinit var nf_adapter : NF_Adapter
-    lateinit var nfr_adapter : NFR_Adapter
-    lateinit var act_adapter : ArrayAdapter<String>
+    lateinit var nf_adapter: NF_Adapter
+    lateinit var nfr_adapter: NFR_Adapter
+    lateinit var act_adapter: ArrayAdapter<String>
 
     lateinit var NFDBHelper: NutritionFactsDBHelper
 
     var listItemClickedFlag = false
 
-    var nowDate : LocalDate = LocalDate.now()
+    var nowDate: LocalDate = LocalDate.now()
 
     var nfArray = ArrayList<NutritionFacts>()
     var fnameArray = ArrayList<String>()
@@ -70,19 +69,16 @@ class NutritionFactsFragment : Fragment()
         binding = null
     }
 
-    fun initDB()
-    {
+    fun initDB() {
         NFDBHelper = NutritionFactsDBHelper(requireActivity())
 
         val dbfile = requireActivity().getDatabasePath("nutritionFacts.db")
 
-        if(!dbfile.parentFile.exists())
-        {
+        if (!dbfile.parentFile.exists()) {
             dbfile.parentFile.mkdir()
         }
 
-        if(!dbfile.exists())
-        {
+        if (!dbfile.exists()) {
             val file = resources.openRawResource(R.raw.nutritionfacts)
             val fileSize = file.available()
             val buffer = ByteArray(fileSize)
@@ -98,8 +94,7 @@ class NutritionFactsFragment : Fragment()
 
         nfArray = NFDBHelper.getAllNutritionFacts()
 
-        for(item in nfArray)
-        {
+        for (item in nfArray) {
             fnameArray.add(item.fname)
         }
     }
@@ -107,8 +102,7 @@ class NutritionFactsFragment : Fragment()
     val key = "ceffcf39a55843089167"
     val scope = CoroutineScope(Dispatchers.IO)
 
-    fun getjson()
-    {
+    fun getjson() {
         val isDBEmpty = NFDBHelper.isNutritionFactsTableEmpty()
 
         scope.launch {
@@ -117,24 +111,22 @@ class NutritionFactsFragment : Fragment()
             var endInd = 1000
             val slice = 1000
             val loop = 53314 / slice
-            for(i in 0..loop)
-            {
+            for (i in 0..loop) {
                 //1, 1001, 2001...
-                startInd = i*slice + 1
+                startInd = i * slice + 1
                 //1000, 2000, 3000, 4000, 5000,
-                endInd = (i+1)*slice
+                endInd = (i + 1) * slice
 
-                if(i == loop)
-                {
+                if (i == loop) {
                     endInd = 53314
                 }
 
-                val jsonurl = "http://openapi.foodsafetykorea.go.kr/api/" + key + "/I2790/xml/" + startInd + "/" + endInd
+                val jsonurl =
+                    "http://openapi.foodsafetykorea.go.kr/api/" + key + "/I2790/xml/" + startInd + "/" + endInd
                 val doc = Jsoup.connect(jsonurl).parser(Parser.xmlParser()).timeout(500000).get()
                 val data = doc.select("row")
 
-                for(item in data)
-                {
+                for (item in data) {
                     val fid = item.select("NUM").text()
                     val fname = item.select("DESC_KOR").text()
                     val carb = item.select("NUTR_CONT2").text()
@@ -143,13 +135,20 @@ class NutritionFactsFragment : Fragment()
                     val pergram = item.select("SERVING_SIZE").text()
                     val kcal = item.select("NUTR_CONT1").text()
 
-                    if(fname.isEmpty() || carb.isEmpty() || protein.isEmpty() || fat.isEmpty() || pergram.isEmpty() || kcal.isEmpty())
-                    {
+                    if (fname.isEmpty() || carb.isEmpty() || protein.isEmpty() || fat.isEmpty() || pergram.isEmpty() || kcal.isEmpty()) {
                         Log.i(fid.toString(), "empty!!")
                         continue
                     }
 
-                    val nutritionFacts = NutritionFacts(fid.toInt(), fname, carb.toDouble(), protein.toDouble(), fat.toDouble(), pergram.toDouble(), kcal.toDouble())
+                    val nutritionFacts = NutritionFacts(
+                        fid.toInt(),
+                        fname,
+                        carb.toDouble(),
+                        protein.toDouble(),
+                        fat.toDouble(),
+                        pergram.toDouble(),
+                        kcal.toDouble()
+                    )
 
                     Log.i(fid.toString(), fname)
                     NFDBHelper.insertNutritionFacts(nutritionFacts)
@@ -163,25 +162,27 @@ class NutritionFactsFragment : Fragment()
     }
 
     //식품 검색 리사이클러뷰
-    fun initNFAdapter(arrayList : ArrayList<NutritionFacts>)
-    {
+    fun initNFAdapter(arrayList: ArrayList<NutritionFacts>) {
         binding?.fnameEditText?.text?.clear()
 
         nf_adapter = NF_Adapter(ArrayList<NutritionFacts>(arrayList))
         nf_adapter.itemClickListener = object : NF_Adapter.OnItemClickListener {
-            override fun OnItemClick(fomerHolder: NF_Adapter.MyViewHolder?, holder: NF_Adapter.MyViewHolder, view: View, selectedFid : Int, data: NutritionFacts, position: Int)
-            {
+            override fun OnItemClick(
+                fomerHolder: NF_Adapter.MyViewHolder?,
+                holder: NF_Adapter.MyViewHolder,
+                view: View,
+                selectedFid: Int,
+                data: NutritionFacts,
+                position: Int
+            ) {
                 //눌렀을 때 nametext 채워주기
                 binding?.fnameEditText?.setText(data.fname.toString())
                 listItemClickedFlag = true
 
-                if(selectedFid == data.fid)
-                {
+                if (selectedFid == data.fid) {
                     nf_adapter.selectedFid = -1
                     holder.setNowHolder(false)
-                }
-                else
-                {
+                } else {
                     fomerHolder?.setNowHolder(false)
                     nf_adapter.selectedFid = data.fid
                     holder.setNowHolder(true)
@@ -189,38 +190,46 @@ class NutritionFactsFragment : Fragment()
             }
         }
 
-        binding?.NFRecyclerView?.adapter = nf_adapter;
+        binding?.NFRecyclerView?.adapter = nf_adapter
     }
 
-    fun settingFnameArray(nfarray : ArrayList<NutritionFacts>)
-    {
-        for(food in nfArray)
-        {
+    fun settingFnameArray(nfarray: ArrayList<NutritionFacts>) {
+        for (food in nfArray) {
             fnameArray.clear()
-            fnameArray.add(food.fname);
+            fnameArray.add(food.fname)
         }
     }
 
-    fun init()
-    {
+    fun init() {
         binding?.apply {
 
             //adapter for NutritionFacts RecyclerView
-            NFRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-            NFRecyclerView.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
+            NFRecyclerView.layoutManager =
+                LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            NFRecyclerView.addItemDecoration(
+                DividerItemDecoration(
+                    activity,
+                    LinearLayoutManager.VERTICAL
+                )
+            )
             nfArray = NFDBHelper.getAllNutritionFacts()
             initNFAdapter(nfArray)
 
             //adapter for NutritionFacts Records RecyclerView
-            NFRRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-            NFRRecyclerView.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
+            NFRRecyclerView.layoutManager =
+                LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            NFRRecyclerView.addItemDecoration(
+                DividerItemDecoration(
+                    activity,
+                    LinearLayoutManager.VERTICAL
+                )
+            )
             nfr_adapter = NFR_Adapter(ArrayList<NutritionFactsRecord>(recordedNFList))
-            NFRRecyclerView.adapter = nfr_adapter;
+            NFRRecyclerView.adapter = nfr_adapter
 
             //음식 이름을 기입하는 EditText. 입력값이 바뀔 때마다 값을 포함하는 음식들을 추려서 NutritionFacts RecyclerView에 보여줌.
             fnameEditText.addTextChangedListener {
-                if(it!!.isEmpty())
-                {
+                if (it!!.isEmpty()) {
                     nfArray = NFDBHelper.getAllNutritionFacts()
                     settingFnameArray(nfArray)
                     initNFAdapter(nfArray)
@@ -233,14 +242,7 @@ class NutritionFactsFragment : Fragment()
             }
 
             intakeEditText.addTextChangedListener {
-                if(nf_adapter.selectedFid != -1 && it.toString().isNotEmpty())
-                {
-                    recordBtn.isEnabled = true
-                }
-                else
-                {
-                    recordBtn.isEnabled = false
-                }
+                recordBtn.isEnabled = nf_adapter.selectedFid != -1 && it.toString().isNotEmpty()
             }
 
             recordBtn.setOnClickListener {
@@ -255,12 +257,9 @@ class NutritionFactsFragment : Fragment()
 
                 val result = NFDBHelper.insertRecord(record)
 
-                if(result)
-                {
+                if (result) {
                     Toast.makeText(requireActivity(), "기록 성공!", Toast.LENGTH_SHORT).show()
-                }
-                else
-                {
+                } else {
                     Toast.makeText(requireActivity(), "기록 실패!", Toast.LENGTH_SHORT).show()
                 }
 
@@ -272,16 +271,22 @@ class NutritionFactsFragment : Fragment()
             }
         }
 
-        act_adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, fnameArray)
+        act_adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, fnameArray)
         binding?.fnameEditText?.setAdapter(act_adapter)
     }
 
-    fun initNFRView(date : LocalDate)
-    {
+    fun initNFRView(date: LocalDate) {
         binding?.apply {
             //adapter for NutritionFacts Records RecyclerView
-            NFRRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-            NFRRecyclerView.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
+            NFRRecyclerView.layoutManager =
+                LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            NFRRecyclerView.addItemDecoration(
+                DividerItemDecoration(
+                    activity,
+                    LinearLayoutManager.VERTICAL
+                )
+            )
             nfr_adapter = NFR_Adapter(NFDBHelper.getRecordList(date))
 
             nfr_adapter.itemClickListener = object : NFR_Adapter.OnItemClickListener {
@@ -307,18 +312,22 @@ class NutritionFactsFragment : Fragment()
                     dlg.start()
                 }
             }
-            NFRRecyclerView.adapter = nfr_adapter;
+            NFRRecyclerView.adapter = nfr_adapter
             calculateTotalKcal(nowDate)
 
-            val simpleCallBack = object: ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN or ItemTouchHelper.UP, ItemTouchHelper.LEFT)
-            {
-                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean
-                {
+            val simpleCallBack = object : ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.DOWN or ItemTouchHelper.UP,
+                ItemTouchHelper.LEFT
+            ) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
                     return false
                 }
 
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int)
-                {
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     NFDBHelper.deleteRecord(nfr_adapter.items[viewHolder.adapterPosition].recordtime)
                     nfr_adapter.removeItem(viewHolder.adapterPosition)
                     calculateTotalKcal(nowDate)
@@ -334,10 +343,9 @@ class NutritionFactsFragment : Fragment()
         }
 
 
-
     }
 
-    fun calculateTotalKcal(date : LocalDate) {
+    fun calculateTotalKcal(date: LocalDate) {
         var totalKcal = 0.0
 
         for (item in nfr_adapter.items) {

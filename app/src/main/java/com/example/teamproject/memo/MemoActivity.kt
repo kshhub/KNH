@@ -23,6 +23,7 @@ class MemoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_memo)
         init()
     }
+
     private fun init() {
         customDBHelper = CustomDBHelper(this)
 
@@ -61,7 +62,7 @@ class MemoActivity : AppCompatActivity() {
         customTextViewColor(customDBHelper.findCustomizing("memo"), contentEdit)
     }
 
-    private fun customBackgroundColor(str: String, const:ConstraintLayout){
+    private fun customBackgroundColor(str: String, const: ConstraintLayout) {
         const.setBackgroundColor(Color.parseColor(str))
     }
 
@@ -118,7 +119,7 @@ class MemoActivity : AppCompatActivity() {
                     R.drawable.edgesmooth_e7ddfa
                 )
                 val intColor = Color.parseColor("#FFFFFF") - Color.parseColor(str)
-                val strColor = "#"+Integer.toHexString(intColor)
+                val strColor = "#" + Integer.toHexString(intColor)
                 textView.setTextColor(Color.parseColor(strColor))
             }
             "#FF9800" -> {

@@ -8,14 +8,14 @@ import android.widget.EditText
 import com.example.teamproject.NutritionFactsRecord
 import com.example.teamproject.R
 
-class NutritionFactsRecordEditDialog(context : Context, val data : NutritionFactsRecord) {
+class NutritionFactsRecordEditDialog(context: Context, val data: NutritionFactsRecord) {
     private val dlg = Dialog(context)
-    private lateinit var btnOK : Button
-    private lateinit var btnCancel : Button
+    private lateinit var btnOK: Button
+    private lateinit var btnCancel: Button
 
-    lateinit var intakeText : EditText
-    lateinit var fnameText : EditText
-    var listener : OKClickedListener? = null
+    lateinit var intakeText: EditText
+    lateinit var fnameText: EditText
+    var listener: OKClickedListener? = null
 
     fun start() {
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE)

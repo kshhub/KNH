@@ -10,61 +10,68 @@ import com.example.teamproject.NutritionFactsRecord
 import java.time.LocalDate
 
 //식단 관련 DB
-class NutritionFactsDBHelper(val context:Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION)
-{
-    companion object{
+class NutritionFactsDBHelper(val context: Context) :
+    SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
+    companion object {
         val DB_NAME = "nutritionFacts.db"
         val DB_VERSION = 1
         val TABLE_NAME_NFRECORD = "nutritionfactsRecord"
         val TABLE_NAME_NUTRITIONFACTS = "nutritionfacts"
+
         //기록한 시간
         val RECORDTIME = "recordtime"
+
         //운동 id
         val FID = "eid"
+
         //운동 이름
         val FNAME = "ename"
+
         //탄수화물
         val CARB = "carb"
+
         //단백질
         val PROTEIN = "protein"
+
         //지방
         val FAT = "fat"
+
         //1회 제공량
         val GRAM = "gram"
+
         //1회 제공량 당 칼로리
         val KCAL = "kcal"
+
         //섭취량
         val INTAKE = "intake"
     }
 
-    override fun onCreate(db: SQLiteDatabase?)
-    {
+    override fun onCreate(db: SQLiteDatabase?) {
         Log.i("shinee", "oncreate")
 
-        val create_table_NF = "create table if not exists $TABLE_NAME_NUTRITIONFACTS("+
-                "$FID integer primary key autoincrement, "+
-                "$FNAME text, "+
-                "$CARB integer, "+
-                "$PROTEIN integer, "+
-                "$FAT integer, "+
-                "$GRAM integer, "+
+        val create_table_NF = "create table if not exists $TABLE_NAME_NUTRITIONFACTS(" +
+                "$FID integer primary key autoincrement, " +
+                "$FNAME text, " +
+                "$CARB integer, " +
+                "$PROTEIN integer, " +
+                "$FAT integer, " +
+                "$GRAM integer, " +
                 "$KCAL integer);"
 
-        val create_table_NFR = "create table if not exists $TABLE_NAME_NFRECORD("+
-                "$RECORDTIME text primary key, "+
-                "$FID integer references $TABLE_NAME_NUTRITIONFACTS($FID) on update cascade, "+
+        val create_table_NFR = "create table if not exists $TABLE_NAME_NFRECORD(" +
+                "$RECORDTIME text primary key, " +
+                "$FID integer references $TABLE_NAME_NUTRITIONFACTS($FID) on update cascade, " +
                 "$INTAKE integer);"
 
         db!!.execSQL(create_table_NF)
-        db!!.execSQL(create_table_NFR)
+        db.execSQL(create_table_NFR)
     }
 
-    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int)
-    {
+    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         val drop_Table_ER = "drop table if exists $TABLE_NAME_NFRECORD;"
         val drop_Table_E = "drop table if exists $TABLE_NAME_NUTRITIONFACTS;"
         db!!.execSQL(drop_Table_ER)
-        db!!.execSQL(drop_Table_E)
+        db.execSQL(drop_Table_E)
         onCreate(db)
     }
 
@@ -73,8 +80,7 @@ class NutritionFactsDBHelper(val context:Context) : SQLiteOpenHelper(context, DB
         db!!.setForeignKeyConstraintsEnabled(true)
     }
 
-    fun isNutritionFactsTableEmpty() : Boolean
-    {
+    fun isNutritionFactsTableEmpty(): Boolean {
         val strsql = "select * from $TABLE_NAME_NUTRITIONFACTS;"
         val db = readableDatabase
         val cursor = db.rawQuery(strsql, null)
@@ -83,13 +89,12 @@ class NutritionFactsDBHelper(val context:Context) : SQLiteOpenHelper(context, DB
         cursor.close()
         db.close()
 
-        if(count == 0)  return true
+        if (count == 0) return true
 
         return false
     }
 
-    fun insertNutritionFacts(nutritionFacts: NutritionFacts):Boolean
-    {
+    fun insertNutritionFacts(nutritionFacts: NutritionFacts): Boolean {
         val values = ContentValues()
         values.put(FID, nutritionFacts.fid)
         values.put(FNAME, nutritionFacts.fname)
@@ -99,25 +104,23 @@ class NutritionFactsDBHelper(val context:Context) : SQLiteOpenHelper(context, DB
         values.put(GRAM, nutritionFacts.pergram)
         values.put(KCAL, nutritionFacts.kcal)
         val db = writableDatabase
-        val flag = db.insert(TABLE_NAME_NUTRITIONFACTS, null, values)>0
+        val flag = db.insert(TABLE_NAME_NUTRITIONFACTS, null, values) > 0
         db.close()
         return flag
     }
 
 
-    fun findNutritionFactsbyName(fname : String) : ArrayList<NutritionFacts>
-    {
+    fun findNutritionFactsbyName(fname: String): ArrayList<NutritionFacts> {
         val strsql = "select * from $TABLE_NAME_NUTRITIONFACTS where $FNAME like '%$fname%'"
         val db = readableDatabase
         val cursor = db.rawQuery(strsql, null)
         var result = ArrayList<NutritionFacts>()
 
-        if(cursor.count != 0)
-        {
+        if (cursor.count != 0) {
             cursor.moveToFirst()
 
             //리스트에 추가하기
-            do{
+            do {
                 val fid = cursor.getInt(0)
                 val fname = cursor.getString(1)
                 val carb = cursor.getDouble(2)
@@ -127,7 +130,7 @@ class NutritionFactsDBHelper(val context:Context) : SQLiteOpenHelper(context, DB
                 val kcal = cursor.getDouble(6)
 
                 result.add(NutritionFacts(fid, fname, carb, protein, fat, pergram, kcal))
-            }while (cursor.moveToNext())
+            } while (cursor.moveToNext())
         }
 
         cursor.close()
@@ -136,15 +139,13 @@ class NutritionFactsDBHelper(val context:Context) : SQLiteOpenHelper(context, DB
         return result
     }
 
-    fun findNutritionFacts(fid : Int) : NutritionFacts?
-    {
+    fun findNutritionFacts(fid: Int): NutritionFacts? {
         val strsql = "select * from $TABLE_NAME_NUTRITIONFACTS where $FID='$fid'"
         val db = readableDatabase
         val cursor = db.rawQuery(strsql, null)
-        var result : NutritionFacts? = null
+        var result: NutritionFacts? = null
 
-        if(cursor.count != 0)
-        {
+        if (cursor.count != 0) {
             cursor.moveToFirst()
 
             val fid = cursor.getInt(0)
@@ -164,27 +165,24 @@ class NutritionFactsDBHelper(val context:Context) : SQLiteOpenHelper(context, DB
         return result
     }
 
-    fun insertRecord(record: NutritionFactsRecord):Boolean
-    {
+    fun insertRecord(record: NutritionFactsRecord): Boolean {
         val values = ContentValues()
         values.put(RECORDTIME, record.recordtime)
         values.put(FID, record.nutritionFacts.fid)
         values.put(INTAKE, record.intake)
         val db = writableDatabase
-        val flag = db.insert(TABLE_NAME_NFRECORD, null, values)>0
+        val flag = db.insert(TABLE_NAME_NFRECORD, null, values) > 0
         db.close()
         return flag
     }
 
-    fun updateRecord(record: NutritionFactsRecord) : Boolean
-    {
+    fun updateRecord(record: NutritionFactsRecord): Boolean {
         val recordTime = record.recordtime
         val strsql = "select * from $TABLE_NAME_NFRECORD where $RECORDTIME='$recordTime';"
         val db = writableDatabase
         val cursor = db.rawQuery(strsql, null)
-        val flag = cursor.count!=0
-        if(flag)
-        {
+        val flag = cursor.count != 0
+        if (flag) {
             cursor.moveToFirst()
             val values = ContentValues()
             values.put(INTAKE, record.intake)
@@ -196,14 +194,12 @@ class NutritionFactsDBHelper(val context:Context) : SQLiteOpenHelper(context, DB
         return flag
     }
 
-    fun deleteRecord(recordTime:String):Boolean
-    {
+    fun deleteRecord(recordTime: String): Boolean {
         val strsql = "select * from $TABLE_NAME_NFRECORD where $RECORDTIME='$recordTime'"
         val db = writableDatabase
         val cursor = db.rawQuery(strsql, null)
-        val flag = cursor.count!=0
-        if(flag)
-        {
+        val flag = cursor.count != 0
+        if (flag) {
             cursor.moveToFirst()
             db.delete(TABLE_NAME_NFRECORD, "$RECORDTIME=?", arrayOf(recordTime))
         }
@@ -213,8 +209,7 @@ class NutritionFactsDBHelper(val context:Context) : SQLiteOpenHelper(context, DB
         return flag
     }
 
-    fun getRecordList(date: LocalDate) : ArrayList<NutritionFactsRecord>
-    {
+    fun getRecordList(date: LocalDate): ArrayList<NutritionFactsRecord> {
         val formattedDate = date.toString().replace("-", "")
 
         val strsql = "select * from $TABLE_NAME_NFRECORD where $RECORDTIME like '$formattedDate%'"
@@ -223,18 +218,17 @@ class NutritionFactsDBHelper(val context:Context) : SQLiteOpenHelper(context, DB
 
         var list = ArrayList<NutritionFactsRecord>()
 
-        if(cursor.count!=0)
-        {
+        if (cursor.count != 0) {
             cursor.moveToFirst()
 
             //리스트에 추가하기
-            do{
+            do {
                 val recordtime = cursor.getString(0)
                 val nutritionFacts = findNutritionFacts(cursor.getInt(1))
                 val intake = cursor.getInt(2)
 
                 list.add(NutritionFactsRecord(recordtime, nutritionFacts!!, intake))
-            }while (cursor.moveToNext())
+            } while (cursor.moveToNext())
         }
         cursor.close()
         db.close()
@@ -242,18 +236,16 @@ class NutritionFactsDBHelper(val context:Context) : SQLiteOpenHelper(context, DB
         return list
     }
 
-    fun getAllNutritionFacts() : ArrayList<NutritionFacts>
-    {
+    fun getAllNutritionFacts(): ArrayList<NutritionFacts> {
         val strsql = "select * from $TABLE_NAME_NUTRITIONFACTS;"
         val db = readableDatabase
         val cursor = db.rawQuery(strsql, null)
         var list = ArrayList<NutritionFacts>()
 
-        if(cursor.count!=0)
-        {
+        if (cursor.count != 0) {
             cursor.moveToFirst()
             //레코드 추가하기
-            do{
+            do {
                 val fid = cursor.getInt(0)
                 val fname = cursor.getString(1)
                 val carb = cursor.getDouble(2)
@@ -264,7 +256,7 @@ class NutritionFactsDBHelper(val context:Context) : SQLiteOpenHelper(context, DB
 
                 list.add(NutritionFacts(fid, fname, carb, protein, fat, pergram, kcal))
                 Log.i("NF_db", cursor.getInt(0).toString() + "/" + cursor.getString(1))
-            }while (cursor.moveToNext())
+            } while (cursor.moveToNext())
         }
         cursor.close()
         db.close()

@@ -11,7 +11,8 @@ import com.prolificinteractive.materialcalendarview.spans.DotSpan
 import java.util.*
 
 class CustomDecorator(
-    var dayOfTheWeek:String, var setting:String, var color:Int):DayViewDecorator {
+    var dayOfTheWeek: String, var setting: String, var color: Int
+) : DayViewDecorator {
 
     private val calendar: Calendar = Calendar.getInstance()
     private var date = CalendarDay.today()
@@ -33,9 +34,9 @@ class CustomDecorator(
     }
 
     override fun decorate(view: DayViewFacade?) {
-        if(setting=="off") {
+        if (setting == "off") {
             view?.addSpan(ForegroundColorSpan(Color.BLACK))
-        }else {
+        } else {
             when (dayOfTheWeek) {
                 "saturday" -> {
                     view?.addSpan(ForegroundColorSpan(Color.BLUE))
@@ -45,7 +46,7 @@ class CustomDecorator(
                 }
                 else -> {
                     view?.addSpan(StyleSpan(Typeface.BOLD))
-                    view?.addSpan(DotSpan(5f,Color.RED))
+                    view?.addSpan(DotSpan(5f, Color.RED))
                 }
             }
         }

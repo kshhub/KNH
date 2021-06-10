@@ -5,10 +5,9 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class CustomDBHelper(val context: Context?)
-    : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
-    companion object{
-        val DB_NAME="customizingdb.db"
+class CustomDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
+    companion object {
+        val DB_NAME = "customizingdb.db"
         val DB_VERSION = 1
         val TABLE_NAME = "customizing"
         val COPTION = "coption"
@@ -16,18 +15,18 @@ class CustomDBHelper(val context: Context?)
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
-        val createTable = "create table if not exists $TABLE_NAME("+
-                "$COPTION text, "+
+        val createTable = "create table if not exists $TABLE_NAME(" +
+                "$COPTION text, " +
                 "$CSETTING text);"
         db!!.execSQL(createTable)
     }
 
-    fun insertCustomizing(customData: CustomData):Boolean{
+    fun insertCustomizing(customData: CustomData): Boolean {
         val values = ContentValues()
         values.put(COPTION, customData.cOption)
         values.put(CSETTING, customData.cSetting)
         val db = writableDatabase
-        val flag = db.insert(TABLE_NAME, null, values)>0
+        val flag = db.insert(TABLE_NAME, null, values) > 0
         db.close()
         return flag
     }
@@ -38,14 +37,14 @@ class CustomDBHelper(val context: Context?)
         onCreate(db)
     }
 
-    fun findCustomizing(option:String):String {
+    fun findCustomizing(option: String): String {
         val strSql = "select $CSETTING from $TABLE_NAME where $COPTION='$option';"
         val db = readableDatabase
         val cursor = db.rawQuery(strSql, null)
-        var str =""
+        var str = ""
         cursor.moveToFirst()
         val attrCount = cursor.columnCount
-        for(i in 0 until attrCount){
+        for (i in 0 until attrCount) {
             str = cursor.getString(i)
         }
         cursor.close()
@@ -53,22 +52,22 @@ class CustomDBHelper(val context: Context?)
         return str
     }
 
-    fun updateCustomizing(customizingdata:CustomData): Boolean {
+    fun updateCustomizing(customizingdata: CustomData): Boolean {
         val coption = customizingdata.cOption
         val strsql = "select * from $TABLE_NAME where $COPTION ='$coption';"
         val db = writableDatabase
         val cursor = db.rawQuery(strsql, null)
-        val flag = cursor.count!=0
-        if(flag){
+        val flag = cursor.count != 0
+        if (flag) {
             cursor.moveToFirst()
             val values = ContentValues()
             values.put(COPTION, customizingdata.cOption)
             values.put(CSETTING, customizingdata.cSetting)
-            db.update(TABLE_NAME, values,"$COPTION=?", arrayOf(coption))
+            db.update(TABLE_NAME, values, "$COPTION=?", arrayOf(coption))
         }
         cursor.close()
         db.close()
-        return  flag
+        return flag
     }
 
 }

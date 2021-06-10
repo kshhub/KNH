@@ -31,17 +31,20 @@ import java.time.format.DateTimeFormatter
 //운동 정보 기록 프래그먼트
 class ExerciseFragment : Fragment() {
 
-    var binding : FragmentExerciseBinding?= null
+    var binding: FragmentExerciseBinding? = null
 
     //DB에서 가지고 온 운동 정보들.
     var eArrayList = ArrayList<Exercise>()
+
     //AutoTextComplement에 쓰일 운동 이름 리스트
     var enameArrayList = ArrayList<String>()
 
     //AutoCompleteTextView의 어댑터
-    lateinit var act_adapter : ArrayAdapter<String>
+    lateinit var act_adapter: ArrayAdapter<String>
+
     //운동 기록 RecyclerView의 어댑터
-    lateinit var er_adapter : ER_Adapter
+    lateinit var er_adapter: ER_Adapter
+
     //운동 관련 DBHelper
     lateinit var ERDBHelper: ExerciseDBHelper
 
@@ -49,7 +52,7 @@ class ExerciseFragment : Fragment() {
     var totalKcal = 0
 
     //현재 프래그먼트가 보여줄 날짜
-    var nowDate : LocalDate = LocalDate.now()
+    var nowDate: LocalDate = LocalDate.now()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -75,13 +78,14 @@ class ExerciseFragment : Fragment() {
     }
 
     //공공데이터 인증키
-    val key = "8bEhE6amw0GgnRepQJXFDZNHHJR5k4x13kb4Y2C2ogSbIJF74e1BHOSQOTMXxHKvkhzowwE5DYpvRWHWBv2lxQ=="
-    val jsonurl = "https://api.odcloud.kr/api/15068730/v1/uddi:12fe14fb-c8ca-47b1-9e53-97a93cb214ed?page=1&perPage=259&serviceKey=" + key
+    val key =
+        "8bEhE6amw0GgnRepQJXFDZNHHJR5k4x13kb4Y2C2ogSbIJF74e1BHOSQOTMXxHKvkhzowwE5DYpvRWHWBv2lxQ=="
+    val jsonurl =
+        "https://api.odcloud.kr/api/15068730/v1/uddi:12fe14fb-c8ca-47b1-9e53-97a93cb214ed?page=1&perPage=259&serviceKey=" + key
     val scope = CoroutineScope(Dispatchers.IO)
 
     //오픈api에 접근하여 운동 정보를 받아와 DB에 저장하고 eArrayList와 enameArrayList에 추가해준다.
-    fun getjson()
-    {
+    fun getjson() {
         val isDBEmpty = ERDBHelper.isExerciseTableEmpty()
 
         scope.launch {
@@ -94,12 +98,14 @@ class ExerciseFragment : Fragment() {
 
             Log.i("exercise", "haha")
 
-            for(i in 0..data.length() -1)
-            {
-                val exercise = Exercise(i+1, data.getJSONObject(i).getString("운동명"), data.getJSONObject(i).getDouble("MET 계수"))
+            for (i in 0..data.length() - 1) {
+                val exercise = Exercise(
+                    i + 1,
+                    data.getJSONObject(i).getString("운동명"),
+                    data.getJSONObject(i).getDouble("MET 계수")
+                )
 
-                if(isDBEmpty)
-                {
+                if (isDBEmpty) {
                     ERDBHelper.insertExercise(exercise)
                     Log.i("exercise", i.toString())
                 }
@@ -111,28 +117,25 @@ class ExerciseFragment : Fragment() {
     }
 
     //어댑터와 버튼 이벤트 초기화
-    fun init()
-    {
+    fun init() {
         binding?.apply {
 
-            act_adapter = ArrayAdapter(requireContext(), R.layout.simple_dropdown_item_1line, enameArrayList)
+            act_adapter =
+                ArrayAdapter(requireContext(), R.layout.simple_dropdown_item_1line, enameArrayList)
             enameEditText.setAdapter(act_adapter)
 
             eRecordBtn.setOnClickListener {
                 val ename = enameEditText.text.toString()
-                var exercise : Exercise? = null
+                var exercise: Exercise? = null
 
-                for(e in eArrayList)
-                {
-                    if(e.ename == ename)
-                    {
+                for (e in eArrayList) {
+                    if (e.ename == ename) {
                         exercise = e
-                        break;
+                        break
                     }
                 }
 
-                if(exercise != null)
-                {
+                if (exercise != null) {
                     val dateTime = LocalDateTime.now().toString().replace("-", "")
                         .replace(":", "")
                         .replace("T", "")
@@ -148,12 +151,9 @@ class ExerciseFragment : Fragment() {
 
                     val result = ERDBHelper.insertRecord(record)
 
-                    if(result)
-                    {
+                    if (result) {
                         Toast.makeText(requireActivity(), "기록 성공!", Toast.LENGTH_SHORT).show()
-                    }
-                    else
-                    {
+                    } else {
                         Toast.makeText(requireActivity(), "기록 실패!", Toast.LENGTH_SHORT).show()
                     }
 
@@ -164,19 +164,16 @@ class ExerciseFragment : Fragment() {
         }
     }
 
-    fun initDB()
-    {
+    fun initDB() {
         ERDBHelper = ExerciseDBHelper(requireActivity())
 
         val dbfile = requireActivity().getDatabasePath("exercise.db")
 
-        if(!dbfile.parentFile.exists())
-        {
+        if (!dbfile.parentFile.exists()) {
             dbfile.parentFile.mkdir()
         }
 
-        if(!dbfile.exists())
-        {
+        if (!dbfile.exists()) {
             val file = resources.openRawResource(com.example.teamproject.R.raw.exercise)
             val fileSize = file.available()
             val buffer = ByteArray(fileSize)
@@ -192,8 +189,7 @@ class ExerciseFragment : Fragment() {
 
         eArrayList = ERDBHelper.getAllExercise()
 
-        for(item in eArrayList)
-        {
+        for (item in eArrayList) {
             enameArrayList.add(item.ename)
         }
 
@@ -202,12 +198,17 @@ class ExerciseFragment : Fragment() {
 
     //운동 기록 RecyclerView를 초기화 해줌.
     //DB에서 해당 날짜의 기록을 가져온 다음 어댑터를 다시 달아준다.
-    fun initRecyclerView(date : LocalDate)
-    {
+    fun initRecyclerView(date: LocalDate) {
         binding?.apply {
             //adapter for NutritionFacts Records RecyclerView
-            eRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-            eRecyclerView.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
+            eRecyclerView.layoutManager =
+                LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            eRecyclerView.addItemDecoration(
+                DividerItemDecoration(
+                    activity,
+                    LinearLayoutManager.VERTICAL
+                )
+            )
             er_adapter = ER_Adapter(ERDBHelper.getRecordList(date))
             er_adapter.itemClickListener = object : ER_Adapter.OnItemClickListener {
                 override fun OnItemClick(
@@ -221,7 +222,11 @@ class ExerciseFragment : Fragment() {
                         override fun onOKClicked(eweightText: EditText, etimeText: EditText) {
                             er_adapter.items[position].weight = eweightText.text.toString().toInt()
                             er_adapter.items[position].etime = etimeText.text.toString().toInt()
-                            er_adapter.items[position].totalKcal = calcualteKcal(er_adapter.items[position].exercise.MET, er_adapter.items[position].weight, er_adapter.items[position].etime).toInt()
+                            er_adapter.items[position].totalKcal = calcualteKcal(
+                                er_adapter.items[position].exercise.MET,
+                                er_adapter.items[position].weight,
+                                er_adapter.items[position].etime
+                            ).toInt()
                             ERDBHelper.updateRecord(er_adapter.items[position])
                             er_adapter.notifyItemChanged(position)
                             calculateTotalKcal(nowDate)
@@ -232,18 +237,22 @@ class ExerciseFragment : Fragment() {
                 }
 
             }
-            eRecyclerView.adapter = er_adapter;
+            eRecyclerView.adapter = er_adapter
             calculateTotalKcal(nowDate)
 
-            val simpleCallBack = object: ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN or ItemTouchHelper.UP, ItemTouchHelper.LEFT)
-            {
-                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean
-                {
+            val simpleCallBack = object : ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.DOWN or ItemTouchHelper.UP,
+                ItemTouchHelper.LEFT
+            ) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
                     return false
                 }
 
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int)
-                {
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     ERDBHelper.deleteRecord(er_adapter.items[viewHolder.adapterPosition].recordtime)
                     er_adapter.removeItem(viewHolder.adapterPosition)
                     calculateTotalKcal(nowDate)
@@ -262,7 +271,7 @@ class ExerciseFragment : Fragment() {
     }
 
     //총 소모 칼로리를 계산하고 출력.
-    fun calculateTotalKcal(date : LocalDate) {
+    fun calculateTotalKcal(date: LocalDate) {
         var totalKcal = 0
 
         for (item in er_adapter.items) {
@@ -279,8 +288,7 @@ class ExerciseFragment : Fragment() {
     }
 
     //소모 칼로리 계산
-    fun calcualteKcal(met : Double, weight : Int, etime : Int) : Double
-    {
+    fun calcualteKcal(met: Double, weight: Int, etime: Int): Double {
         return 0.0175 * met * weight * etime
     }
 }
