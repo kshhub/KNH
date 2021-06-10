@@ -34,6 +34,9 @@ android {
     viewBinding {
         enabled = true
     }
+    repositories{
+        maven { url "https://jitpack.io"}
+    }
 }
 
 dependencies {

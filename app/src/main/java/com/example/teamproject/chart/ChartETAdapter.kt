@@ -1,18 +1,19 @@
-package com.example.teamproject
+package com.example.teamproject.chart
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.teamproject.R
 
-class ChartETAdapter(private val context: Context) : RecyclerView.Adapter<ChartETAdapter.ViewHolder>() {
+class ChartETAdapter(private val context: Context) :
+    RecyclerView.Adapter<ChartETAdapter.ViewHolder>() {
 
     var datas = mutableListOf<EatingData>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.chart_et,parent,false)
+        val view = LayoutInflater.from(context).inflate(R.layout.chart_et, parent, false)
         return ViewHolder(view)
     }
 

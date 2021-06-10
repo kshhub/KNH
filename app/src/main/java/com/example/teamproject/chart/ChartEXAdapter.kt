@@ -1,4 +1,4 @@
-package com.example.teamproject
+package com.example.teamproject.chart
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.teamproject.R
 
-class ChartEXAdapter(private val context: Context) : RecyclerView.Adapter<ChartEXAdapter.ViewHolder>() {
+class ChartEXAdapter(private val context: Context) :
+    RecyclerView.Adapter<ChartEXAdapter.ViewHolder>() {
 
     var datas = mutableListOf<ExerciseData>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.chart_ex,parent,false)
+        val view = LayoutInflater.from(context).inflate(R.layout.chart_ex, parent, false)
         return ViewHolder(view)
     }
 
