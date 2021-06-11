@@ -162,7 +162,11 @@ class CustomFragment : Fragment() {
     }
 
     private fun initSwitch(helper: CustomDBHelper, switch: Switch, option: String) {
-        if (helper.findCustomizing(option) == "on") switch.isChecked = true
+        if (helper.findCustomizing(option) == "on"){
+            switch.isChecked = true
+        }else{
+            switch.isChecked = false
+        }
     }
 
     private fun initSpinnerV1(helper: CustomDBHelper, spinner: Spinner, option: String) {
@@ -177,7 +181,9 @@ class CustomFragment : Fragment() {
             }
             "RED" -> {
                 spinner.setSelection(2)
-                spinner.setBackgroundColor(Color.RED)
+                //spinner.setBackgroundColor(Color.RED)
+                spinner.setBackgroundColor(Color.parseColor("#F68D83"))
+
             }
             "MAGENTA" -> {
                 spinner.setSelection(3)
@@ -193,7 +199,8 @@ class CustomFragment : Fragment() {
             }
             "BLUE" -> {
                 spinner.setSelection(6)
-                spinner.setBackgroundColor(Color.BLUE)
+                //spinner.setBackgroundColor(Color.BLUE)
+                spinner.setBackgroundColor(Color.parseColor("#00BCD4"))
             }
             "CYAN" -> {
                 spinner.setSelection(7)
@@ -281,7 +288,7 @@ class CustomFragment : Fragment() {
                     }
                     2 -> {
                         helper.updateCustomizing(CustomData(option, "RED"))
-                        spinner.setBackgroundColor(Color.RED)
+                        spinner.setBackgroundColor(Color.parseColor("#F68D83"))
                     }
                     3 -> {
                         helper.updateCustomizing(CustomData(option, "MAGENTA"))
@@ -297,7 +304,7 @@ class CustomFragment : Fragment() {
                     }
                     6 -> {
                         helper.updateCustomizing(CustomData(option, "BLUE"))
-                        spinner.setBackgroundColor(Color.BLUE)
+                        spinner.setBackgroundColor(Color.parseColor("#00BCD4"))
                     }
                     7 -> {
                         helper.updateCustomizing(CustomData(option, "CYAN"))
@@ -379,6 +386,7 @@ class CustomFragment : Fragment() {
             }
             .setPositiveButton("Yes") { _, _ ->
                 buttonR(helper)
+                refreshing()
                 Toast.makeText(context, "Customizing Reset", Toast.LENGTH_SHORT).show()
             }
         val dlg = builder.create()
@@ -396,5 +404,30 @@ class CustomFragment : Fragment() {
         helper.updateCustomizing(CustomData("memo", "#FFFFFF"))
         helper.updateCustomizing(CustomData("record", "#FFFFFF"))
         helper.updateCustomizing(CustomData("select", "GRAY"))
+    }
+
+    private fun refreshing(){
+        customDBHelper = CustomDBHelper(context)
+
+        val switchSaturday = view?.findViewById<Switch>(R.id.switchCustomSaturday)
+        val switchSunday = view?.findViewById<Switch>(R.id.switchCustomSunday)
+        val switchToday = view?.findViewById<Switch>(R.id.switchCustomToday)
+        val switchDate = view?.findViewById<Switch>(R.id.switchCustomDate)
+        val spinnerColor = view?.findViewById<Spinner>(R.id.spinnerCustomColor)
+        val spinnerSelect = view?.findViewById<Spinner>(R.id.spinnerCustomSelect)
+        val switchFormat = view?.findViewById<Switch>(R.id.switchCustomFormat)
+        val spinnerBackground = view?.findViewById<Spinner>(R.id.spinnerCustomBackground)
+        val spinnerMemo = view?.findViewById<Spinner>(R.id.spinnerCustomMemo)
+        val spinnerRecord = view?.findViewById<Spinner>(R.id.spinnerCustomRecord)
+
+        if (switchSaturday != null && switchSunday != null && switchToday != null && //init
+            switchDate != null && spinnerColor != null && spinnerSelect != null && switchFormat != null &&
+            spinnerBackground != null && spinnerMemo != null && spinnerRecord != null
+        ) {
+            initSetting(
+                customDBHelper, switchSaturday, switchSunday, switchToday, switchDate, spinnerColor,
+                spinnerSelect, switchFormat, spinnerBackground, spinnerMemo, spinnerRecord
+            )
+        }
     }
 }

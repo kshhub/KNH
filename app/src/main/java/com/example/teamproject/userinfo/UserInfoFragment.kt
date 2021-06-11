@@ -197,7 +197,44 @@ class UserInfoFragment : Fragment() {
                     helper.updateUserInfo(UserInfoData("goal", "체중 증가"))
                 }
             }
+
+            refreshing()
+
             Toast.makeText(context, "저장 완료", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun refreshing(){
+        userInfoDBHelper = UserInfoDBHelper(context)
+
+        val textViewAge = view?.findViewById<TextView>(R.id.textViewUserInfoAge)
+        val textViewHeight = view?.findViewById<TextView>(R.id.textViewUserInfoHeight)
+        val textViewWeight = view?.findViewById<TextView>(R.id.textViewUserInfoWeight)
+        val textViewGender = view?.findViewById<TextView>(R.id.textViewUserInfoGender)
+        val textViewGoal = view?.findViewById<TextView>(R.id.textViewUserInfoGoal)
+        val radioman = view?.findViewById<RadioButton>(R.id.radioButtonUserInfoMan)
+        val radiowoman = view?.findViewById<RadioButton>(R.id.radioButtonUserInfoWoman)
+        val spinnerGoal = view?.findViewById<Spinner>(R.id.spinnerUserInfoGoal)
+        val editTextAge = view?.findViewById<EditText>(R.id.editTextUserInfoAge)
+        val editTextHeight = view?.findViewById<EditText>(R.id.editTextUserInfoHeight)
+        val editTextWeight = view?.findViewById<EditText>(R.id.editTextUserInfoWeight)
+
+        textViewAge?.text = userInfoDBHelper.findUserInfo("age")
+        textViewGender?.text = userInfoDBHelper.findUserInfo("gender")
+        textViewHeight?.text = userInfoDBHelper.findUserInfo("height")
+        textViewWeight?.text = userInfoDBHelper.findUserInfo("weight")
+        textViewGoal?.text = userInfoDBHelper.findUserInfo("goal")
+
+        genderFlag = userInfoDBHelper.findUserInfo("gender")
+        goalFlag = userInfoDBHelper.findUserInfo("goal")
+
+        if (editTextAge != null && radioman != null && radiowoman != null && editTextHeight != null //init
+            && editTextWeight != null && spinnerGoal != null
+        ) {
+            initEditSetting(
+                userInfoDBHelper, editTextAge, radioman, radiowoman, editTextHeight,
+                editTextWeight, spinnerGoal
+            )
         }
     }
 
