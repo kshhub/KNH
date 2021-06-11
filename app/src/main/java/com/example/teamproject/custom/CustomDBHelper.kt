@@ -53,17 +53,17 @@ class CustomDBHelper(val context: Context?) : SQLiteOpenHelper(context, DB_NAME,
     }
 
     fun updateCustomizing(customizingdata: CustomData): Boolean {
-        val coption = customizingdata.cOption
-        val strsql = "select * from $TABLE_NAME where $COPTION ='$coption';"
+        val cOption = customizingdata.cOption
+        val strSql = "select * from $TABLE_NAME where $COPTION ='$cOption';"
         val db = writableDatabase
-        val cursor = db.rawQuery(strsql, null)
+        val cursor = db.rawQuery(strSql, null)
         val flag = cursor.count != 0
         if (flag) {
             cursor.moveToFirst()
             val values = ContentValues()
             values.put(COPTION, customizingdata.cOption)
             values.put(CSETTING, customizingdata.cSetting)
-            db.update(TABLE_NAME, values, "$COPTION=?", arrayOf(coption))
+            db.update(TABLE_NAME, values, "$COPTION=?", arrayOf(cOption))
         }
         cursor.close()
         db.close()

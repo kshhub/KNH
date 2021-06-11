@@ -5,8 +5,8 @@ import android.content.Context
 import android.view.Window
 import android.widget.Button
 import android.widget.EditText
-import com.example.teamproject.NutritionFactsRecord
 import com.example.teamproject.R
+import com.example.teamproject.exercise.NutritionFactsRecord
 
 class NutritionFactsRecordEditDialog(context: Context, val data: NutritionFactsRecord) {
     private val dlg = Dialog(context)

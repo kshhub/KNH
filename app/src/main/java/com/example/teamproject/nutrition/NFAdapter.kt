@@ -5,12 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.teamproject.NutritionFacts
 import com.example.teamproject.databinding.NfRowBinding
+import com.example.teamproject.exercise.NutritionFacts
 
 //음식 영양정보 RecyclerView의 어댑터
-class NF_Adapter(val items: ArrayList<NutritionFacts>) :
-    RecyclerView.Adapter<NF_Adapter.MyViewHolder>() {
+class NFAdapter(val items: ArrayList<NutritionFacts>) :
+    RecyclerView.Adapter<NFAdapter.MyViewHolder>() {
     var itemClickListener: OnItemClickListener? = null
     var nowHolder: MyViewHolder? = null
     var selectedFid = -1

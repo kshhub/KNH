@@ -14,9 +14,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.teamproject.Exercise
 import com.example.teamproject.ExerciseDBHelper
-import com.example.teamproject.ExerciseRecord
 import com.example.teamproject.databinding.FragmentExerciseBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,45 +28,35 @@ import java.time.format.DateTimeFormatter
 
 //운동 정보 기록 프래그먼트
 class ExerciseFragment : Fragment() {
-
     var binding: FragmentExerciseBinding? = null
-
     //DB에서 가지고 온 운동 정보들.
     var eArrayList = ArrayList<Exercise>()
-
     //AutoTextComplement에 쓰일 운동 이름 리스트
     var enameArrayList = ArrayList<String>()
-
     //AutoCompleteTextView의 어댑터
     lateinit var act_adapter: ArrayAdapter<String>
-
     //운동 기록 RecyclerView의 어댑터
-    lateinit var er_adapter: ER_Adapter
-
+    lateinit var er_adapter: ERAdapter
     //운동 관련 DBHelper
     lateinit var ERDBHelper: ExerciseDBHelper
-
     //총 칼로리
     var totalKcal = 0
-
     //현재 프래그먼트가 보여줄 날짜
     var nowDate: LocalDate = LocalDate.now()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentExerciseBinding.inflate(layoutInflater, container, false)
         return binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initDB()
         init()
         initRecyclerView(nowDate)
-
         //getjson()
     }
 
@@ -87,18 +75,15 @@ class ExerciseFragment : Fragment() {
     //오픈api에 접근하여 운동 정보를 받아와 DB에 저장하고 eArrayList와 enameArrayList에 추가해준다.
     fun getjson() {
         val isDBEmpty = ERDBHelper.isExerciseTableEmpty()
-
         scope.launch {
-
             val doc = Jsoup.connect(jsonurl).ignoreContentType(true).get()
-
             //json object를 생성
             val json = JSONObject(doc.text())
             val data = json.getJSONArray("data")
 
             Log.i("exercise", "haha")
 
-            for (i in 0..data.length() - 1) {
+            for (i in 0 until data.length()) {
                 val exercise = Exercise(
                     i + 1,
                     data.getJSONObject(i).getString("운동명"),
@@ -142,7 +127,7 @@ class ExerciseFragment : Fragment() {
 
                     val etime = etimeEditText.text.toString().toInt()
                     val weight = weightEditText.text.toString().toInt()
-                    val kcal = calcualteKcal(exercise.MET, weight, etime)
+                    val kcal = calculateKcal(exercise.MET, weight, etime)
 
                     val record = ExerciseRecord(dateTime, exercise, weight, etime, kcal.toInt())
 
@@ -198,7 +183,7 @@ class ExerciseFragment : Fragment() {
 
     //운동 기록 RecyclerView를 초기화 해줌.
     //DB에서 해당 날짜의 기록을 가져온 다음 어댑터를 다시 달아준다.
-    fun initRecyclerView(date: LocalDate) {
+    private fun initRecyclerView(date: LocalDate) {
         binding?.apply {
             //adapter for NutritionFacts Records RecyclerView
             eRecyclerView.layoutManager =
@@ -209,10 +194,10 @@ class ExerciseFragment : Fragment() {
                     LinearLayoutManager.VERTICAL
                 )
             )
-            er_adapter = ER_Adapter(ERDBHelper.getRecordList(date))
-            er_adapter.itemClickListener = object : ER_Adapter.OnItemClickListener {
+            er_adapter = ERAdapter(ERDBHelper.getRecordList(date))
+            er_adapter.itemClickListener = object : ERAdapter.OnItemClickListener {
                 override fun OnItemClick(
-                    holder: ER_Adapter.MyViewHolder,
+                    holder: ERAdapter.MyViewHolder,
                     view: View,
                     data: ExerciseRecord,
                     position: Int
@@ -222,7 +207,7 @@ class ExerciseFragment : Fragment() {
                         override fun onOKClicked(eweightText: EditText, etimeText: EditText) {
                             er_adapter.items[position].weight = eweightText.text.toString().toInt()
                             er_adapter.items[position].etime = etimeText.text.toString().toInt()
-                            er_adapter.items[position].totalKcal = calcualteKcal(
+                            er_adapter.items[position].totalKcal = calculateKcal(
                                 er_adapter.items[position].exercise.MET,
                                 er_adapter.items[position].weight,
                                 er_adapter.items[position].etime
@@ -281,14 +266,14 @@ class ExerciseFragment : Fragment() {
         this.totalKcal = totalKcal
 
         binding?.etotalKcalText?.text = if (date == LocalDate.now()) {
-            "오늘 소모한 칼로리는 " + totalKcal.toString() + " (Kcal) 입니다"
+            "오늘 소모한 칼로리는 $totalKcal (Kcal) 입니다"
         } else {
             date.format(DateTimeFormatter.ofPattern("yyyy년 M월 d일")) + " 소모한 칼로리는 " + totalKcal.toString() + " (Kcal) 입니다"
         }
     }
 
     //소모 칼로리 계산
-    fun calcualteKcal(met: Double, weight: Int, etime: Int): Double {
+    fun calculateKcal(met: Double, weight: Int, etime: Int): Double {
         return 0.0175 * met * weight * etime
     }
 }

@@ -5,62 +5,57 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import com.example.teamproject.exercise.Exercise
+import com.example.teamproject.exercise.ExerciseRecord
 import java.time.LocalDate
 
 //운동 관련 데이터베이스
 class ExerciseDBHelper(val context: Context) :
     SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     companion object {
-        val DB_NAME = "exercise.db"
-        val DB_VERSION = 1
-        val TABLE_NAME_EXERCISERECORD = "exerciseRecord"
-        val TABLE_NAME_EXERCISE = "exercise"
-
+        const val DB_NAME = "exercise.db"
+        const val DB_VERSION = 1
+        const val TABLE_NAME_EXERCISE_RECORD = "exerciseRecord"
+        const val TABLE_NAME_EXERCISE = "exercise"
         //기록한 시간
-        val RECORDTIME = "recordtime"
-
+        const val RECORDTIME = "recordtime"
         //운동 id
-        val EID = "eid"
-
+        const val EID = "eid"
         //운동 이름
-        val ENAME = "ename"
-
+        const val ENAME = "ename"
         //운동의 MET계수
-        val EMET = "emet"
-
+        const val EMET = "emet"
         //운동 시간
-        val ETIME = "etime"
-
+        const val ETIME = "etime"
         //몸무게
-        val WEIGHT = "weight"
-
+        const val WEIGHT = "weight"
         //소비 칼로리
-        val TOTALKCAL = "kcal"
-
+        const val TOTALKCAL = "kcal"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
-        val create_table_E = "create table if not exists $TABLE_NAME_EXERCISE(" +
+        // 운동 정보
+        val createTableE = "create table if not exists $TABLE_NAME_EXERCISE(" +
                 "$EID integer primary key autoincrement, " +
                 "$ENAME text, " +
                 "$EMET double);"
-
-        val create_table_ER = "create table if not exists $TABLE_NAME_EXERCISERECORD(" +
+        //사용자 운동 정보
+        val createTableEr = "create table if not exists $TABLE_NAME_EXERCISE_RECORD(" +
                 "$RECORDTIME text primary key, " +
                 "$EID integer references $TABLE_NAME_EXERCISE($EID) on update cascade, " +
                 "$ETIME integer, " +
                 "$WEIGHT integer, " +
                 "$TOTALKCAL integer);"
 
-        db!!.execSQL(create_table_E)
-        db.execSQL(create_table_ER)
+        db!!.execSQL(createTableE)
+        db.execSQL(createTableEr)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        val drop_Table_ER = "drop table if exists $TABLE_NAME_EXERCISERECORD;"
-        val drop_Table_E = "drop table if exists $TABLE_NAME_EXERCISE;"
-        db!!.execSQL(drop_Table_ER)
-        db.execSQL(drop_Table_E)
+        val dropTableEr = "drop table if exists $TABLE_NAME_EXERCISE_RECORD;"
+        val dropTableE = "drop table if exists $TABLE_NAME_EXERCISE;"
+        db!!.execSQL(dropTableEr)
+        db.execSQL(dropTableE)
         onCreate(db)
     }
 
@@ -94,10 +89,10 @@ class ExerciseDBHelper(val context: Context) :
         return flag
     }
 
-    fun findExercise(eid: Int): Exercise? {
-        val strsql = "select * from $TABLE_NAME_EXERCISE where $EID='$eid'"
+    private fun findExercise(eid: Int): Exercise? {
+        val strSql = "select * from $TABLE_NAME_EXERCISE where $EID='$eid'"
         val db = readableDatabase
-        val cursor = db.rawQuery(strsql, null)
+        val cursor = db.rawQuery(strSql, null)
         val flag = cursor.count != 0
         var result: Exercise? = null
 
@@ -118,9 +113,9 @@ class ExerciseDBHelper(val context: Context) :
     }
 
     fun getAllRecord() {
-        val strsql = "select * from $TABLE_NAME_EXERCISERECORD;"
+        val strSql = "select * from $TABLE_NAME_EXERCISE_RECORD;"
         val db = readableDatabase
-        val cursor = db.rawQuery(strsql, null)
+        val cursor = db.rawQuery(strSql, null)
         if (cursor.count != 0) {
             cursor.moveToFirst()
             //레코드 추가하기
@@ -141,16 +136,16 @@ class ExerciseDBHelper(val context: Context) :
         values.put(WEIGHT, record.weight)
         values.put(TOTALKCAL, record.totalKcal)
         val db = writableDatabase
-        val flag = db.insert(TABLE_NAME_EXERCISERECORD, null, values) > 0
+        val flag = db.insert(TABLE_NAME_EXERCISE_RECORD, null, values) > 0
         db.close()
         return flag
     }
 
     fun updateRecord(record: ExerciseRecord): Boolean {
         val recordTime = record.recordtime
-        val strsql = "select * from $TABLE_NAME_EXERCISERECORD where $RECORDTIME='$recordTime';"
+        val strSql = "select * from $TABLE_NAME_EXERCISE_RECORD where $RECORDTIME='$recordTime';"
         val db = writableDatabase
-        val cursor = db.rawQuery(strsql, null)
+        val cursor = db.rawQuery(strSql, null)
         val flag = cursor.count != 0
         if (flag) {
             cursor.moveToFirst()
@@ -160,7 +155,7 @@ class ExerciseDBHelper(val context: Context) :
             values.put(WEIGHT, record.weight)
             values.put(TOTALKCAL, record.totalKcal)
             db.update(
-                TABLE_NAME_EXERCISERECORD,
+                TABLE_NAME_EXERCISE_RECORD,
                 values,
                 "$RECORDTIME=?",
                 arrayOf(recordTime.toString())
@@ -173,13 +168,13 @@ class ExerciseDBHelper(val context: Context) :
     }
 
     fun deleteRecord(recordTime: String): Boolean {
-        val strsql = "select * from $TABLE_NAME_EXERCISERECORD where $RECORDTIME='$recordTime'"
+        val strSql = "select * from $TABLE_NAME_EXERCISE_RECORD where $RECORDTIME='$recordTime'"
         val db = writableDatabase
-        val cursor = db.rawQuery(strsql, null)
+        val cursor = db.rawQuery(strSql, null)
         val flag = cursor.count != 0
         if (flag) {
             cursor.moveToFirst()
-            db.delete(TABLE_NAME_EXERCISERECORD, "$RECORDTIME=?", arrayOf(recordTime))
+            db.delete(TABLE_NAME_EXERCISE_RECORD, "$RECORDTIME=?", arrayOf(recordTime))
         }
 
         cursor.close()
@@ -190,10 +185,10 @@ class ExerciseDBHelper(val context: Context) :
     fun getRecordList(date: LocalDate): ArrayList<ExerciseRecord> {
         val formattedDate = date.toString().replace("-", "")
 
-        val strsql =
-            "select * from $TABLE_NAME_EXERCISERECORD where $RECORDTIME like '$formattedDate%'"
+        val strSql =
+            "select * from $TABLE_NAME_EXERCISE_RECORD where $RECORDTIME like '$formattedDate%'"
         val db = readableDatabase
-        val cursor = db.rawQuery(strsql, null)
+        val cursor = db.rawQuery(strSql, null)
 
         var list = ArrayList<ExerciseRecord>()
 
@@ -218,9 +213,9 @@ class ExerciseDBHelper(val context: Context) :
     }
 
     fun getAllExercise(): ArrayList<Exercise> {
-        val strsql = "select * from $TABLE_NAME_EXERCISE;"
+        val strSql = "select * from $TABLE_NAME_EXERCISE;"
         val db = readableDatabase
-        val cursor = db.rawQuery(strsql, null)
+        val cursor = db.rawQuery(strSql, null)
 
         var list = ArrayList<Exercise>()
 

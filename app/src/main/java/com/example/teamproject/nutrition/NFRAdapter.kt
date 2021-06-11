@@ -1,19 +1,20 @@
-package com.example.teamproject.exercise
+package com.example.teamproject.nutrition
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.teamproject.ExerciseRecord
 import com.example.teamproject.databinding.NfrRowBinding
+import com.example.teamproject.exercise.NutritionFactsRecord
+import kotlin.math.round
 
-//운동정보 기록 RecyclerView에 대한 어댑터.
-class ER_Adapter(val items: ArrayList<ExerciseRecord>) :
-    RecyclerView.Adapter<ER_Adapter.MyViewHolder>() {
+//사용자의 영양정보 기록 RecyclerView의 어댑터
+class NFRAdapter(val items: ArrayList<NutritionFactsRecord>) :
+    RecyclerView.Adapter<NFRAdapter.MyViewHolder>() {
     var itemClickListener: OnItemClickListener? = null
 
     interface OnItemClickListener {
-        fun OnItemClick(holder: MyViewHolder, view: View, data: ExerciseRecord, position: Int)
+        fun OnItemClick(holder: MyViewHolder, view: View, data: NutritionFactsRecord, position: Int)
     }
 
     inner class MyViewHolder(val binding: NfrRowBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -36,7 +37,9 @@ class ER_Adapter(val items: ArrayList<ExerciseRecord>) :
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = items[position]
         holder.binding.nutritionFactsRecord.text =
-            convertDateFormat(item.recordtime) + " / " + item.exercise.ename + " / " + item.etime.toString() + " (분) / " + item.totalKcal.toString() + " (kcal)"
+            convertDateFormat(item.recordtime) + " / " + item.nutritionFacts.fname + " " + item.intake.toString() + " (g) / " + calculateKcal(
+                item
+            ) + " (kcal)"
     }
 
     fun removeItem(pos: Int) {
@@ -44,8 +47,15 @@ class ER_Adapter(val items: ArrayList<ExerciseRecord>) :
         notifyItemRemoved(pos)
     }
 
-    //시간 정보를 간략하게 바꿔줍니다.
-    fun convertDateFormat(date: String): String {
+    fun calculateKcal(data: NutritionFactsRecord): Double {
+        val rawKcal =
+            data.intake.toDouble() / data.nutritionFacts.pergram * data.nutritionFacts.kcal
+        val formattedKcal = round(rawKcal * 10) / 10
+
+        return formattedKcal
+    }
+
+    private fun convertDateFormat(date: String): String {
         var result = date.substring(8, 12)
         result = result.substring(0, 2) + "시 " + result.substring(2, 4) + "분"
 

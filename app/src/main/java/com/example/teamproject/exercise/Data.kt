@@ -1,4 +1,4 @@
-package com.example.teamproject
+package com.example.teamproject.exercise
 
 //영양성분
 data class NutritionFacts(

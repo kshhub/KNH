@@ -5,7 +5,6 @@ import android.content.Context
 import android.view.Window
 import android.widget.Button
 import android.widget.EditText
-import com.example.teamproject.ExerciseRecord
 import com.example.teamproject.R
 
 //운동 기록 항목을 누르면 팝업되는 다이얼로그.

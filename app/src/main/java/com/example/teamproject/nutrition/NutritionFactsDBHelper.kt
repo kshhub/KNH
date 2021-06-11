@@ -5,45 +5,36 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import com.example.teamproject.NutritionFacts
-import com.example.teamproject.NutritionFactsRecord
+import com.example.teamproject.exercise.NutritionFacts
+import com.example.teamproject.exercise.NutritionFactsRecord
 import java.time.LocalDate
 
 //식단 관련 DB
 class NutritionFactsDBHelper(val context: Context) :
     SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     companion object {
-        val DB_NAME = "nutritionFacts.db"
-        val DB_VERSION = 1
-        val TABLE_NAME_NFRECORD = "nutritionfactsRecord"
-        val TABLE_NAME_NUTRITIONFACTS = "nutritionfacts"
-
+        const val DB_NAME = "nutritionFacts.db"
+        const val DB_VERSION = 1
+        const val TABLE_NAME_NFRECORD = "nutritionfactsRecord"
+        const val TABLE_NAME_NUTRITIONFACTS = "nutritionfacts"
         //기록한 시간
-        val RECORDTIME = "recordtime"
-
+        const val RECORDTIME = "recordtime"
         //운동 id
-        val FID = "eid"
-
+        const val FID = "eid"
         //운동 이름
-        val FNAME = "ename"
-
+        const val FNAME = "ename"
         //탄수화물
-        val CARB = "carb"
-
+        const val CARB = "carb"
         //단백질
-        val PROTEIN = "protein"
-
+        const val PROTEIN = "protein"
         //지방
-        val FAT = "fat"
-
+        const val FAT = "fat"
         //1회 제공량
-        val GRAM = "gram"
-
+        const val GRAM = "gram"
         //1회 제공량 당 칼로리
-        val KCAL = "kcal"
-
+        const val KCAL = "kcal"
         //섭취량
-        val INTAKE = "intake"
+        const val INTAKE = "intake"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {

@@ -14,10 +14,10 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.teamproject.NutritionFacts
-import com.example.teamproject.NutritionFactsRecord
 import com.example.teamproject.R
 import com.example.teamproject.databinding.FragmentNutritionFactsBinding
+import com.example.teamproject.exercise.NutritionFacts
+import com.example.teamproject.exercise.NutritionFactsRecord
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,8 +31,8 @@ import java.time.format.DateTimeFormatter
 class NutritionFactsFragment : Fragment() {
     var binding: FragmentNutritionFactsBinding? = null
 
-    lateinit var nf_adapter: NF_Adapter
-    lateinit var nfr_adapter: NFR_Adapter
+    lateinit var nf_adapter: NFAdapter
+    lateinit var nfr_adapter: NFRAdapter
     lateinit var act_adapter: ArrayAdapter<String>
 
     lateinit var NFDBHelper: NutritionFactsDBHelper
@@ -165,11 +165,11 @@ class NutritionFactsFragment : Fragment() {
     fun initNFAdapter(arrayList: ArrayList<NutritionFacts>) {
         binding?.fnameEditText?.text?.clear()
 
-        nf_adapter = NF_Adapter(ArrayList<NutritionFacts>(arrayList))
-        nf_adapter.itemClickListener = object : NF_Adapter.OnItemClickListener {
+        nf_adapter = NFAdapter(ArrayList<NutritionFacts>(arrayList))
+        nf_adapter.itemClickListener = object : NFAdapter.OnItemClickListener {
             override fun OnItemClick(
-                fomerHolder: NF_Adapter.MyViewHolder?,
-                holder: NF_Adapter.MyViewHolder,
+                fomerHolder: NFAdapter.MyViewHolder?,
+                holder: NFAdapter.MyViewHolder,
                 view: View,
                 selectedFid: Int,
                 data: NutritionFacts,
@@ -224,7 +224,7 @@ class NutritionFactsFragment : Fragment() {
                     LinearLayoutManager.VERTICAL
                 )
             )
-            nfr_adapter = NFR_Adapter(ArrayList<NutritionFactsRecord>(recordedNFList))
+            nfr_adapter = NFRAdapter(ArrayList<NutritionFactsRecord>(recordedNFList))
             NFRRecyclerView.adapter = nfr_adapter
 
             //음식 이름을 기입하는 EditText. 입력값이 바뀔 때마다 값을 포함하는 음식들을 추려서 NutritionFacts RecyclerView에 보여줌.
@@ -287,11 +287,11 @@ class NutritionFactsFragment : Fragment() {
                     LinearLayoutManager.VERTICAL
                 )
             )
-            nfr_adapter = NFR_Adapter(NFDBHelper.getRecordList(date))
+            nfr_adapter = NFRAdapter(NFDBHelper.getRecordList(date))
 
-            nfr_adapter.itemClickListener = object : NFR_Adapter.OnItemClickListener {
+            nfr_adapter.itemClickListener = object : NFRAdapter.OnItemClickListener {
                 override fun OnItemClick(
-                    holder: NFR_Adapter.MyViewHolder,
+                    holder: NFRAdapter.MyViewHolder,
                     view: View,
                     data: NutritionFactsRecord,
                     position: Int

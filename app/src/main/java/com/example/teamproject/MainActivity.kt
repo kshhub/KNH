@@ -121,6 +121,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, SettingActivity::class.java)
             startActivity(intent)
         }
+
         calendarView.setOnDateChangedListener { _, date, _ ->
             Log.d("date_selected_test", date.date.toString())
         }
