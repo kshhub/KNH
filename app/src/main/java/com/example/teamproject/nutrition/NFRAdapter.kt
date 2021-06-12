@@ -1,8 +1,10 @@
 package com.example.teamproject.nutrition
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.teamproject.databinding.NfrRowBinding
 import com.example.teamproject.exercise.NutritionFactsRecord
@@ -56,8 +58,8 @@ class NFRAdapter(val items: ArrayList<NutritionFactsRecord>) :
     }
 
     private fun convertDateFormat(date: String): String {
-        var result = date.substring(8, 12)
-        result = result.substring(0, 2) + "시 " + result.substring(2, 4) + "분"
+        var result = date.substring(11, 16)
+        result = result.substring(0, 2) + "시 " + result.substring(3, 5) + "분"
 
         return result
     }

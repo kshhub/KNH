@@ -45,8 +45,8 @@ class ERAdapter(val items: ArrayList<ExerciseRecord>) :
 
     //시간 정보를 간략하게 바꿔줍니다.
     private fun convertDateFormat(date: String): String {
-        var result = date.substring(8, 12)
-        result = result.substring(0, 2) + "시 " + result.substring(2, 4) + "분"
+        var result = date.substring(11, 16)
+        result = result.substring(0, 2) + "시 " + result.substring(3, 5) + "분"
 
         return result
     }

@@ -80,6 +80,17 @@
         app:layout_constraintTop_toTopOf="@+id/settingBtn" />
 
     <Button
+        android:id="@+id/exerciseBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="156dp"
+        android:backgroundTint="#69AEB6"
+        android:text="EXERCISE"
+        app:layout_constraintEnd_toStartOf="@+id/chartbtn"
+        app:layout_constraintTop_toBottomOf="@+id/memoBtn" />
+
+    <Button
         android:id="@+id/chartbtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

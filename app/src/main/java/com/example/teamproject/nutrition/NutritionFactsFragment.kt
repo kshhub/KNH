@@ -26,7 +26,9 @@ import org.jsoup.parser.Parser
 import java.io.FileOutputStream
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import kotlin.math.round
 
 class NutritionFactsFragment : Fragment() {
     var binding: FragmentNutritionFactsBinding? = null
@@ -46,13 +48,14 @@ class NutritionFactsFragment : Fragment() {
 
     var recordedNFList = ArrayList<NutritionFactsRecord>()
 
-    var totalKcal = 0.0
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentNutritionFactsBinding.inflate(layoutInflater, container, false)
+
+        nowDate = LocalDate.parse(arguments?.getString("date"), DateTimeFormatter.ISO_DATE);
+
         return binding!!.root
     }
 
@@ -61,7 +64,6 @@ class NutritionFactsFragment : Fragment() {
 
         initDB()
         init()
-        initNFRView(nowDate)
     }
 
     override fun onDestroyView() {
@@ -162,10 +164,11 @@ class NutritionFactsFragment : Fragment() {
     }
 
     //식품 검색 리사이클러뷰
-    fun initNFAdapter(arrayList: ArrayList<NutritionFacts>) {
+    fun initNFAdapter(arrayList: ArrayList<NutritionFacts>)
+    {
         binding?.fnameEditText?.text?.clear()
 
-        nf_adapter = NFAdapter(ArrayList<NutritionFacts>(arrayList))
+        nf_adapter = NFAdapter(arrayList)
         nf_adapter.itemClickListener = object : NFAdapter.OnItemClickListener {
             override fun OnItemClick(
                 fomerHolder: NFAdapter.MyViewHolder?,
@@ -212,20 +215,10 @@ class NutritionFactsFragment : Fragment() {
                     LinearLayoutManager.VERTICAL
                 )
             )
-            nfArray = NFDBHelper.getAllNutritionFacts()
+            //nfArray = NFDBHelper.getAllNutritionFacts()
             initNFAdapter(nfArray)
 
-            //adapter for NutritionFacts Records RecyclerView
-            NFRRecyclerView.layoutManager =
-                LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-            NFRRecyclerView.addItemDecoration(
-                DividerItemDecoration(
-                    activity,
-                    LinearLayoutManager.VERTICAL
-                )
-            )
-            nfr_adapter = NFRAdapter(ArrayList<NutritionFactsRecord>(recordedNFList))
-            NFRRecyclerView.adapter = nfr_adapter
+            initNFRView(nowDate)
 
             //음식 이름을 기입하는 EditText. 입력값이 바뀔 때마다 값을 포함하는 음식들을 추려서 NutritionFacts RecyclerView에 보여줌.
             fnameEditText.addTextChangedListener {
@@ -246,15 +239,11 @@ class NutritionFactsFragment : Fragment() {
             }
 
             recordBtn.setOnClickListener {
-                val dateTime = LocalDateTime.now().toString().replace("-", "")
-                    .replace(":", "")
-                    .replace("T", "")
+                var dateTime = nowDate.toString() + "/" + LocalTime.now().toString()
+
                 val intake = intakeEditText.text.toString().toInt()
-
                 val nutritionFacts = NFDBHelper.findNutritionFacts(nf_adapter.selectedFid)
-
                 val record = NutritionFactsRecord(dateTime, nutritionFacts!!, intake)
-
                 val result = NFDBHelper.insertRecord(record)
 
                 if (result) {
@@ -276,6 +265,39 @@ class NutritionFactsFragment : Fragment() {
         binding?.fnameEditText?.setAdapter(act_adapter)
     }
 
+    fun initNFRAdapter(date : LocalDate)
+    {
+        nfr_adapter = NFRAdapter(NFDBHelper.getRecordList(date))
+        Log.i("dive", nfr_adapter.items.size.toString())
+
+        nfr_adapter.itemClickListener = object : NFRAdapter.OnItemClickListener {
+            override fun OnItemClick(
+                holder: NFRAdapter.MyViewHolder,
+                view: View,
+                data: NutritionFactsRecord,
+                position: Int
+            ) {
+                val dlg = NutritionFactsRecordEditDialog(requireActivity(), data)
+
+                dlg.listener = object : NutritionFactsRecordEditDialog.OKClickedListener {
+                    override fun onOKClicked(intakeText: EditText) {
+                        nfr_adapter.items[position].intake = intakeText.text.toString().toInt()
+
+                        NFDBHelper.updateRecord(nfr_adapter.items[position])
+                        nfr_adapter.notifyItemChanged(position)
+                        calculateTotalKcal(nowDate)
+                    }
+
+                }
+
+                dlg.start()
+            }
+        }
+
+        binding?.NFRRecyclerView?.adapter = nfr_adapter
+        calculateTotalKcal(nowDate)
+    }
+
     fun initNFRView(date: LocalDate) {
         binding?.apply {
             //adapter for NutritionFacts Records RecyclerView
@@ -287,33 +309,8 @@ class NutritionFactsFragment : Fragment() {
                     LinearLayoutManager.VERTICAL
                 )
             )
-            nfr_adapter = NFRAdapter(NFDBHelper.getRecordList(date))
 
-            nfr_adapter.itemClickListener = object : NFRAdapter.OnItemClickListener {
-                override fun OnItemClick(
-                    holder: NFRAdapter.MyViewHolder,
-                    view: View,
-                    data: NutritionFactsRecord,
-                    position: Int
-                ) {
-                    val dlg = NutritionFactsRecordEditDialog(requireActivity(), data)
-
-                    dlg.listener = object : NutritionFactsRecordEditDialog.OKClickedListener {
-                        override fun onOKClicked(intakeText: EditText) {
-                            nfr_adapter.items[position].intake = intakeText.text.toString().toInt()
-
-                            NFDBHelper.updateRecord(nfr_adapter.items[position])
-                            nfr_adapter.notifyItemChanged(position)
-                            calculateTotalKcal(nowDate)
-                        }
-
-                    }
-
-                    dlg.start()
-                }
-            }
-            NFRRecyclerView.adapter = nfr_adapter
-            calculateTotalKcal(nowDate)
+            initNFRAdapter(date);
 
             val simpleCallBack = object : ItemTouchHelper.SimpleCallback(
                 ItemTouchHelper.DOWN or ItemTouchHelper.UP,
@@ -352,7 +349,7 @@ class NutritionFactsFragment : Fragment() {
             totalKcal += nfr_adapter.calculateKcal(item)
         }
 
-        this.totalKcal = totalKcal
+        totalKcal = round(totalKcal * 10) / 10
 
         binding?.nftotalKcalText?.text = if (date == LocalDate.now()) {
             "오늘 섭취한 칼로리는 " + totalKcal.toString() + " (Kcal) 입니다"
