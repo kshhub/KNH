@@ -242,7 +242,7 @@ class MainActivity : AppCompatActivity() {
                 //calendar.addDecorator(CustomDecorator("today", "on", Color.GRAY))
             }
             "RED" -> {
-                calendar.selectionColor = Color.RED
+                calendar.selectionColor = Color.parseColor("#F68D83")
                 //calendar.addDecorator(CustomDecorator("today", "on", Color.CYAN))
             }
             "MAGENTA" -> {
@@ -258,7 +258,7 @@ class MainActivity : AppCompatActivity() {
                 //calendar.addDecorator(CustomDecorator("today", "on", Color.MAGENTA))
             }
             "BLUE" -> {
-                calendar.selectionColor = Color.BLUE
+                calendar.selectionColor = Color.parseColor("#00BCD4")
                 //calendar.addDecorator(CustomDecorator("today", "on", Color.YELLOW))
             }
             "CYAN" -> {
