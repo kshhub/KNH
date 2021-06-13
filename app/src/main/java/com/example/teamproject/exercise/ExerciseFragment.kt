@@ -24,7 +24,9 @@ import org.jsoup.Jsoup
 import java.io.FileOutputStream
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import kotlin.math.round
 
 //운동 정보 기록 프래그먼트
 class ExerciseFragment : Fragment() {
@@ -49,6 +51,9 @@ class ExerciseFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentExerciseBinding.inflate(layoutInflater, container, false)
+
+        nowDate = LocalDate.parse(arguments?.getString("date"), DateTimeFormatter.ISO_DATE);
+
         return binding!!.root
     }
 
@@ -121,9 +126,7 @@ class ExerciseFragment : Fragment() {
                 }
 
                 if (exercise != null) {
-                    val dateTime = LocalDateTime.now().toString().replace("-", "")
-                        .replace(":", "")
-                        .replace("T", "")
+                    var dateTime = nowDate.toString() + "/" + LocalTime.now().toString()
 
                     val etime = etimeEditText.text.toString().toInt()
                     val weight = weightEditText.text.toString().toInt()
@@ -262,8 +265,6 @@ class ExerciseFragment : Fragment() {
         for (item in er_adapter.items) {
             totalKcal += item.totalKcal
         }
-
-        this.totalKcal = totalKcal
 
         binding?.etotalKcalText?.text = if (date == LocalDate.now()) {
             "오늘 소모한 칼로리는 $totalKcal (Kcal) 입니다"

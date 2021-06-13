@@ -183,10 +183,10 @@ class ExerciseDBHelper(val context: Context) :
     }
 
     fun getRecordList(date: LocalDate): ArrayList<ExerciseRecord> {
-        val formattedDate = date.toString().replace("-", "")
+        val format = date.toString()
 
         val strSql =
-            "select * from $TABLE_NAME_EXERCISE_RECORD where $RECORDTIME like '$formattedDate%'"
+            "select * from $TABLE_NAME_EXERCISE_RECORD where $RECORDTIME like '$format%'"
         val db = readableDatabase
         val cursor = db.rawQuery(strSql, null)
 

@@ -201,9 +201,10 @@ class NutritionFactsDBHelper(val context: Context) :
     }
 
     fun getRecordList(date: LocalDate): ArrayList<NutritionFactsRecord> {
-        val formattedDate = date.toString().replace("-", "")
 
-        val strsql = "select * from $TABLE_NAME_NFRECORD where $RECORDTIME like '$formattedDate%'"
+        val format = date.toString()
+
+        val strsql = "select * from $TABLE_NAME_NFRECORD where $RECORDTIME like '$format%'"
         val db = readableDatabase
         val cursor = db.rawQuery(strsql, null)
 
@@ -246,7 +247,7 @@ class NutritionFactsDBHelper(val context: Context) :
                 val kcal = cursor.getDouble(6)
 
                 list.add(NutritionFacts(fid, fname, carb, protein, fat, pergram, kcal))
-                Log.i("NF_db", cursor.getInt(0).toString() + "/" + cursor.getString(1))
+                //Log.i("NF_db", cursor.getInt(0).toString() + "/" + cursor.getString(1))
             } while (cursor.moveToNext())
         }
         cursor.close()

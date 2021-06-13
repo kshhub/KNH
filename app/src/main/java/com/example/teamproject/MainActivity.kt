@@ -7,6 +7,7 @@ import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -16,6 +17,7 @@ import com.example.teamproject.custom.CustomData
 import com.example.teamproject.custom.CustomDecorator
 import com.example.teamproject.database.AppDataBase
 import com.example.teamproject.memo.MemoActivity
+import com.example.teamproject.nutrition.RecordActivity
 import com.example.teamproject.popup.PopupActivity
 import com.example.teamproject.setting.SettingActivity
 import com.example.teamproject.userinfo.UserInfoDBHelper
@@ -27,6 +29,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalTime
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -100,6 +104,9 @@ class MainActivity : AppCompatActivity() {
         val today = CalendarDay.today()
         val memo = findViewById<Button>(R.id.memoBtn)
         val memoTextView = findViewById<TextView>(R.id.memoView)
+        val dietBtn = findViewById<Button>(R.id.button2);
+        val exerciseBtn = findViewById<Button>(R.id.exerciseBtn);
+
         calendarView.selectedDate = today
         memo.setOnClickListener {
             val intent = Intent(this, MemoActivity::class.java)
@@ -135,6 +142,23 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("date",calendarView.selectedDate.toString())
             startActivity(intent)
         }
+
+        dietBtn.setOnClickListener {
+            val date = LocalDate.of(calendarView.selectedDate.year, calendarView.selectedDate.month+1, calendarView.selectedDate.day)
+            val intent = Intent(this, RecordActivity::class.java)
+            intent.putExtra("type", "diet")
+            intent.putExtra("date", date.toString())
+            startActivity(intent)
+        }
+
+        exerciseBtn.setOnClickListener {
+            val date = LocalDate.of(calendarView.selectedDate.year, calendarView.selectedDate.month+1, calendarView.selectedDate.day)
+            val intent = Intent(this, RecordActivity::class.java)
+            intent.putExtra("type", "exercise")
+            intent.putExtra("date", date.toString())
+            startActivity(intent)
+        }
+
         customizing()
         initView()
     }
