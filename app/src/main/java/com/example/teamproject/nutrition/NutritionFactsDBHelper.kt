@@ -59,10 +59,10 @@ class NutritionFactsDBHelper(val context: Context) :
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        val drop_Table_ER = "drop table if exists $TABLE_NAME_NFRECORD;"
-        val drop_Table_E = "drop table if exists $TABLE_NAME_NUTRITIONFACTS;"
-        db!!.execSQL(drop_Table_ER)
-        db.execSQL(drop_Table_E)
+        val dropTableER = "drop table if exists $TABLE_NAME_NFRECORD;"
+        val dropTableE = "drop table if exists $TABLE_NAME_NUTRITIONFACTS;"
+        db!!.execSQL(dropTableER)
+        db.execSQL(dropTableE)
         onCreate(db)
     }
 

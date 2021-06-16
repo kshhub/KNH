@@ -7,7 +7,6 @@ import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -17,6 +16,7 @@ import com.example.teamproject.custom.CustomData
 import com.example.teamproject.custom.CustomDecorator
 import com.example.teamproject.database.AppDataBase
 import com.example.teamproject.memo.MemoActivity
+import com.example.teamproject.nutrition.NutritionFactsDBHelper
 import com.example.teamproject.nutrition.RecordActivity
 import com.example.teamproject.popup.PopupActivity
 import com.example.teamproject.setting.SettingActivity
@@ -28,21 +28,24 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.time.LocalTime
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
     val DEFAULT_DATE = "Tue Jun 01 00:00:00 GMT+09:00 1990"
     lateinit var customDBHelper: CustomDBHelper
     lateinit var userInfoDBHelper: UserInfoDBHelper
+    lateinit var exerciseDBHelper: ExerciseDBHelper
+    lateinit var nutritionFactsDBHelper: NutritionFactsDBHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initCustomizingDB()
         initUserInfoDB()
+        initDB()
         init()
     }
 
@@ -72,8 +75,54 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun initDB() {
+        exerciseDBHelper = ExerciseDBHelper(this)
+
+        val dbfile = this.getDatabasePath("exercise.db")
+
+        if (!dbfile.parentFile.exists()) {
+            dbfile.parentFile.mkdir()
+        }
+
+        if (!dbfile.exists()) {
+            val file = resources.openRawResource(com.example.teamproject.R.raw.exercise)
+            val fileSize = file.available()
+            val buffer = ByteArray(fileSize)
+
+            file.read(buffer)
+            file.close()
+
+            dbfile.createNewFile()
+            val output = FileOutputStream(dbfile)
+            output.write(buffer)
+            output.close()
+        }
+
+        nutritionFactsDBHelper = NutritionFactsDBHelper(this)
+
+        val dbFile = this.getDatabasePath("nutritionFacts.db")
+
+        if (!dbFile.parentFile.exists()) {
+            dbFile.parentFile.mkdir()
+        }
+
+        if (!dbFile.exists()) {
+            val file = resources.openRawResource(R.raw.nutritionfacts)
+            val fileSize = file.available()
+            val buffer = ByteArray(fileSize)
+
+            file.read(buffer)
+            file.close()
+
+            dbfile.createNewFile()
+            val output = FileOutputStream(dbfile)
+            output.write(buffer)
+            output.close()
+        }
+    }
+
     private fun initBoolean(): Array<Boolean> = runBlocking {
-        val today = CalendarDay.today().date.toString()
+        val today = LocalDate.now().toString()
         var isMemo = false
         var isDiet = false
         val job = CoroutineScope(Dispatchers.IO).launch {
@@ -104,13 +153,15 @@ class MainActivity : AppCompatActivity() {
         val today = CalendarDay.today()
         val memo = findViewById<Button>(R.id.memoBtn)
         val memoTextView = findViewById<TextView>(R.id.memoView)
+        val dietView = findViewById<TextView>(R.id.dietView)
         val dietBtn = findViewById<Button>(R.id.button2);
-        val exerciseBtn = findViewById<Button>(R.id.exerciseBtn);
+        val exerciseBtn = findViewById<Button>(R.id.exerciseBtn)
+        val date = LocalDate.now().toString()
 
         calendarView.selectedDate = today
         memo.setOnClickListener {
             val intent = Intent(this, MemoActivity::class.java)
-            intent.putExtra("date", today.date.toString())
+            intent.putExtra("date", date)
             startActivity(intent)
         }
 
@@ -118,9 +169,15 @@ class MainActivity : AppCompatActivity() {
 
         memoTextView.setOnClickListener {
             val intent = Intent(this, PopupActivity::class.java)
-            intent.putExtra("date", today.date.toString())
-            Log.d("memo_test", memoTextView.text.toString())
+            intent.putExtra("date", date)
             intent.putExtra("content", memoTextView.text.toString())
+            startActivity(intent)
+        }
+
+        dietView.setOnClickListener {
+            val intent = Intent(this, PopupActivity::class.java)
+            intent.putExtra("date", date)
+            intent.putExtra("content", dietView.text.toString())
             startActivity(intent)
         }
 
@@ -139,12 +196,16 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("day", today.day.toString())
             intent.putExtra("month", today.month.toString())
             intent.putExtra("year", today.year.toString())
-            intent.putExtra("date",calendarView.selectedDate.toString())
+            intent.putExtra("date", calendarView.selectedDate.toString())
             startActivity(intent)
         }
 
         dietBtn.setOnClickListener {
-            val date = LocalDate.of(calendarView.selectedDate.year, calendarView.selectedDate.month+1, calendarView.selectedDate.day)
+            val date = LocalDate.of(
+                calendarView.selectedDate.year,
+                calendarView.selectedDate.month + 1,
+                calendarView.selectedDate.day
+            )
             val intent = Intent(this, RecordActivity::class.java)
             intent.putExtra("type", "diet")
             intent.putExtra("date", date.toString())
@@ -152,7 +213,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         exerciseBtn.setOnClickListener {
-            val date = LocalDate.of(calendarView.selectedDate.year, calendarView.selectedDate.month+1, calendarView.selectedDate.day)
+            val date = LocalDate.of(
+                calendarView.selectedDate.year,
+                calendarView.selectedDate.month + 1,
+                calendarView.selectedDate.day
+            )
             val intent = Intent(this, RecordActivity::class.java)
             intent.putExtra("type", "exercise")
             intent.putExtra("date", date.toString())
@@ -172,24 +237,25 @@ class MainActivity : AppCompatActivity() {
     private fun initView() {
         val memoTxt = findViewById<TextView>(R.id.memoView)
         val dietTxt = findViewById<TextView>(R.id.dietView)
-        val today = CalendarDay.today().date.toString()
+        val today = LocalDate.now()
         val bools = initBoolean()
         Log.d("edit_test", bools.toString())
         if (bools[0]) {
             CoroutineScope(Dispatchers.IO).launch {
                 val memo =
-                    AppDataBase.getInstance(applicationContext).memoDao().getMemoByDate(today)
+                    AppDataBase.getInstance(applicationContext).memoDao().getMemoByDate(today.toString())
                 memoTxt.text = memo[memo.lastIndex].content
             }
         } else {
             memoTxt.text = ""
         }
-        if (bools[1]) {
-            CoroutineScope(Dispatchers.IO).launch {
-                val diet =
-                    AppDataBase.getInstance(applicationContext).dietDao().getDietByDate(today)
-                dietTxt.text = diet[diet.lastIndex].diet
+        val exerciseList = exerciseDBHelper.getRecordList(today)
+        if (exerciseList.size != 0) {
+            var text = ""
+            for (record in exerciseList) {
+                text = text + record.exercise + "/" + record.etime + "/" + record.totalKcal + "\n"
             }
+            dietTxt.text = text
         } else {
             dietTxt.text = ""
         }

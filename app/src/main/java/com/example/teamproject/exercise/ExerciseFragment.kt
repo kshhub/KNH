@@ -23,26 +23,31 @@ import org.json.JSONObject
 import org.jsoup.Jsoup
 import java.io.FileOutputStream
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import kotlin.math.round
 
 //운동 정보 기록 프래그먼트
 class ExerciseFragment : Fragment() {
     var binding: FragmentExerciseBinding? = null
+
     //DB에서 가지고 온 운동 정보들.
     var eArrayList = ArrayList<Exercise>()
+
     //AutoTextComplement에 쓰일 운동 이름 리스트
     var enameArrayList = ArrayList<String>()
+
     //AutoCompleteTextView의 어댑터
     lateinit var act_adapter: ArrayAdapter<String>
+
     //운동 기록 RecyclerView의 어댑터
     lateinit var er_adapter: ERAdapter
+
     //운동 관련 DBHelper
     lateinit var ERDBHelper: ExerciseDBHelper
+
     //총 칼로리
     var totalKcal = 0
+
     //현재 프래그먼트가 보여줄 날짜
     var nowDate: LocalDate = LocalDate.now()
 
@@ -52,7 +57,7 @@ class ExerciseFragment : Fragment() {
     ): View {
         binding = FragmentExerciseBinding.inflate(layoutInflater, container, false)
 
-        nowDate = LocalDate.parse(arguments?.getString("date"), DateTimeFormatter.ISO_DATE);
+        nowDate = LocalDate.parse(arguments?.getString("date"), DateTimeFormatter.ISO_DATE)
 
         return binding!!.root
     }
@@ -126,7 +131,7 @@ class ExerciseFragment : Fragment() {
                 }
 
                 if (exercise != null) {
-                    var dateTime = nowDate.toString() + "/" + LocalTime.now().toString()
+                    val dateTime = nowDate.toString() + "/" + LocalTime.now().toString()
 
                     val etime = etimeEditText.text.toString().toInt()
                     val weight = weightEditText.text.toString().toInt()
@@ -180,8 +185,6 @@ class ExerciseFragment : Fragment() {
         for (item in eArrayList) {
             enameArrayList.add(item.ename)
         }
-
-
     }
 
     //운동 기록 RecyclerView를 초기화 해줌.

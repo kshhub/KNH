@@ -17,6 +17,7 @@
         <activity android:name=".memo.MemoActivity"/>
         <activity android:name=".setting.SettingActivity" />
         <activity android:name=".chart.ChartActivity"/>
+        <activity android:name=".nutrition.RecordActivity" android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
