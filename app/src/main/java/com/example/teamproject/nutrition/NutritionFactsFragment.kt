@@ -46,7 +46,9 @@ class NutritionFactsFragment : Fragment() {
     var nfArray = ArrayList<NutritionFacts>()
     var fnameArray = ArrayList<String>()
 
-    var recordedNFList = ArrayList<NutritionFactsRecord>()
+    val ERROR_FOOD_NOT_SELECTED = 100
+    val ERROR_INTAKE_IS_EMPTY = 200
+    val NOTI_SEARCH_FOODS = 300
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -220,18 +222,18 @@ class NutritionFactsFragment : Fragment() {
 
             initNFRView(nowDate)
 
-            //음식 이름을 기입하는 EditText. 입력값이 바뀔 때마다 값을 포함하는 음식들을 추려서 NutritionFacts RecyclerView에 보여줌.
-            fnameEditText.addTextChangedListener {
-                if (it!!.isEmpty()) {
-                    nfArray = NFDBHelper.getAllNutritionFacts()
-                    settingFnameArray(nfArray)
+            searchBtn.setOnClickListener {
+                if(fnameEditText.text.isEmpty())
+                {
                     initNFAdapter(nfArray)
                 }
-            }
+                else
+                {
+                    val fname = fnameEditText.text.toString()
+                    initNFAdapter(NFDBHelper.findNutritionFactsbyName(fname))
+                }
 
-            searchBtn.setOnClickListener {
-                val fname = fnameEditText.text.toString()
-                initNFAdapter(NFDBHelper.findNutritionFactsbyName(fname))
+                toastError(NOTI_SEARCH_FOODS)
             }
 
             intakeEditText.addTextChangedListener {
@@ -239,24 +241,40 @@ class NutritionFactsFragment : Fragment() {
             }
 
             recordBtn.setOnClickListener {
-                var dateTime = nowDate.toString() + "/" + LocalTime.now().toString()
+                try
+                {
+                    var dateTime = nowDate.toString() + "/" + LocalTime.now().toString()
 
-                val intake = intakeEditText.text.toString().toInt()
-                val nutritionFacts = NFDBHelper.findNutritionFacts(nf_adapter.selectedFid)
-                val record = NutritionFactsRecord(dateTime, nutritionFacts!!, intake)
-                val result = NFDBHelper.insertRecord(record)
+                    val nutritionFacts = NFDBHelper.findNutritionFacts(nf_adapter.selectedFid)
+                    val intake = intakeEditText.text.toString().toInt()
+                    val record = NutritionFactsRecord(dateTime, nutritionFacts!!, intake)
+                    val result = NFDBHelper.insertRecord(record)
 
-                if (result) {
-                    Toast.makeText(requireActivity(), "기록 성공!", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(requireActivity(), "기록 실패!", Toast.LENGTH_SHORT).show()
+                    /*
+                    if (result) {
+                        Toast.makeText(requireActivity(), "기록 성공!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(requireActivity(), "기록 실패!", Toast.LENGTH_SHORT).show()
+                    }
+                     */
+
+                    nfr_adapter.items.add(record)
+                    nfr_adapter.notifyDataSetChanged()
+
+                    //총 칼로리 누적
+                    calculateTotalKcal(nowDate)
                 }
-
-                nfr_adapter.items.add(record)
-                nfr_adapter.notifyDataSetChanged()
-
-                //총 칼로리 누적
-                calculateTotalKcal(nowDate)
+                catch (e : Exception)
+                {
+                    if(nf_adapter.selectedFid == -1)
+                    {
+                        toastError(ERROR_FOOD_NOT_SELECTED)
+                    }
+                    else if(intakeEditText.text.isEmpty())
+                    {
+                        toastError(ERROR_INTAKE_IS_EMPTY)
+                    }
+                }
             }
         }
 
@@ -355,6 +373,24 @@ class NutritionFactsFragment : Fragment() {
             "오늘 섭취한 칼로리는 " + totalKcal.toString() + " (Kcal) 입니다"
         } else {
             date.format(DateTimeFormatter.ofPattern("yyyy년 M월 d일")) + " 섭취한 칼로리는 " + totalKcal.toString() + " (Kcal) 입니다"
+        }
+    }
+
+    fun toastError(error : Int)
+    {
+        when(error)
+        {
+            ERROR_FOOD_NOT_SELECTED -> {
+                Toast.makeText(requireActivity(), "음식을 선택해주세요", Toast.LENGTH_SHORT).show()
+            }
+
+            ERROR_INTAKE_IS_EMPTY -> {
+                Toast.makeText(requireActivity(), "섭취량을 입력해주세요", Toast.LENGTH_SHORT).show()
+            }
+
+            NOTI_SEARCH_FOODS -> {
+                Toast.makeText(requireActivity(), nf_adapter.items.size.toString() + "가지의 음식을 검색했습니다", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

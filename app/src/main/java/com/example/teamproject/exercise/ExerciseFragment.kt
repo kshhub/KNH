@@ -45,11 +45,13 @@ class ExerciseFragment : Fragment() {
     //운동 관련 DBHelper
     lateinit var ERDBHelper: ExerciseDBHelper
 
-    //총 칼로리
-    var totalKcal = 0
-
     //현재 프래그먼트가 보여줄 날짜
     var nowDate: LocalDate = LocalDate.now()
+
+    val ERROR_EXERCISE_WRONG = 100
+    val ERROR_ETIME_IS_EMPTY = 200
+    val ERROR_EXERCISE_IS_EMPTY = 300
+    val ERROR_WEIGHT_IS_EMPTY = 400
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -130,12 +132,13 @@ class ExerciseFragment : Fragment() {
                     }
                 }
 
-                if (exercise != null) {
-                    val dateTime = nowDate.toString() + "/" + LocalTime.now().toString()
+                val dateTime = nowDate.toString() + "/" + LocalTime.now().toString()
 
+                try
+                {
                     val etime = etimeEditText.text.toString().toInt()
                     val weight = weightEditText.text.toString().toInt()
-                    val kcal = calculateKcal(exercise.MET, weight, etime)
+                    val kcal = calculateKcal(exercise!!.MET, weight, etime)
 
                     val record = ExerciseRecord(dateTime, exercise, weight, etime, kcal.toInt())
 
@@ -144,13 +147,34 @@ class ExerciseFragment : Fragment() {
 
                     val result = ERDBHelper.insertRecord(record)
 
+                    /*
                     if (result) {
                         Toast.makeText(requireActivity(), "기록 성공!", Toast.LENGTH_SHORT).show()
                     } else {
                         Toast.makeText(requireActivity(), "기록 실패!", Toast.LENGTH_SHORT).show()
                     }
+                     */
 
                     calculateTotalKcal(nowDate)
+                }
+                catch (e : Exception)
+                {
+                    if(enameEditText.text.isEmpty())
+                    {
+                        toastError(ERROR_EXERCISE_IS_EMPTY)
+                    }
+                    else if(exercise == null)
+                    {
+                        toastError(ERROR_EXERCISE_WRONG)
+                    }
+                    else if(weightEditText.text.isEmpty())
+                    {
+                        toastError(ERROR_WEIGHT_IS_EMPTY)
+                    }
+                    else if(etimeEditText.text.isEmpty())
+                    {
+                        toastError(ERROR_ETIME_IS_EMPTY)
+                    }
                 }
             }
 
@@ -279,5 +303,27 @@ class ExerciseFragment : Fragment() {
     //소모 칼로리 계산
     fun calculateKcal(met: Double, weight: Int, etime: Int): Double {
         return 0.0175 * met * weight * etime
+    }
+
+    fun toastError(error : Int)
+    {
+        when(error)
+        {
+            ERROR_EXERCISE_IS_EMPTY -> {
+                Toast.makeText(requireActivity(), "운동 종목을 입력해주세요", Toast.LENGTH_SHORT).show()
+            }
+
+            ERROR_EXERCISE_WRONG -> {
+                Toast.makeText(requireActivity(), "운동 종목을 다시 입력해주세요", Toast.LENGTH_SHORT).show()
+            }
+
+            ERROR_ETIME_IS_EMPTY -> {
+                Toast.makeText(requireActivity(), "운동 시간을 입력해주세요", Toast.LENGTH_SHORT).show()
+            }
+
+            ERROR_WEIGHT_IS_EMPTY -> {
+                Toast.makeText(requireActivity(), "체중을 입력해주세요", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

@@ -15,6 +15,7 @@ import com.example.teamproject.custom.CustomDBHelper
 import com.example.teamproject.custom.CustomData
 import com.example.teamproject.custom.CustomDecorator
 import com.example.teamproject.database.AppDataBase
+import com.example.teamproject.exercise.NutritionFacts
 import com.example.teamproject.memo.MemoActivity
 import com.example.teamproject.nutrition.NutritionFactsDBHelper
 import com.example.teamproject.nutrition.RecordActivity
@@ -114,8 +115,8 @@ class MainActivity : AppCompatActivity() {
             file.read(buffer)
             file.close()
 
-            dbfile.createNewFile()
-            val output = FileOutputStream(dbfile)
+            dbFile.createNewFile()
+            val output = FileOutputStream(dbFile)
             output.write(buffer)
             output.close()
         }
