@@ -14,9 +14,9 @@ class SettingFragmentAdapter(fragmentActivity: FragmentActivity) :
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> CustomFragment()
-            1 -> UserInfoFragment()
-            else -> CustomFragment()
+            0 -> UserInfoFragment()
+            1 -> CustomFragment()
+            else -> UserInfoFragment()
         }
     }
 
