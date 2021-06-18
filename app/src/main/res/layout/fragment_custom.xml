@@ -299,11 +299,20 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/buttonCustomSave"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginLeft="100dp"
+            android:background="@drawable/edgesmooth"
+            android:backgroundTint="#8BC34A"
+            android:text="SAVE"
+            app:backgroundTint="@null" />
+
+        <Button
             android:id="@+id/buttonCustomReset"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="165dp"
+            android:layout_marginLeft="40dp"
             android:background="@drawable/edgesmooth"
             android:backgroundTint="#8BC34A"
             android:text="Reset"
