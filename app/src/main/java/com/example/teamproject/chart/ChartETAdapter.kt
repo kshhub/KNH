@@ -1,6 +1,7 @@
 package com.example.teamproject.chart
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,8 +29,15 @@ class ChartETAdapter(private val context: Context) :
         private val tkcal: TextView = itemView.findViewById(R.id.RTtext)
 
         fun bind(item: EatingData) {
-            tname.text = item.ename
-            tkcal.text = item.ekcal.toString()
+            Log.d("B",item.ekcal.toString())
+            if(item.ename.length>4){
+                val cen = item.ename.subSequence(0,4).toString()
+                var cstn = cen + ".."
+                if(item.ename.length>6)cstn = cstn + "."
+                tname.text = cstn
+            }
+            else tname.text = item.ename
+            tkcal.text = item.ekcal.toString()+"kcal"
 
         }
     }

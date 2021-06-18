@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
@@ -13,14 +14,23 @@ import com.example.teamproject.ExerciseDBHelper
 import com.example.teamproject.MainActivity
 import com.example.teamproject.R
 import com.example.teamproject.databinding.ActivityChartBinding
+import com.example.teamproject.exercise.ExerciseRecord
+import com.example.teamproject.exercise.NutritionFactsRecord
 import com.example.teamproject.nutrition.NutritionFactsDBHelper
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ChartActivity : AppCompatActivity() {
@@ -30,31 +40,157 @@ class ChartActivity : AppCompatActivity() {
 
     val entries = arrayListOf<Entry>()
     val entriset = arrayListOf<Entry>()
+    val useentries = arrayListOf<Int>()
+    val gainentries = arrayListOf<Int>()
+    var exdataall = mutableListOf<ArrayList<ExerciseRecord>>()
+    var vardataall = mutableListOf<ArrayList<NutritionFactsRecord>>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         chartbinding = ActivityChartBinding.inflate(layoutInflater)
         setContentView(chartbinding.root)
         init()
         setChart()
-        initRecycler()
+        initDBall()
     }
+    private fun calcgraph(whr:Int){
+        if(!useentries.isEmpty()&&!gainentries.isEmpty()) {
+            entries.clear()
+            entriset.clear()
+            for (i in 0..whr) {
+                val `val` = useentries[whr - i].toFloat()
+                entries.add(Entry((i-whr).toFloat(), `val`))
+            }
+            for (i in 0..whr) {
+                val `val` = gainentries[whr - i].toFloat()
+                entriset.add(Entry((i-whr).toFloat(), `val`))
+            }
+            val set1 = LineDataSet(entries, "소비 칼로리")
+            val set2 = LineDataSet(entriset, "섭취 칼로리")
+            val dataSets: ArrayList<ILineDataSet> = ArrayList()
+            dataSets.add(set1)
+            dataSets.add(set2)
+            val data = LineData(dataSets)
+            set1.color = Color.BLUE
+            set1.setCircleColor(Color.BLACK)
+            set2.color = Color.RED
+            set2.setCircleColor(Color.YELLOW)
+            try {
+                val chart = findViewById<LineChart>(R.id.Chart)
+                chart!!.data = data
+                chart.invalidate()
+                //refreshm();
 
-    private fun initRecycler() {
+            } catch (e: NullPointerException) {
+                Log.d("ERR", "없")
+            }
+        }
+    }
+    private fun calcgoal(){
+        val noeat = findViewById<TextView>(R.id.noeattext)
+        val noex = findViewById<TextView>(R.id.noextext)
+        val noall = findViewById<TextView>(R.id.noalldatatext)
+        val eatal = findViewById<TextView>(R.id.alleatkcal)
+        val exal = findViewById<TextView>(R.id.allexkcal)
+        val goalt = findViewById<TextView>(R.id.bestset)
+        val achieveg = findViewById<TextView>(R.id.setpercent)
+        if(eatal.text.toString()!="none"&&exal.text.toString()!="none"){
+            noeat.setVisibility(View.INVISIBLE)
+            noex.setVisibility(View.INVISIBLE)
+            noall.setVisibility(View.INVISIBLE)
+            val eatint = eatal.text.toString().toInt()
+            val exint = exal.text.toString().toInt()
+            if(eatint==0&&exint==0){//정보없음
+                achieveg.setText("ㅇㅂㅇ?")
+                noall.setVisibility(View.VISIBLE)
+            }
+            else if(eatint==0){
+                achieveg.setText("ㅇㅂㅇ?")
+                noeat.setVisibility(View.VISIBLE)
+            }
+            else if(exint==0){
+                achieveg.setText("ㅇㅂㅇ?")
+                noex.setVisibility(View.VISIBLE)
+            }
+            else if(eatint>exint+300){//먹보
+                when(goalt.text.toString()){
+                    "체중 감소"->{achieveg.setText(";ㅁ;")}
+                    "체중 유지"->{achieveg.setText("-ㅅ-")}
+                    "체중 증가"->{achieveg.setText("ㅇㅂㅇb")}
+                    else->{Log.d("F","목표 오류")}
+                }
+            }
+            else if(eatint<exint+300&&eatint>exint-300){//적당
+                when(goalt.text.toString()){
+                    "체중 감소"->{achieveg.setText("-ㅅ-")}
+                    "체중 유지"->{achieveg.setText("ㅇㅂㅇb")}
+                    "체중 증가"->{achieveg.setText("-ㅅ-")}
+                    else->{Log.d("F","목표 오류")}
+                }
+            }
+            else if(eatint<exint-300){//운동
+                when(goalt.text.toString()){
+                    "체중 감소"->{achieveg.setText("ㅇㅂㅇb")}
+                    "체중 유지"->{achieveg.setText("-ㅅ-")}
+                    "체중 증가"->{achieveg.setText(";ㅁ;")}
+                    else->{Log.d("F","목표 오류")}
+                }
+            }
+            else{
+                Log.d("F","ATAL ERROR")
+            }
+        }
+    }
+    private fun initDBall(){
         val date = intent.getStringExtra("date")
-        val nowDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE)
-        val exerciseData = exerciseDBHelper.getRecordList(nowDate)
-        val nutritionData = nutritionFactsDBHelper.getRecordList(nowDate)
-
+        val cal: Calendar = Calendar.getInstance()
+        val df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val datedate : Date = df.parse(date)
+        cal.setTime(datedate)
+        System.out.println("current: " + df.format(cal.getTime()))
+        val sD = LocalDate.parse(df.format(cal.getTime()),DateTimeFormatter.ISO_DATE)
+        val exerciseData = exerciseDBHelper.getRecordList(sD)
+        val nutritionData = nutritionFactsDBHelper.getRecordList(sD)
+        exdataall.add(exerciseData)
+        vardataall.add(nutritionData)
+        for(i in 1..30){
+            cal.add(Calendar.DATE, -1)
+            val dD = LocalDate.parse(df.format(cal.getTime()),DateTimeFormatter.ISO_DATE)
+            val edata = exerciseDBHelper.getRecordList(dD)
+            val ndata = nutritionFactsDBHelper.getRecordList(dD)
+            exdataall.add(edata)
+            vardataall.add(ndata)
+        }
+        initRecycler(0)
+    }
+    private fun initRecycler(whr:Int) {
         val datas = mutableListOf<ExerciseData>()
         val exerciseAdapter = ChartEXAdapter(this)
         val exerciseRecyclerView = findViewById<RecyclerView>(R.id.exerrecyclerView)
+        var exall = 0
+        var exmini = 0
+        var eatall = 0
+        var eatmini = 0
+        useentries.clear()
+        gainentries.clear()
         exerciseRecyclerView.adapter = exerciseAdapter
         datas.apply {
-            //add(ExerciseData(exname = "수영", extime = 30, exkcal = 56))
-            for (exData in exerciseData) {
-                add(ExerciseData(exData.exercise.ename, exData.etime, exData.totalKcal))
+            val alex = findViewById<TextView>(R.id.exalltext)
+            for(i in 0..whr) {
+                exmini = 0
+                for (exData in exdataall[i]) {
+                    add(ExerciseData(exData.exercise.ename, exData.etime, exData.totalKcal))
+                    exmini = exmini + exData.totalKcal
+                }
+                useentries.add(exmini)
+                exall = exall + exmini
             }
+            val exal = findViewById<TextView>(R.id.allexkcal)
+            exal.setText(exall.toString())
+            calcgoal()
+            if(exall==0)alex.setText("총 소비 칼로리: 정보 없음")
+            else alex.setText("총 소비 칼로리: " + exall.toString() + "kcal")
             exerciseAdapter.datas = datas
+            calcgraph(whr)
             exerciseAdapter.notifyDataSetChanged()
         }
 
@@ -63,14 +199,27 @@ class ChartActivity : AppCompatActivity() {
         val eatRecyclerView = findViewById<RecyclerView>(R.id.eatrecyclerView)
         eatRecyclerView.adapter = eatAdapter
         datast.apply {
-            //add(EatingData(ename = "햇반", ekcal = 190))
-            for (nutData in nutritionData) {
-                val kcal = (nutData.nutritionFacts.kcal * nutData.intake).toInt()
-                add(EatingData(nutData.nutritionFacts.fname, kcal))
+            val aleat = findViewById<TextView>(R.id.eatalltext)
+            for(i in 0..whr) {
+                eatmini = 0
+                for (nutData in vardataall[i]) {
+                    val kcal = (nutData.nutritionFacts.kcal * nutData.intake / nutData.nutritionFacts.pergram).toInt()
+                    eatmini = eatmini + kcal
+                    add(EatingData(nutData.nutritionFacts.fname, kcal))
+                }
+                gainentries.add(eatmini)
+                eatall = eatall + eatmini
             }
+            val eatal = findViewById<TextView>(R.id.alleatkcal)
+            eatal.setText(eatall.toString())
+            calcgoal()
+            if(eatall==0)aleat.setText("총 섭취 칼로리: 정보 없음")
+            else aleat.setText("총 섭취 칼로리: " + eatall.toString() + "kcal")
             eatAdapter.datas = datast
+            calcgraph(whr)
             eatAdapter.notifyDataSetChanged()
         }
+
     }
 
     private fun init() {
@@ -78,26 +227,19 @@ class ChartActivity : AppCompatActivity() {
         nutritionFactsDBHelper = NutritionFactsDBHelper(applicationContext)
 
         val bestset: TextView = findViewById(R.id.bestset)
-        val setpercent: TextView = findViewById(R.id.setpercent)
         val todaydate: TextView = findViewById(R.id.dateshowtext)
         val bartext: TextView = findViewById(R.id.bardatetext)
-        bestset.text = "체중 감소"
-        setpercent.text = "NULL"
+        bestset.text = "설정 안함"
+        if(intent.hasExtra("goal")){
+            val gstst = intent.getStringExtra("goal")
+            if(gstst!="default")bestset.text = gstst
+        }
         bartext.text = "오늘 하루"
         if (intent.hasExtra("day")) {
             val setdtdt = intent.getStringExtra("date")
             val setdy = IntRange(19, 20)
             val setmt = IntRange(17, 17)
             val setyr = IntRange(12, 15)
-            /*todaydate.text = "0000/00/00"
-            if (setdtdt != null) {
-                Log.d("DATE", setdtdt)
-                var helpsetdate = setdtdt.slice(setmt).toInt()
-                helpsetdate += 1
-                val setdatestr =
-                    setdtdt.slice(setyr) + "/" + helpsetdate.toString() + "/" + setdtdt.slice(setdy)
-                todaydate.text = setdatestr
-            }*/
             todaydate.text = setdtdt
         }
         val seekBar: SeekBar = findViewById(R.id.seekBar)
@@ -121,8 +263,6 @@ class ChartActivity : AppCompatActivity() {
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                entries.clear()
-                entriset.clear()
                 try {
                     val chart = findViewById<LineChart>(R.id.Chart)
                     if (chart != null) {
@@ -140,8 +280,8 @@ class ChartActivity : AppCompatActivity() {
                                 chart.apply {
                                     xAxis.apply {
                                         setLabelCount(2, true)
-                                        axisMinimum = 0f
-                                        axisMaximum = 1f
+                                        axisMinimum = -1f
+                                        axisMaximum = 0f
                                     }
                                 }
                             }
@@ -149,8 +289,8 @@ class ChartActivity : AppCompatActivity() {
                                 chart.apply {
                                     xAxis.apply {
                                         setLabelCount(3, true)
-                                        axisMinimum = 0f
-                                        axisMaximum = 2f
+                                        axisMinimum = -2f
+                                        axisMaximum = 0f
                                     }
                                 }
                             }
@@ -158,8 +298,8 @@ class ChartActivity : AppCompatActivity() {
                                 chart.apply {
                                     xAxis.apply {
                                         setLabelCount(4, true)
-                                        axisMinimum = 0f
-                                        axisMaximum = 3f
+                                        axisMinimum = -3f
+                                        axisMaximum = 0f
                                     }
                                 }
                             }
@@ -167,8 +307,8 @@ class ChartActivity : AppCompatActivity() {
                                 chart.apply {
                                     xAxis.apply {
                                         setLabelCount(5, true)
-                                        axisMinimum = 0f
-                                        axisMaximum = 4f
+                                        axisMinimum = -4f
+                                        axisMaximum = 0f
                                     }
                                 }
                             }
@@ -176,8 +316,8 @@ class ChartActivity : AppCompatActivity() {
                                 chart.apply {
                                     xAxis.apply {
                                         setLabelCount(6, true)
-                                        axisMinimum = 0f
-                                        axisMaximum = 5f
+                                        axisMinimum = -5f
+                                        axisMaximum = 0f
                                     }
                                 }
                             }
@@ -185,8 +325,8 @@ class ChartActivity : AppCompatActivity() {
                                 chart.apply {
                                     xAxis.apply {
                                         setLabelCount(7, true)
-                                        axisMinimum = 0f
-                                        axisMaximum = 6f
+                                        axisMinimum = -6f
+                                        axisMaximum = 0f
                                     }
                                 }
                             }
@@ -194,8 +334,8 @@ class ChartActivity : AppCompatActivity() {
                                 chart.apply {
                                     xAxis.apply {
                                         setLabelCount(8, true)
-                                        axisMinimum = 0f
-                                        axisMaximum = 7f
+                                        axisMinimum = -7f
+                                        axisMaximum = 0f
                                     }
                                 }
                             }
@@ -203,8 +343,8 @@ class ChartActivity : AppCompatActivity() {
                                 chart.apply {
                                     xAxis.apply {
                                         setLabelCount(15, true)
-                                        axisMinimum = 0f
-                                        axisMaximum = 14f
+                                        axisMinimum = -14f
+                                        axisMaximum = 0f
                                     }
                                 }
                             }
@@ -212,8 +352,8 @@ class ChartActivity : AppCompatActivity() {
                                 chart.apply {
                                     xAxis.apply {
                                         setLabelCount(31, true)
-                                        axisMinimum = 0f
-                                        axisMaximum = 30f
+                                        axisMinimum = -30f
+                                        axisMaximum = 0f
                                     }
                                 }
                             }
@@ -223,56 +363,16 @@ class ChartActivity : AppCompatActivity() {
                     Log.d("ERR", "없")
                 }
                 if (seekBar!!.progress < 8) {
-                    for (i in 0..seekBar.progress) {
-                        val `val` = (Math.random() * 10).toFloat()
-                        entries.add(Entry(i.toFloat(), `val`))
-                    }
-                    for (i in 0..seekBar.progress) {
-                        val `val` = (Math.random() * 10).toFloat()
-                        entriset.add(Entry(i.toFloat(), `val`))
-                    }
+                    initRecycler(seekBar.progress)
                 } else {
                     when (seekBar.progress) {
                         8 -> {
-                            for (i in 0..14) {
-                                val `val` = (Math.random() * 10).toFloat()
-                                entries.add(Entry(i.toFloat(), `val`))
-                            }
-                            for (i in 0..14) {
-                                val `val` = (Math.random() * 10).toFloat()
-                                entriset.add(Entry(i.toFloat(), `val`))
-                            }
+                            initRecycler(14)
                         }
                         9 -> {
-                            for (i in 0..30) {
-                                val `val` = (Math.random() * 10).toFloat()
-                                entries.add(Entry(i.toFloat(), `val`))
-                            }
-                            for (i in 0..30) {
-                                val `val` = (Math.random() * 10).toFloat()
-                                entriset.add(Entry(i.toFloat(), `val`))
-                            }
+                            initRecycler(30)
                         }
                     }
-                }
-                val set1 = LineDataSet(entries, "소비 칼로리")
-                val set2 = LineDataSet(entriset, "섭취 칼로리")
-                val dataSets: ArrayList<ILineDataSet> = ArrayList()
-                dataSets.add(set1)
-                dataSets.add(set2)
-                val data = LineData(dataSets)
-                set1.color = Color.BLUE
-                set1.setCircleColor(Color.BLACK)
-                set2.color = Color.RED
-                set2.setCircleColor(Color.YELLOW)
-                try {
-                    val chart = findViewById<LineChart>(R.id.Chart)
-                    chart!!.data = data
-                    chart.invalidate()
-                    //refreshm();
-
-                } catch (e: NullPointerException) {
-                    Log.d("ERR", "없")
                 }
             }
         })

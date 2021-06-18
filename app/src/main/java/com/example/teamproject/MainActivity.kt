@@ -217,6 +217,10 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("year", today.year.toString())
             //intent.putExtra("date", calendarView.selectedDate.toString())
             intent.putExtra("date", selectedDate.toString())
+            //intent.putExtra("date", calendarView.selectedDate.toString())
+            intent.putExtra("date", selectedDate.toString())
+            Log.d("A",userInfoDBHelper.findUserInfo("goal"))
+            intent.putExtra("goal",userInfoDBHelper.findUserInfo("goal"))
             startActivity(intent)
         }
 

@@ -1,6 +1,7 @@
 package com.example.teamproject.chart
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,9 +29,20 @@ class ChartEXAdapter(private val context: Context) :
         private val etime: TextView = itemView.findViewById(R.id.RTtext)
         private val ekcal: TextView = itemView.findViewById(R.id.RHtext)
         fun bind(item: ExerciseData) {
-            ename.text = item.exname
-            etime.text = item.extime.toString()
-            ekcal.text = item.exkcal.toString()
+            Log.d("X",item.exname.length.toString())
+            if(item.exname.length>6){
+                val cxn = item.exname.subSequence(0,6).toString()
+                var csxn = cxn + ".."
+                if(item.exname.length>8)csxn = csxn + "."
+                ename.text = csxn
+            }
+            else ename.text = item.exname
+            val ghour = item.extime/60
+            val gmin = item.extime%60
+            var fnaltime =  ghour.toString()+":"
+            if(gmin<10)fnaltime = fnaltime + "0"
+            fnaltime = fnaltime + gmin.toString()
+            ekcal.text = fnaltime + "/" + item.exkcal.toString() + "kcal"
 
         }
     }
