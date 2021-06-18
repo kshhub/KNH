@@ -13,15 +13,18 @@ class PopupActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        setContentView(R.layout.popup_activity)
+        setContentView(R.layout.activity_popup)
         init()
     }
 
     fun init() {
+        val titleTxt = findViewById<TextView>(R.id.titleTxt)
         txtText = findViewById<View>(R.id.txtText) as TextView
         val intent = intent
+        val title = intent.getStringExtra("title")
         val date = intent.getStringExtra("date")
         txtText!!.text = date
+        titleTxt.text = title
         val textView = findViewById<TextView>(R.id.contentText)
         val content = intent.getStringExtra("content")
         textView.movementMethod = ScrollingMovementMethod()
