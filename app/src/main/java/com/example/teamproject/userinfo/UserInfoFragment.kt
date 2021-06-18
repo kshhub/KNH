@@ -178,10 +178,9 @@ class UserInfoFragment : Fragment() {
             val weight = editweight.text.toString()
 
             helper.updateUserInfo((UserInfoData("age", age)))
-            if (genderFlag == "남") {
-                helper.updateUserInfo(UserInfoData("gender", "man"))
-            } else {
-                helper.updateUserInfo(UserInfoData("gender", "woman"))
+           when(genderFlag) {
+                "남" -> helper.updateUserInfo(UserInfoData("gender", "man"))
+                "여" -> helper.updateUserInfo(UserInfoData("gender", "woman"))
             }
             helper.updateUserInfo(UserInfoData("height", height))
             helper.updateUserInfo(UserInfoData("weight", weight))
@@ -192,7 +191,7 @@ class UserInfoFragment : Fragment() {
                 "체중 유지" -> {
                     helper.updateUserInfo(UserInfoData("goal", "체중 유지"))
                 }
-                else -> {
+                "체중 증가" -> {
                     helper.updateUserInfo(UserInfoData("goal", "체중 증가"))
                 }
             }
