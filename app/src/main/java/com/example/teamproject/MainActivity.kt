@@ -121,21 +121,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initBoolean(): Array<Boolean> = runBlocking {
-        val today = LocalDate.now().toString()
+    private fun initBoolean(date: LocalDate): Array<Boolean> = runBlocking {
+        //val today = LocalDate.now().toString()
         var isMemo = false
         var isDiet = false
         val job = CoroutineScope(Dispatchers.IO).launch {
             val memoData = AppDataBase.getInstance(applicationContext).memoDao().getAllMemo()
             for (memo in memoData) {
-                if (memo.date == today) {
+                if (memo.date == date.toString()) {
                     isMemo = true
                     break
                 }
             }
             val dietData = AppDataBase.getInstance(applicationContext).dietDao().getAllDiet()
             for (diet in dietData) {
-                if (diet.date == today) {
+                if (diet.date == date.toString()) {
                     isDiet = true
                     break
                 }
@@ -166,7 +166,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         memoTextView.movementMethod = ScrollingMovementMethod()
-
         memoTextView.setOnClickListener {
             val intent = Intent(this, PopupActivity::class.java)
             intent.putExtra("date", date)
@@ -174,8 +173,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        dietView.movementMethod = ScrollingMovementMethod()
         dietView.setOnClickListener {
             val intent = Intent(this, PopupActivity::class.java)
+            intent.putExtra("title", "diet")
             intent.putExtra("date", date)
             intent.putExtra("content", dietView.text.toString())
             startActivity(intent)
@@ -187,7 +188,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         calendarView.setOnDateChangedListener { _, date, _ ->
-            Log.d("date_selected_test", date.date.toString())
+//            Log.d("date_selected_test", date.date.toString())
+            val selectedDate = LocalDate.of(
+                date.year,
+                date.month + 1,
+                date.day
+            )
+            Log.d("date_selected_test", selectedDate.toString())
+            renewView(selectedDate)
         }
         val chartBtn = findViewById<Button>(R.id.chartbtn)
 
@@ -240,11 +248,44 @@ class MainActivity : AppCompatActivity() {
         initView()
     }
 
+    override fun onResume() {
+        super.onResume()
+        customizing()
+        initView()
+    }
+
+    private fun renewView(selectedDate : LocalDate) {
+        val memoTxt = findViewById<TextView>(R.id.memoView)
+        val dietTxt = findViewById<TextView>(R.id.dietView)
+        val bools = initBoolean(selectedDate)
+        Log.d("edit_test", bools.toString())
+        if (bools[0]) {
+            CoroutineScope(Dispatchers.IO).launch {
+                val memo =
+                    AppDataBase.getInstance(applicationContext).memoDao().getMemoByDate(selectedDate.toString())
+                memoTxt.text = memo[memo.lastIndex].content
+            }
+        } else {
+            memoTxt.text = ""
+        }
+        val exerciseList = exerciseDBHelper.getRecordList(selectedDate)
+        if (exerciseList.size != 0) {
+            var text = ""
+            for (record in exerciseList) {
+                text = text + record.exercise.ename + "/" + record.etime + "/" + record.totalKcal + "\n"
+            }
+            dietTxt.text = text
+        } else {
+            dietTxt.text = ""
+        }
+    }
+
+
     private fun initView() {
         val memoTxt = findViewById<TextView>(R.id.memoView)
         val dietTxt = findViewById<TextView>(R.id.dietView)
         val today = LocalDate.now()
-        val bools = initBoolean()
+        val bools = initBoolean(today)
         Log.d("edit_test", bools.toString())
         if (bools[0]) {
             CoroutineScope(Dispatchers.IO).launch {
