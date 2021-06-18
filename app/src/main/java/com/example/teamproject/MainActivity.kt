@@ -15,7 +15,6 @@ import com.example.teamproject.custom.CustomDBHelper
 import com.example.teamproject.custom.CustomData
 import com.example.teamproject.custom.CustomDecorator
 import com.example.teamproject.database.AppDataBase
-import com.example.teamproject.exercise.NutritionFacts
 import com.example.teamproject.memo.MemoActivity
 import com.example.teamproject.nutrition.NutritionFactsDBHelper
 import com.example.teamproject.nutrition.RecordActivity
@@ -190,38 +189,44 @@ class MainActivity : AppCompatActivity() {
         calendarView.setOnDateChangedListener { _, date, _ ->
             Log.d("date_selected_test", date.date.toString())
         }
-        val cbtn = findViewById<Button>(R.id.chartbtn)
+        val chartBtn = findViewById<Button>(R.id.chartbtn)
 
-        cbtn.setOnClickListener {
+        chartBtn.setOnClickListener {
+            val selectedDate = LocalDate.of(
+                calendarView.selectedDate.year,
+                calendarView.selectedDate.month + 1,
+                calendarView.selectedDate.day
+            )
             val intent = Intent(this, ChartActivity::class.java)
             intent.putExtra("day", today.day.toString())
             intent.putExtra("month", today.month.toString())
             intent.putExtra("year", today.year.toString())
-            intent.putExtra("date", calendarView.selectedDate.toString())
+            //intent.putExtra("date", calendarView.selectedDate.toString())
+            intent.putExtra("date", selectedDate.toString())
             startActivity(intent)
         }
 
         dietBtn.setOnClickListener {
-            val date = LocalDate.of(
+            val selectedDate = LocalDate.of(
                 calendarView.selectedDate.year,
                 calendarView.selectedDate.month + 1,
                 calendarView.selectedDate.day
             )
             val intent = Intent(this, RecordActivity::class.java)
             intent.putExtra("type", "diet")
-            intent.putExtra("date", date.toString())
+            intent.putExtra("date", selectedDate.toString())
             startActivity(intent)
         }
 
         exerciseBtn.setOnClickListener {
-            val date = LocalDate.of(
+            val selectedDate = LocalDate.of(
                 calendarView.selectedDate.year,
                 calendarView.selectedDate.month + 1,
                 calendarView.selectedDate.day
             )
             val intent = Intent(this, RecordActivity::class.java)
             intent.putExtra("type", "exercise")
-            intent.putExtra("date", date.toString())
+            intent.putExtra("date", selectedDate.toString())
             startActivity(intent)
         }
 
@@ -254,7 +259,7 @@ class MainActivity : AppCompatActivity() {
         if (exerciseList.size != 0) {
             var text = ""
             for (record in exerciseList) {
-                text = text + record.exercise + "/" + record.etime + "/" + record.totalKcal + "\n"
+                text = text + record.exercise.ename + "/" + record.etime + "/" + record.totalKcal + "\n"
             }
             dietTxt.text = text
         } else {

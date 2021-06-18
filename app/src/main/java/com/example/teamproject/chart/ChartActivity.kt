@@ -9,18 +9,24 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.teamproject.ExerciseDBHelper
 import com.example.teamproject.MainActivity
 import com.example.teamproject.R
 import com.example.teamproject.databinding.ActivityChartBinding
+import com.example.teamproject.nutrition.NutritionFactsDBHelper
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 class ChartActivity : AppCompatActivity() {
     lateinit var chartbinding: ActivityChartBinding
+    lateinit var exerciseDBHelper: ExerciseDBHelper
+    lateinit var nutritionFactsDBHelper: NutritionFactsDBHelper
 
     val entries = arrayListOf<Entry>()
     val entriset = arrayListOf<Entry>()
@@ -30,16 +36,24 @@ class ChartActivity : AppCompatActivity() {
         setContentView(chartbinding.root)
         init()
         setChart()
-        initrecycler()
+        initRecycler()
     }
 
-    private fun initrecycler() {
+    private fun initRecycler() {
+        val date = intent.getStringExtra("date")
+        val nowDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE)
+        val exerciseData = exerciseDBHelper.getRecordList(nowDate)
+        val nutritionData = nutritionFactsDBHelper.getRecordList(nowDate)
+
         val datas = mutableListOf<ExerciseData>()
-        var exerciseAdapter = ChartEXAdapter(this)
-        val exerRecyclerView = findViewById<RecyclerView>(R.id.exerrecyclerView)
-        exerRecyclerView.adapter = exerciseAdapter
+        val exerciseAdapter = ChartEXAdapter(this)
+        val exerciseRecyclerView = findViewById<RecyclerView>(R.id.exerrecyclerView)
+        exerciseRecyclerView.adapter = exerciseAdapter
         datas.apply {
-            add(ExerciseData(exname = "수영", extime = 30, exkcal = 56))
+            //add(ExerciseData(exname = "수영", extime = 30, exkcal = 56))
+            for (exData in exerciseData) {
+                add(ExerciseData(exData.exercise.ename, exData.etime, exData.totalKcal))
+            }
             exerciseAdapter.datas = datas
             exerciseAdapter.notifyDataSetChanged()
         }
@@ -49,13 +63,20 @@ class ChartActivity : AppCompatActivity() {
         val eatRecyclerView = findViewById<RecyclerView>(R.id.eatrecyclerView)
         eatRecyclerView.adapter = eatAdapter
         datast.apply {
-            add(EatingData(ename = "햇반", ekcal = 190))
+            //add(EatingData(ename = "햇반", ekcal = 190))
+            for (nutData in nutritionData) {
+                val kcal = (nutData.nutritionFacts.kcal * nutData.intake).toInt()
+                add(EatingData(nutData.nutritionFacts.fname, kcal))
+            }
             eatAdapter.datas = datast
             eatAdapter.notifyDataSetChanged()
         }
     }
 
     private fun init() {
+        exerciseDBHelper = ExerciseDBHelper(applicationContext)
+        nutritionFactsDBHelper = NutritionFactsDBHelper(applicationContext)
+
         val bestset: TextView = findViewById(R.id.bestset)
         val setpercent: TextView = findViewById(R.id.setpercent)
         val todaydate: TextView = findViewById(R.id.dateshowtext)
@@ -68,15 +89,16 @@ class ChartActivity : AppCompatActivity() {
             val setdy = IntRange(19, 20)
             val setmt = IntRange(17, 17)
             val setyr = IntRange(12, 15)
-            todaydate.text = "0000/00/00"
+            /*todaydate.text = "0000/00/00"
             if (setdtdt != null) {
                 Log.d("DATE", setdtdt)
                 var helpsetdate = setdtdt.slice(setmt).toInt()
-                helpsetdate = helpsetdate + 1
+                helpsetdate += 1
                 val setdatestr =
                     setdtdt.slice(setyr) + "/" + helpsetdate.toString() + "/" + setdtdt.slice(setdy)
                 todaydate.text = setdatestr
-            }
+            }*/
+            todaydate.text = setdtdt
         }
         val seekBar: SeekBar = findViewById(R.id.seekBar)
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
