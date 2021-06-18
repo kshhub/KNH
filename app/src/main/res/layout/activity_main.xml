@@ -37,8 +37,9 @@
         android:layout_width="0dp"
         android:layout_height="75dp"
         android:layout_marginStart="9dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="9dp"
-        android:layout_marginBottom="21dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/edgesmooth"
         android:scrollbars="vertical"
         android:text="TextView"
@@ -77,6 +78,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/settingBtn"
         app:layout_constraintTop_toTopOf="@+id/settingBtn" />
+
+    <Button
+        android:id="@+id/exerciseBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="148dp"
+        android:backgroundTint="#69AEB6"
+        android:text="EXERCISE"
+        app:layout_constraintEnd_toStartOf="@+id/chartbtn"
+        app:layout_constraintTop_toBottomOf="@+id/memoBtn" />
 
     <Button
         android:id="@+id/chartbtn"

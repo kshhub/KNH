@@ -13,10 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Teamproject">
-        <activity android:name=".PopupActivity" android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".MemoActivity"/>
-        <activity android:name=".ChartActivity"></activity>
-        <activity android:name=".SettingActivity" />
+        <activity android:name=".popup.PopupActivity" android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".memo.MemoActivity"/>
+        <activity android:name=".setting.SettingActivity" />
+        <activity android:name=".chart.ChartActivity"/>
+        <activity android:name=".nutrition.RecordActivity" android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

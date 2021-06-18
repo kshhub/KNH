@@ -59,8 +59,11 @@ class ChartActivity : AppCompatActivity() {
         val setpercent : TextView = findViewById(R.id.setpercent)
         val todaydate : TextView = findViewById(R.id.dateshowtext)
         val bartext : TextView = findViewById(R.id.bardatetext)
-        bestset.setText("체중 감소")
-        setpercent.setText("NULL")
+        bestset.setText("설정 안됨")
+        if(intent.hasExtra("goal")){
+            bestset.setText(intent.getStringExtra("goal"))
+        }
+        setpercent.setText("달성안됨")
         bartext.setText("오늘 하루")
         if(intent.hasExtra("day")){
             val setdtdt = intent.getStringExtra("date")

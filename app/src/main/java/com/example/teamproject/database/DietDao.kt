@@ -20,5 +20,5 @@ interface DietDao {
     suspend fun deleteAllDiet()
 
     @Query("select * from Diet where date = :date")
-    suspend fun getDietByDate(date: String) : List<Diet>
+    suspend fun getDietByDate(date: String): List<Diet>
 }

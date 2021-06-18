@@ -1,5 +1,7 @@
 package com.example.teamproject
 
+import android.graphics.Color
+import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
@@ -19,6 +21,10 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        val color = (Color.parseColor("#FFFFFF") - Color.parseColor("#000000"))
+        Log.d("color_test", Color.valueOf(color).toString())
+        //assertEquals(Color.valueOf(color), Color.WHITE)
         assertEquals("com.example.teamproject", appContext.packageName)
+
     }
 }

@@ -21,5 +21,5 @@ interface MemoDao {
     suspend fun deleteAllMemo()
 
     @Query("select * from Memo where date = :date")
-    suspend fun getMemoByDate(date: String) : List<Memo>
+    suspend fun getMemoByDate(date: String): List<Memo>
 }
