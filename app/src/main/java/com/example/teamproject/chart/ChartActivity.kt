@@ -4,27 +4,27 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.example.teamproject.ExerciseDBHelper
 import com.example.teamproject.MainActivity
 import com.example.teamproject.R
 import com.example.teamproject.databinding.ActivityChartBinding
 import com.example.teamproject.exercise.ExerciseRecord
-import com.example.teamproject.exercise.NutritionFacts
 import com.example.teamproject.exercise.NutritionFactsRecord
 import com.example.teamproject.nutrition.NutritionFactsDBHelper
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
-import java.lang.String.format
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -58,11 +58,11 @@ class ChartActivity : AppCompatActivity() {
             entriset.clear()
             for (i in 0..whr) {
                 val `val` = useentries[whr - i].toFloat()
-                entries.add(Entry(i.toFloat(), `val`))
+                entries.add(Entry((i-whr).toFloat(), `val`))
             }
             for (i in 0..whr) {
                 val `val` = gainentries[whr - i].toFloat()
-                entriset.add(Entry(i.toFloat(), `val`))
+                entriset.add(Entry((i-whr).toFloat(), `val`))
             }
             val set1 = LineDataSet(entries, "소비 칼로리")
             val set2 = LineDataSet(entriset, "섭취 칼로리")
@@ -86,14 +86,32 @@ class ChartActivity : AppCompatActivity() {
         }
     }
     private fun calcgoal(){
+        val noeat = findViewById<TextView>(R.id.noeattext)
+        val noex = findViewById<TextView>(R.id.noextext)
+        val noall = findViewById<TextView>(R.id.noalldatatext)
         val eatal = findViewById<TextView>(R.id.alleatkcal)
         val exal = findViewById<TextView>(R.id.allexkcal)
         val goalt = findViewById<TextView>(R.id.bestset)
         val achieveg = findViewById<TextView>(R.id.setpercent)
         if(eatal.text.toString()!="none"&&exal.text.toString()!="none"){
+            noeat.setVisibility(View.INVISIBLE)
+            noex.setVisibility(View.INVISIBLE)
+            noall.setVisibility(View.INVISIBLE)
             val eatint = eatal.text.toString().toInt()
             val exint = exal.text.toString().toInt()
-            if(eatint>exint+300){//먹보
+            if(eatint==0&&exint==0){//정보없음
+                achieveg.setText("ㅇㅂㅇ?")
+                noall.setVisibility(View.VISIBLE)
+            }
+            else if(eatint==0){
+                achieveg.setText("ㅇㅂㅇ?")
+                noeat.setVisibility(View.VISIBLE)
+            }
+            else if(exint==0){
+                achieveg.setText("ㅇㅂㅇ?")
+                noex.setVisibility(View.VISIBLE)
+            }
+            else if(eatint>exint+300){//먹보
                 when(goalt.text.toString()){
                     "체중 감소"->{achieveg.setText(";ㅁ;")}
                     "체중 유지"->{achieveg.setText("-ㅅ-")}
@@ -169,7 +187,8 @@ class ChartActivity : AppCompatActivity() {
             val exal = findViewById<TextView>(R.id.allexkcal)
             exal.setText(exall.toString())
             calcgoal()
-            alex.setText("총 소비 칼로리: " + exall.toString() + "kcal")
+            if(exall==0)alex.setText("총 소비 칼로리: 정보 없음")
+            else alex.setText("총 소비 칼로리: " + exall.toString() + "kcal")
             exerciseAdapter.datas = datas
             calcgraph(whr)
             exerciseAdapter.notifyDataSetChanged()
@@ -194,7 +213,8 @@ class ChartActivity : AppCompatActivity() {
             val eatal = findViewById<TextView>(R.id.alleatkcal)
             eatal.setText(eatall.toString())
             calcgoal()
-            aleat.setText("총 섭취 칼로리: " + eatall.toString() + "kcal")
+            if(eatall==0)aleat.setText("총 섭취 칼로리: 정보 없음")
+            else aleat.setText("총 섭취 칼로리: " + eatall.toString() + "kcal")
             eatAdapter.datas = datast
             calcgraph(whr)
             eatAdapter.notifyDataSetChanged()
@@ -260,8 +280,8 @@ class ChartActivity : AppCompatActivity() {
                                 chart.apply {
                                     xAxis.apply {
                                         setLabelCount(2, true)
-                                        axisMinimum = 0f
-                                        axisMaximum = 1f
+                                        axisMinimum = -1f
+                                        axisMaximum = 0f
                                     }
                                 }
                             }
@@ -269,8 +289,8 @@ class ChartActivity : AppCompatActivity() {
                                 chart.apply {
                                     xAxis.apply {
                                         setLabelCount(3, true)
-                                        axisMinimum = 0f
-                                        axisMaximum = 2f
+                                        axisMinimum = -2f
+                                        axisMaximum = 0f
                                     }
                                 }
                             }
@@ -278,8 +298,8 @@ class ChartActivity : AppCompatActivity() {
                                 chart.apply {
                                     xAxis.apply {
                                         setLabelCount(4, true)
-                                        axisMinimum = 0f
-                                        axisMaximum = 3f
+                                        axisMinimum = -3f
+                                        axisMaximum = 0f
                                     }
                                 }
                             }
@@ -287,8 +307,8 @@ class ChartActivity : AppCompatActivity() {
                                 chart.apply {
                                     xAxis.apply {
                                         setLabelCount(5, true)
-                                        axisMinimum = 0f
-                                        axisMaximum = 4f
+                                        axisMinimum = -4f
+                                        axisMaximum = 0f
                                     }
                                 }
                             }
@@ -296,8 +316,8 @@ class ChartActivity : AppCompatActivity() {
                                 chart.apply {
                                     xAxis.apply {
                                         setLabelCount(6, true)
-                                        axisMinimum = 0f
-                                        axisMaximum = 5f
+                                        axisMinimum = -5f
+                                        axisMaximum = 0f
                                     }
                                 }
                             }
@@ -305,8 +325,8 @@ class ChartActivity : AppCompatActivity() {
                                 chart.apply {
                                     xAxis.apply {
                                         setLabelCount(7, true)
-                                        axisMinimum = 0f
-                                        axisMaximum = 6f
+                                        axisMinimum = -6f
+                                        axisMaximum = 0f
                                     }
                                 }
                             }
@@ -314,8 +334,8 @@ class ChartActivity : AppCompatActivity() {
                                 chart.apply {
                                     xAxis.apply {
                                         setLabelCount(8, true)
-                                        axisMinimum = 0f
-                                        axisMaximum = 7f
+                                        axisMinimum = -7f
+                                        axisMaximum = 0f
                                     }
                                 }
                             }
@@ -323,8 +343,8 @@ class ChartActivity : AppCompatActivity() {
                                 chart.apply {
                                     xAxis.apply {
                                         setLabelCount(15, true)
-                                        axisMinimum = 0f
-                                        axisMaximum = 14f
+                                        axisMinimum = -14f
+                                        axisMaximum = 0f
                                     }
                                 }
                             }
@@ -332,8 +352,8 @@ class ChartActivity : AppCompatActivity() {
                                 chart.apply {
                                     xAxis.apply {
                                         setLabelCount(31, true)
-                                        axisMinimum = 0f
-                                        axisMaximum = 30f
+                                        axisMinimum = -30f
+                                        axisMaximum = 0f
                                     }
                                 }
                             }

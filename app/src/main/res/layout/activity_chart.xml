@@ -7,18 +7,30 @@
     android:background="#E7DDFA"
     tools:context=".chart.ChartActivity">
 
+    <TextView
+        android:id="@+id/noextext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="53dp"
+        android:layout_marginBottom="202dp"
+        android:text="운동기록 없음"
+        android:textSize="20sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/Chart"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="13dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView8"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
         android:id="@+id/chartendbtn"
@@ -34,35 +46,38 @@
         android:id="@+id/seekBar"
         style="@style/Widget.AppCompat.SeekBar"
         android:layout_width="0dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="79dp"
-        android:layout_marginEnd="71dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="19dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="10dp"
         android:max="9"
         android:progress="0"
         android:scrollbarAlwaysDrawHorizontalTrack="false"
         android:scrollbarAlwaysDrawVerticalTrack="false"
         android:thumb="@android:drawable/ic_menu_more"
-        app:layout_constraintEnd_toEndOf="@+id/Chart"
-        app:layout_constraintStart_toStartOf="@+id/dateshowtext"
-        app:layout_constraintTop_toBottomOf="@+id/dateshowtext" />
+        app:layout_constraintBottom_toTopOf="@+id/Chart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="@+id/dateshowtext" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="7dp"
-        android:layout_marginBottom="8dp"
         android:text="날짜선택"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/seekBar"
-        app:layout_constraintEnd_toStartOf="@+id/seekBar" />
+        app:layout_constraintEnd_toStartOf="@+id/seekBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateshowtext" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="9dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
         android:text="달성도"
         android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/chartendbtn"
@@ -72,8 +87,7 @@
         android:id="@+id/bestset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginBottom="17dp"
+        android:layout_marginBottom="16dp"
         android:text="(목표값)"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/setpercent"
@@ -83,8 +97,7 @@
         android:id="@+id/setpercent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="18dp"
         android:text="ㅇㅂㅇ?"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/chartendbtn"
@@ -95,7 +108,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="13dp"
+        android:layout_marginBottom="18dp"
         android:text="선택한 목표"
         android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/textView4"
@@ -116,16 +129,16 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/eatrecyclerView"
         android:layout_width="170dp"
-        android:layout_height="100dp"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="63dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="13dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="24dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@+id/setpercent"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintEnd_toStartOf="@+id/exerrecyclerView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView8"
+        app:layout_constraintTop_toTopOf="@+id/eatalltext"
         tools:listitem="@layout/chart_et">
 
     </androidx.recyclerview.widget.RecyclerView>
@@ -134,55 +147,51 @@
         android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginStart="65dp"
+        android:layout_marginEnd="63dp"
         android:layout_marginBottom="11dp"
         android:text="운동기록"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/exalltext"
-        app:layout_constraintEnd_toEndOf="@+id/setpercent"
-        app:layout_constraintStart_toStartOf="@+id/bestset" />
+        app:layout_constraintEnd_toEndOf="@+id/Chart"
+        app:layout_constraintStart_toStartOf="@+id/exalltext" />
 
     <TextView
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="13dp"
+        android:layout_marginTop="13dp"
         android:text="식단기록"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/eatalltext"
-        app:layout_constraintEnd_toEndOf="@+id/eatalltext" />
+        app:layout_constraintEnd_toEndOf="@+id/eatalltext"
+        app:layout_constraintTop_toBottomOf="@+id/Chart" />
 
     <TextView
         android:id="@+id/bardatetext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="33dp"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="33dp"
         android:text="0일 전까지"
-        app:layout_constraintEnd_toStartOf="@+id/exalltext"
-        app:layout_constraintStart_toEndOf="@+id/alleatkcal"
+        app:layout_constraintStart_toStartOf="@+id/seekBar"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/dateshowtext"
-        android:layout_width="0dp"
+        android:layout_width="149dp"
         android:layout_height="19dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
         android:text="2021.01.01"
         android:textSize="14sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/bardatetext"
-        app:layout_constraintEnd_toEndOf="@+id/bardatetext"
-        app:layout_constraintStart_toStartOf="@+id/eatrecyclerView" />
+        app:layout_constraintEnd_toEndOf="@+id/textView"
+        app:layout_constraintStart_toEndOf="@+id/textView" />
 
     <TextView
         android:id="@+id/exalltext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="9dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="6dp"
         android:text="총 소모 칼로리: 없음"
         android:textSize="13sp"
         app:layout_constraintBottom_toTopOf="@+id/exerrecyclerView"
@@ -192,8 +201,8 @@
         android:id="@+id/eatalltext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginBottom="273dp"
+        android:layout_marginStart="13dp"
+        android:layout_marginBottom="270dp"
         android:text="총 섭취 칼로리: 없음"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -203,22 +212,46 @@
         android:id="@+id/alleatkcal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginBottom="26dp"
         android:text="none"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/allexkcal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
         android:text="none"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/noeattext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="45dp"
+        android:layout_marginBottom="202dp"
+        android:text="식단기록 없음"
+        android:textSize="20sp"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@+id/setpercent"
-        app:layout_constraintStart_toEndOf="@+id/setpercent"
-        app:layout_constraintTop_toBottomOf="@+id/setpercent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/noalldatatext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="84dp"
+        android:layout_marginBottom="178dp"
+        android:text="데이터 없음"
+        android:textSize="50sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
