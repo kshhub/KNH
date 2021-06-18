@@ -153,6 +153,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun init() {
         customDBHelper = CustomDBHelper(this)
+        userInfoDBHelper = UserInfoDBHelper(this)
 
         val btn = findViewById<Button>(R.id.settingBtn)
         val calendarView = findViewById<MaterialCalendarView>(R.id.calendarViewMain)

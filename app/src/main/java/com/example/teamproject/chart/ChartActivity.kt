@@ -1,14 +1,19 @@
 package com.example.teamproject.chart
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.teamproject.ExerciseDBHelper
 import com.example.teamproject.MainActivity
@@ -18,13 +23,12 @@ import com.example.teamproject.exercise.ExerciseRecord
 import com.example.teamproject.exercise.NutritionFactsRecord
 import com.example.teamproject.nutrition.NutritionFactsDBHelper
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.AxisBase
-import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import java.io.File
+import java.io.FileOutputStream
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -92,7 +96,7 @@ class ChartActivity : AppCompatActivity() {
         val eatal = findViewById<TextView>(R.id.alleatkcal)
         val exal = findViewById<TextView>(R.id.allexkcal)
         val goalt = findViewById<TextView>(R.id.bestset)
-        val achieveg = findViewById<TextView>(R.id.setpercent)
+        val achievi = findViewById<ImageView>(R.id.percentimage)
         if(eatal.text.toString()!="none"&&exal.text.toString()!="none"){
             noeat.setVisibility(View.INVISIBLE)
             noex.setVisibility(View.INVISIBLE)
@@ -100,38 +104,56 @@ class ChartActivity : AppCompatActivity() {
             val eatint = eatal.text.toString().toInt()
             val exint = exal.text.toString().toInt()
             if(eatint==0&&exint==0){//정보없음
-                achieveg.setText("ㅇㅂㅇ?")
+                achievi.setImageResource(R.drawable.waiting)
                 noall.setVisibility(View.VISIBLE)
             }
             else if(eatint==0){
-                achieveg.setText("ㅇㅂㅇ?")
+                achievi.setImageResource(R.drawable.waiting)
                 noeat.setVisibility(View.VISIBLE)
             }
             else if(exint==0){
-                achieveg.setText("ㅇㅂㅇ?")
+                achievi.setImageResource(R.drawable.waiting)
                 noex.setVisibility(View.VISIBLE)
             }
-            else if(eatint>exint+300){//먹보
+            else if(eatint>exint+500){
                 when(goalt.text.toString()){
-                    "체중 감소"->{achieveg.setText(";ㅁ;")}
-                    "체중 유지"->{achieveg.setText("-ㅅ-")}
-                    "체중 증가"->{achieveg.setText("ㅇㅂㅇb")}
+                    "체중 감소"->{
+                        achievi.setImageResource(R.drawable.bad)
+                    }
+                    "체중 유지"->{
+                        achievi.setImageResource(R.drawable.sad)
+                    }
+                    "체중 증가"->{
+                        achievi.setImageResource(R.drawable.thumbup)
+                    }
                     else->{Log.d("F","목표 오류")}
                 }
             }
-            else if(eatint<exint+300&&eatint>exint-300){//적당
+            else if(eatint<=exint+500&&eatint>exint-500){//적당
                 when(goalt.text.toString()){
-                    "체중 감소"->{achieveg.setText("-ㅅ-")}
-                    "체중 유지"->{achieveg.setText("ㅇㅂㅇb")}
-                    "체중 증가"->{achieveg.setText("-ㅅ-")}
+                    "체중 감소"->{
+                        achievi.setImageResource(R.drawable.cheerup)
+                    }
+                    "체중 유지"->{
+                        achievi.setImageResource(R.drawable.thumbup)
+                    }
+                    "체중 증가"->{
+                        achievi.setImageResource(R.drawable.cheerup)
+                    }
                     else->{Log.d("F","목표 오류")}
                 }
             }
-            else if(eatint<exint-300){//운동
+            else if(eatint<=exint-500){//운동
                 when(goalt.text.toString()){
-                    "체중 감소"->{achieveg.setText("ㅇㅂㅇb")}
-                    "체중 유지"->{achieveg.setText("-ㅅ-")}
-                    "체중 증가"->{achieveg.setText(";ㅁ;")}
+                    "체중 감소"->{
+                        achievi.setImageResource(R.drawable.thumbup)
+                    }
+                    "체중 유지"->{
+                        achievi.setImageResource(R.drawable.sad)
+                    }
+                    "체중 증가"->{
+                        achievi.setImageResource(R.drawable.sad)
+                    }
                     else->{Log.d("F","목표 오류")}
                 }
             }
@@ -385,6 +407,13 @@ class ChartActivity : AppCompatActivity() {
         } catch (e: NullPointerException) {
             Log.d("확인", "없음")
         }
+        val sharebtn = findViewById<Button>(R.id.nope)
+        sharebtn.setOnClickListener {
+            val rootView = window.decorView.rootView
+            val bitmap = getBitmapFromView(rootView)
+
+            shareImageandText(bitmap!!)
+        }
     }
 
     private fun setChart() {
@@ -416,5 +445,42 @@ class ChartActivity : AppCompatActivity() {
         } catch (e: NullPointerException) {
             Log.d("ERR", "없")
         }
+    }
+    open fun getBitmapFromView(view: View): Bitmap? {
+        var bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        var canvas = Canvas(bitmap)
+        view.draw(canvas)
+        return bitmap
+    }
+
+    private fun shareImageandText(bitmap: Bitmap) {
+        val uri = getImageToShare(bitmap)
+        val intent = Intent(Intent.ACTION_SEND)
+
+        intent.putExtra(Intent.EXTRA_STREAM, uri)
+
+        intent.putExtra(Intent.EXTRA_TEXT, "차트 요약 내용")
+
+        intent.type = "image/png"
+
+        startActivity(Intent.createChooser(intent, "차트 공유하기"))
+    }
+
+    private fun getImageToShare(bitmap: Bitmap): Uri? {
+        val imagefolder = File(cacheDir, "images")
+        var uri: Uri? = null
+
+        try {
+            imagefolder.mkdirs()
+            val file = File(imagefolder, "shared_image.png")
+            val outputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream)
+            outputStream.flush()
+            outputStream.close()
+            uri = FileProvider.getUriForFile(this, "com.example.teamproject.fileprovider", file)
+        } catch (e: java.lang.Exception) {
+            //Toast.makeText(this, "" + e.message, Toast.LENGTH_LONG).show()
+        }
+        return uri
     }
 }
