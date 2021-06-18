@@ -50,28 +50,34 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initCustomizingDB() {
-        customDBHelper = CustomDBHelper(this)
-        val coption = arrayListOf(
-            "saturday", "sunday", "today", "date", "color", "select",
-            "format", "background", "memo", "record"
-        )
-        val csetting = arrayListOf(
-            "off", "off", "off", "on", "#FFFFFF", "GRAY",
-            "off", "#FFFFFF", "#FFFFFF", "#FFFFFF"
-        )
-        for (i in 0 until coption.size) {
-            val cdata = CustomData(coption[i], csetting[i])
-            customDBHelper.insertCustomizing(cdata)
+        val dbfile = getDatabasePath("customizingdb.db")
+        if(!dbfile.exists()) {
+            customDBHelper = CustomDBHelper(this)
+            val coption = arrayListOf(
+                "saturday", "sunday", "today", "date", "color", "select",
+                "format", "background", "memo", "record"
+            )
+            val csetting = arrayListOf(
+                "off", "off", "off", "on", "#FFFFFF", "GRAY",
+                "off", "#FFFFFF", "#FFFFFF", "#FFFFFF"
+            )
+            for (i in 0 until coption.size) {
+                val cdata = CustomData(coption[i], csetting[i])
+                customDBHelper.insertCustomizing(cdata)
+            }
         }
     }
 
     private fun initUserInfoDB() {
-        userInfoDBHelper = UserInfoDBHelper(this)
-        val uoption = arrayListOf("age", "gender", "height", "weight", "goal")
-        val usetting = arrayListOf("default", "default", "default", "default", "default")
-        for (i in 0 until uoption.size) {
-            val udata = UserInfoData(uoption[i], usetting[i])
-            userInfoDBHelper.insertUserInfo(udata)
+        val dbfile = getDatabasePath("userInfodb.db")
+        if(!dbfile.exists()) {
+            userInfoDBHelper = UserInfoDBHelper(this)
+            val uoption = arrayListOf("age", "gender", "height", "weight", "goal")
+            val usetting = arrayListOf("default", "default", "default", "default", "default")
+            for (i in 0 until uoption.size) {
+                val udata = UserInfoData(uoption[i], usetting[i])
+                userInfoDBHelper.insertUserInfo(udata)
+            }
         }
     }
 
