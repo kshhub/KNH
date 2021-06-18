@@ -1,9 +1,11 @@
 package com.example.teamproject.setting
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.teamproject.R
 import com.example.teamproject.databinding.ActivitySettingBinding
+import com.example.teamproject.userinfo.UserInfoDBHelper
 import com.google.android.material.tabs.TabLayoutMediator
 
 /*사용자 설정*/
@@ -18,6 +20,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 // tablayoutSetting, viewPagerSetting
 
 class SettingActivity : AppCompatActivity() {
+
+    lateinit var userInfoDBHelper: UserInfoDBHelper
 
     lateinit var settingbinding: ActivitySettingBinding
     val settingFragText = arrayListOf("User Info","Customizing")
@@ -34,6 +38,7 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun init() {
+        userInfoDBHelper = UserInfoDBHelper(this)
         settingbinding.viewPagerSetting.adapter = SettingFragmentAdapter(this)
         TabLayoutMediator(
             settingbinding.tablayoutSetting,
@@ -42,5 +47,20 @@ class SettingActivity : AppCompatActivity() {
             tab.text = settingFragText[position]
             tab.setIcon(settingFragIcon[position])
         }.attach()
+    }
+
+    override fun onBackPressed() {
+        if(userInfoDBHelper.findUserInfo("age")!="default" &&
+            userInfoDBHelper.findUserInfo("age")!="" &&
+            userInfoDBHelper.findUserInfo("gender")!="default" &&
+            userInfoDBHelper.findUserInfo("height")!="default" &&
+            userInfoDBHelper.findUserInfo("height")!="" &&
+            userInfoDBHelper.findUserInfo("weight")!="default" &&
+            userInfoDBHelper.findUserInfo("weight")!="" &&
+            userInfoDBHelper.findUserInfo("goal")!="default") {
+            super.onBackPressed()
+        }else{
+            Toast.makeText(this,"사용자 정보를 입력하세요", Toast.LENGTH_SHORT).show()
+        }
     }
 }

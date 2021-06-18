@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.teamproject.ExerciseDBHelper
 import com.example.teamproject.databinding.FragmentExerciseBinding
+import com.example.teamproject.userinfo.UserInfoDBHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,6 +45,9 @@ class ExerciseFragment : Fragment() {
 
     //운동 관련 DBHelper
     lateinit var ERDBHelper: ExerciseDBHelper
+
+    //사용자정보 관련 DBHelper
+    lateinit var userInfoDBHelper: UserInfoDBHelper
 
     //현재 프래그먼트가 보여줄 날짜
     var nowDate: LocalDate = LocalDate.now()
@@ -115,6 +119,10 @@ class ExerciseFragment : Fragment() {
 
     //어댑터와 버튼 이벤트 초기화
     fun init() {
+
+        userInfoDBHelper = UserInfoDBHelper(context)
+        if(userInfoDBHelper.findUserInfo("weight")!="default") binding?.weightEditText?.setText(userInfoDBHelper.findUserInfo("weight"))
+
         binding?.apply {
 
             act_adapter =
