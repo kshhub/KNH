@@ -2,6 +2,7 @@ package com.example.teamproject.memo
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -14,6 +15,7 @@ import com.example.teamproject.database.AppDataBase
 import com.example.teamproject.database.Memo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class MemoActivity : AppCompatActivity() {
@@ -33,20 +35,30 @@ class MemoActivity : AppCompatActivity() {
         val contentEdit = findViewById<EditText>(R.id.contentEdit)
         val titleEdit = findViewById<EditText>(R.id.titleEdit)
         val intent = intent
+        val title = intent.getStringExtra("title").toString()
         val date = intent.getStringExtra("date").toString()
+        val content = intent.getStringExtra("content").toString()
+        val isMemo = intent.getStringExtra("isMemo").toBoolean()
 
         cancelBtn.setOnClickListener {
             finish()
         }
 
         submitBtn.setOnClickListener {
+            //Log.d("co before","co before")
             CoroutineScope(Dispatchers.IO).launch {
+                //Log.d("co after", "co after")
                 val memo = Memo(0, date, titleEdit.text.toString(), contentEdit.text.toString())
-                AppDataBase.getInstance(applicationContext).memoDao().updateMemo(memo)
+                if(!isMemo)
+                    AppDataBase.getInstance(applicationContext).memoDao().insert(memo)
+                else
+                    AppDataBase.getInstance(applicationContext).memoDao().updateMemo(memo)
                 finish()
             }
         }
 
+        titleEdit.setText(title)
+        contentEdit.setText(content)
         dateText.text = date
         customizing()
     }

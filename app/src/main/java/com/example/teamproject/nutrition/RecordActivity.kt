@@ -44,7 +44,7 @@ class RecordActivity : AppCompatActivity() {
 
         fragment!!.arguments = bundle
         Log.i("fragment", "commit!")
-        supportFragmentManager.beginTransaction().replace(R.id.recordFrameLayout, fragment!!).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.recordFrameLayout, fragment).commit()
         Log.i("fragment", "commit done!")
 
     }

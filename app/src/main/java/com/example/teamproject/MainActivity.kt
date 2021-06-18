@@ -24,10 +24,7 @@ import com.example.teamproject.userinfo.UserInfoDBHelper
 import com.example.teamproject.userinfo.UserInfoData
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -35,6 +32,8 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
     val DEFAULT_DATE = "Tue Jun 01 00:00:00 GMT+09:00 1990"
+    var isInMemo = false
+    var memoContent = ""
     lateinit var customDBHelper: CustomDBHelper
     lateinit var userInfoDBHelper: UserInfoDBHelper
     lateinit var exerciseDBHelper: ExerciseDBHelper
@@ -51,7 +50,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initCustomizingDB() {
         val dbfile = getDatabasePath("customizingdb.db")
-        if(!dbfile.exists()) {
+        if (!dbfile.exists()) {
             customDBHelper = CustomDBHelper(this)
             val coption = arrayListOf(
                 "saturday", "sunday", "today", "date", "color", "select",
@@ -70,7 +69,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initUserInfoDB() {
         val dbfile = getDatabasePath("userInfodb.db")
-        if(!dbfile.exists()) {
+        if (!dbfile.exists()) {
             userInfoDBHelper = UserInfoDBHelper(this)
             val uoption = arrayListOf("age", "gender", "height", "weight", "goal")
             val usetting = arrayListOf("default", "default", "default", "default", "default")
@@ -134,6 +133,7 @@ class MainActivity : AppCompatActivity() {
         val job = CoroutineScope(Dispatchers.IO).launch {
             val memoData = AppDataBase.getInstance(applicationContext).memoDao().getAllMemo()
             for (memo in memoData) {
+                Log.d("init boolean test", memo.date)
                 if (memo.date == date.toString()) {
                     isMemo = true
                     break
@@ -148,6 +148,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         job.join()
+        isInMemo = isMemo
         return@runBlocking arrayOf(isMemo, isDiet)
     }
 
@@ -160,29 +161,33 @@ class MainActivity : AppCompatActivity() {
         val memo = findViewById<Button>(R.id.memoBtn)
         val memoTextView = findViewById<TextView>(R.id.memoView)
         val dietView = findViewById<TextView>(R.id.dietView)
-        val dietBtn = findViewById<Button>(R.id.button2);
+        val dietBtn = findViewById<Button>(R.id.button2)
         val exerciseBtn = findViewById<Button>(R.id.exerciseBtn)
         val date = LocalDate.now().toString()
 
         calendarView.selectedDate = today
         memo.setOnClickListener {
             val intent = Intent(this, MemoActivity::class.java)
+            intent.putExtra("title", memoTextView.text.toString())
             intent.putExtra("date", date)
+            intent.putExtra("content", memoContent)
+            intent.putExtra("isMemo", isInMemo.toString())
             startActivity(intent)
         }
 
         memoTextView.movementMethod = ScrollingMovementMethod()
         memoTextView.setOnClickListener {
             val intent = Intent(this, PopupActivity::class.java)
+            intent.putExtra("title", memoTextView.text.toString())
             intent.putExtra("date", date)
-            intent.putExtra("content", memoTextView.text.toString())
+            intent.putExtra("content", memoContent)
             startActivity(intent)
         }
 
         dietView.movementMethod = ScrollingMovementMethod()
         dietView.setOnClickListener {
             val intent = Intent(this, PopupActivity::class.java)
-            intent.putExtra("title", "diet")
+            intent.putExtra("title", "EXERCISE")
             intent.putExtra("date", date)
             intent.putExtra("content", dietView.text.toString())
             startActivity(intent)
@@ -219,8 +224,8 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("date", selectedDate.toString())
             //intent.putExtra("date", calendarView.selectedDate.toString())
             intent.putExtra("date", selectedDate.toString())
-            Log.d("A",userInfoDBHelper.findUserInfo("goal"))
-            intent.putExtra("goal",userInfoDBHelper.findUserInfo("goal"))
+            Log.d("A", userInfoDBHelper.findUserInfo("goal"))
+            intent.putExtra("goal", userInfoDBHelper.findUserInfo("goal"))
             startActivity(intent)
         }
 
@@ -264,25 +269,29 @@ class MainActivity : AppCompatActivity() {
         initView()
     }
 
-    private fun renewView(selectedDate : LocalDate) {
+    private fun renewView(selectedDate: LocalDate) {
         val memoTxt = findViewById<TextView>(R.id.memoView)
         val dietTxt = findViewById<TextView>(R.id.dietView)
         val bools = initBoolean(selectedDate)
-        Log.d("edit_test", bools.toString())
+        Log.d("renew_test", bools[0].toString())
         if (bools[0]) {
             CoroutineScope(Dispatchers.IO).launch {
                 val memo =
-                    AppDataBase.getInstance(applicationContext).memoDao().getMemoByDate(selectedDate.toString())
+                    AppDataBase.getInstance(applicationContext).memoDao()
+                        .getMemoByDate(selectedDate.toString())
                 memoTxt.text = memo[memo.lastIndex].content
+                memoContent = memo[memo.lastIndex].content.toString()
             }
         } else {
             memoTxt.text = ""
+            memoContent = ""
         }
         val exerciseList = exerciseDBHelper.getRecordList(selectedDate)
         if (exerciseList.size != 0) {
             var text = ""
             for (record in exerciseList) {
-                text = text + record.exercise.ename + "/" + record.etime + "/" + record.totalKcal + "\n"
+                text =
+                    text + record.exercise.ename + "/" + record.etime + "/" + record.totalKcal + "\n"
             }
             dietTxt.text = text
         } else {
@@ -296,21 +305,25 @@ class MainActivity : AppCompatActivity() {
         val dietTxt = findViewById<TextView>(R.id.dietView)
         val today = LocalDate.now()
         val bools = initBoolean(today)
-        Log.d("edit_test", bools.toString())
+        Log.d("edit_test", bools[0].toString())
         if (bools[0]) {
             CoroutineScope(Dispatchers.IO).launch {
                 val memo =
-                    AppDataBase.getInstance(applicationContext).memoDao().getMemoByDate(today.toString())
-                memoTxt.text = memo[memo.lastIndex].content
+                    AppDataBase.getInstance(applicationContext).memoDao()
+                        .getMemoByDate(today.toString())
+                memoTxt.text = memo[memo.lastIndex].title
+                memoContent = memo[memo.lastIndex].content.toString()
             }
         } else {
             memoTxt.text = ""
+            memoContent = ""
         }
         val exerciseList = exerciseDBHelper.getRecordList(today)
         if (exerciseList.size != 0) {
             var text = ""
             for (record in exerciseList) {
-                text = text + record.exercise.ename + "/" + record.etime + "/" + record.totalKcal + "\n"
+                text =
+                    text + record.exercise.ename + "/" + record.etime + "/" + record.totalKcal + "\n"
             }
             dietTxt.text = text
         } else {

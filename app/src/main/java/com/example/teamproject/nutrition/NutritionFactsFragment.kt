@@ -56,7 +56,7 @@ class NutritionFactsFragment : Fragment() {
     ): View? {
         binding = FragmentNutritionFactsBinding.inflate(layoutInflater, container, false)
 
-        nowDate = LocalDate.parse(arguments?.getString("date"), DateTimeFormatter.ISO_DATE);
+        nowDate = LocalDate.parse(arguments?.getString("date"), DateTimeFormatter.ISO_DATE)
 
         return binding!!.root
     }
@@ -328,7 +328,7 @@ class NutritionFactsFragment : Fragment() {
                 )
             )
 
-            initNFRAdapter(date);
+            initNFRAdapter(date)
 
             val simpleCallBack = object : ItemTouchHelper.SimpleCallback(
                 ItemTouchHelper.DOWN or ItemTouchHelper.UP,
