@@ -164,6 +164,7 @@ class UserInfoFragment : Fragment() {
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
+                    goalFlag = "체중 감소"
                 }
             }
     }
