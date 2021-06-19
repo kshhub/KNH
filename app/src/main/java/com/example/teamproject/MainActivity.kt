@@ -77,6 +77,8 @@ class MainActivity : AppCompatActivity() {
                 val udata = UserInfoData(uoption[i], usetting[i])
                 userInfoDBHelper.insertUserInfo(udata)
             }
+            val intent = Intent(this, SettingActivity::class.java)
+            startActivity(intent)
         }
     }
 
