@@ -279,7 +279,8 @@ class MainActivity : AppCompatActivity() {
                 val memo =
                     AppDataBase.getInstance(applicationContext).memoDao()
                         .getMemoByDate(selectedDate.toString())
-                memoTxt.text = memo[memo.lastIndex].content
+                val text = memo[memo.lastIndex].title
+                memoTxt.text = text
                 memoContent = memo[memo.lastIndex].content.toString()
             }
         } else {
@@ -323,7 +324,7 @@ class MainActivity : AppCompatActivity() {
             var text = ""
             for (record in exerciseList) {
                 text =
-                    text + record.exercise.ename + "/" + record.etime + "/" + record.totalKcal + "\n"
+                    text + record.exercise.ename + "/" + record.etime + "분/" + record.totalKcal + "kcal\n"
             }
             dietTxt.text = text
         } else {

@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Memo(
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "index") val index: Long,
-    @ColumnInfo(name = "date") val date: String,
+    //@PrimaryKey @ColumnInfo(name = "index") val index: Long,
+    @PrimaryKey @ColumnInfo(name = "date") val date: String,
     @ColumnInfo(name = "title") val title: String?,
     @ColumnInfo(name = "content") val content: String?
 )

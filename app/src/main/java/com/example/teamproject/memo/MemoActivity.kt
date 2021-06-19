@@ -48,7 +48,7 @@ class MemoActivity : AppCompatActivity() {
             //Log.d("co before","co before")
             CoroutineScope(Dispatchers.IO).launch {
                 //Log.d("co after", "co after")
-                val memo = Memo(0, date, titleEdit.text.toString(), contentEdit.text.toString())
+                val memo = Memo(date, titleEdit.text.toString(), contentEdit.text.toString())
                 if(!isMemo)
                     AppDataBase.getInstance(applicationContext).memoDao().insert(memo)
                 else
