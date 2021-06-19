@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     val DEFAULT_DATE = "Tue Jun 01 00:00:00 GMT+09:00 1990"
     var isInMemo = false
     var memoContent = ""
+    var currentDate = LocalDate.now()
     lateinit var customDBHelper: CustomDBHelper
     lateinit var userInfoDBHelper: UserInfoDBHelper
     lateinit var exerciseDBHelper: ExerciseDBHelper
@@ -222,6 +223,7 @@ class MainActivity : AppCompatActivity() {
                 date.month + 1,
                 date.day
             )
+            currentDate = selectedDate
             Log.d("date_selected_test", selectedDate.toString())
             renewView(selectedDate)
         }
@@ -275,13 +277,13 @@ class MainActivity : AppCompatActivity() {
     override fun onRestart() {
         super.onRestart()
         customizing()
-        initView()
+        renewView(currentDate)
     }
 
     override fun onResume() {
         super.onResume()
         customizing()
-        initView()
+        renewView(currentDate)
     }
 
     private fun renewView(selectedDate: LocalDate) {
@@ -307,7 +309,7 @@ class MainActivity : AppCompatActivity() {
             var text = ""
             for (record in exerciseList) {
                 text =
-                    text + record.exercise.ename + "/" + record.etime + "/" + record.totalKcal + "\n"
+                    text + record.exercise.ename + "/" + record.etime + "분/" + record.totalKcal + "kcal\n"
             }
             dietTxt.text = text
         } else {
