@@ -164,13 +164,17 @@ class MainActivity : AppCompatActivity() {
         val dietView = findViewById<TextView>(R.id.dietView)
         val dietBtn = findViewById<Button>(R.id.button2)
         val exerciseBtn = findViewById<Button>(R.id.exerciseBtn)
-        val date = LocalDate.now().toString()
 
         calendarView.selectedDate = today
         memo.setOnClickListener {
+            val selectedDate = LocalDate.of(
+                calendarView.selectedDate.year,
+                calendarView.selectedDate.month + 1,
+                calendarView.selectedDate.day
+            )
             val intent = Intent(this, MemoActivity::class.java)
             intent.putExtra("title", memoTextView.text.toString())
-            intent.putExtra("date", date)
+            intent.putExtra("date", selectedDate.toString())
             intent.putExtra("content", memoContent)
             intent.putExtra("isMemo", isInMemo.toString())
             startActivity(intent)
@@ -178,18 +182,28 @@ class MainActivity : AppCompatActivity() {
 
         memoTextView.movementMethod = ScrollingMovementMethod()
         memoTextView.setOnClickListener {
+            val selectedDate = LocalDate.of(
+                calendarView.selectedDate.year,
+                calendarView.selectedDate.month + 1,
+                calendarView.selectedDate.day
+            )
             val intent = Intent(this, PopupActivity::class.java)
             intent.putExtra("title", memoTextView.text.toString())
-            intent.putExtra("date", date)
+            intent.putExtra("date", selectedDate.toString())
             intent.putExtra("content", memoContent)
             startActivity(intent)
         }
 
         dietView.movementMethod = ScrollingMovementMethod()
         dietView.setOnClickListener {
+            val selectedDate = LocalDate.of(
+                calendarView.selectedDate.year,
+                calendarView.selectedDate.month + 1,
+                calendarView.selectedDate.day
+            )
             val intent = Intent(this, PopupActivity::class.java)
             intent.putExtra("title", "EXERCISE")
-            intent.putExtra("date", date)
+            intent.putExtra("date", selectedDate.toString())
             intent.putExtra("content", dietView.text.toString())
             startActivity(intent)
         }
@@ -221,8 +235,6 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("day", today.day.toString())
             intent.putExtra("month", today.month.toString())
             intent.putExtra("year", today.year.toString())
-            //intent.putExtra("date", calendarView.selectedDate.toString())
-            intent.putExtra("date", selectedDate.toString())
             //intent.putExtra("date", calendarView.selectedDate.toString())
             intent.putExtra("date", selectedDate.toString())
             Log.d("A", userInfoDBHelper.findUserInfo("goal"))
