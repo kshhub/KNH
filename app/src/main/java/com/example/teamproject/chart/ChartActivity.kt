@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.teamproject.ExerciseDBHelper
@@ -408,9 +409,14 @@ class ChartActivity : AppCompatActivity() {
             Log.d("확인", "없음")
         }
         val sharebtn = findViewById<Button>(R.id.nope)
+        val chartbtn = findViewById<Button>(R.id.chartendbtn)
         sharebtn.setOnClickListener {
-            val rootView = window.decorView.rootView
-            val bitmap = getBitmapFromView(rootView)
+            val layout = findViewById<ConstraintLayout>(R.id.chartLayout)
+            sharebtn.visibility = View.INVISIBLE
+            chartbtn.visibility = View.INVISIBLE
+            val bitmap = getBitmapFromView(layout)
+            sharebtn.visibility = View.VISIBLE
+            chartbtn.visibility = View.VISIBLE
 
             shareImageandText(bitmap!!)
         }
@@ -459,7 +465,7 @@ class ChartActivity : AppCompatActivity() {
 
         intent.putExtra(Intent.EXTRA_STREAM, uri)
 
-        intent.putExtra(Intent.EXTRA_TEXT, "차트 요약 내용")
+        intent.putExtra(Intent.EXTRA_TEXT, getMessageBody())
 
         intent.type = "image/png"
 
@@ -482,5 +488,23 @@ class ChartActivity : AppCompatActivity() {
             //Toast.makeText(this, "" + e.message, Toast.LENGTH_LONG).show()
         }
         return uri
+    }
+
+    fun getMessageBody():String
+    {
+        var body = "현재 건강관리 등급은 "
+
+        val achievi = findViewById<ImageView>(R.id.percentimage)
+
+        when(achievi.getDrawable().getConstantState())
+        {
+            getResources().getDrawable( R.drawable.thumbup).getConstantState() -> body += "'매우 좋음' 입니다.\n최고예요! 이대로만 유지하세요!";
+            getResources().getDrawable( R.drawable.cheerup).getConstantState() -> body += "'좋음' 입니다.\n노력하고 계시네요! 조금만 더 힘내세요!";
+            getResources().getDrawable( R.drawable.waiting).getConstantState() -> body += "'보통' 입니다.";
+            getResources().getDrawable( R.drawable.sad).getConstantState() -> body += "'나쁨' 입니다.\n설정한 목표까지 힘내세요!";
+            getResources().getDrawable( R.drawable.bad).getConstantState() -> body += "'매우 나쁨' 입니다.\n목표 달성도가 매우 낮습니다! 분발하세요!";
+        }
+
+        return body
     }
 }

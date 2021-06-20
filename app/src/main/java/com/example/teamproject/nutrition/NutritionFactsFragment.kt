@@ -168,7 +168,7 @@ class NutritionFactsFragment : Fragment() {
     //식품 검색 리사이클러뷰
     fun initNFAdapter(arrayList: ArrayList<NutritionFacts>)
     {
-        binding?.fnameEditText?.text?.clear()
+        //binding?.fnameEditText?.text?.clear()
 
         nf_adapter = NFAdapter(arrayList)
         nf_adapter.itemClickListener = object : NFAdapter.OnItemClickListener {
@@ -181,7 +181,7 @@ class NutritionFactsFragment : Fragment() {
                 position: Int
             ) {
                 //눌렀을 때 nametext 채워주기
-                binding?.fnameEditText?.setText(data.fname.toString())
+                //binding?.fnameEditText?.setText(data.fname.toString())
                 listItemClickedFlag = true
 
                 if (selectedFid == data.fid) {
